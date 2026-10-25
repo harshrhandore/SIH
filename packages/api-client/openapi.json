@@ -39,6 +39,9 @@
     },
     "/api/v1/auth/demo-accounts": {
       "get": {
+        "tags": [
+          "auth"
+        ],
         "summary": "Accounts",
         "operationId": "accounts_api_v1_auth_demo_accounts_get",
         "responses": {
@@ -46,7 +49,9 @@
             "description": "Successful Response",
             "content": {
               "application/json": {
-                "schema": {}
+                "schema": {
+                  "$ref": "#/components/schemas/DemoAccountsResponse"
+                }
               }
             }
           }
@@ -55,6 +60,9 @@
     },
     "/api/v1/auth/login": {
       "post": {
+        "tags": [
+          "auth"
+        ],
         "summary": "Login",
         "operationId": "login_api_v1_auth_login_post",
         "requestBody": {
@@ -72,7 +80,9 @@
             "description": "Successful Response",
             "content": {
               "application/json": {
-                "schema": {}
+                "schema": {
+                  "$ref": "#/components/schemas/TokenResponse"
+                }
               }
             }
           },
@@ -91,6 +101,9 @@
     },
     "/api/v1/auth/refresh": {
       "post": {
+        "tags": [
+          "auth"
+        ],
         "summary": "Refresh",
         "operationId": "refresh_api_v1_auth_refresh_post",
         "requestBody": {
@@ -108,7 +121,9 @@
             "description": "Successful Response",
             "content": {
               "application/json": {
-                "schema": {}
+                "schema": {
+                  "$ref": "#/components/schemas/TokenResponse"
+                }
               }
             }
           },
@@ -127,6 +142,9 @@
     },
     "/api/v1/auth/logout": {
       "post": {
+        "tags": [
+          "auth"
+        ],
         "summary": "Logout",
         "operationId": "logout_api_v1_auth_logout_post",
         "requestBody": {
@@ -144,7 +162,9 @@
             "description": "Successful Response",
             "content": {
               "application/json": {
-                "schema": {}
+                "schema": {
+                  "$ref": "#/components/schemas/LogoutResponse"
+                }
               }
             }
           },
@@ -163,6 +183,9 @@
     },
     "/api/v1/auth/me": {
       "get": {
+        "tags": [
+          "auth"
+        ],
         "summary": "Me",
         "operationId": "me_api_v1_auth_me_get",
         "responses": {
@@ -181,6 +204,9 @@
     },
     "/api/v1/institutions": {
       "get": {
+        "tags": [
+          "institutions"
+        ],
         "summary": "Institutions",
         "operationId": "institutions_api_v1_institutions_get",
         "parameters": [
@@ -206,7 +232,9 @@
             "description": "Successful Response",
             "content": {
               "application/json": {
-                "schema": {}
+                "schema": {
+                  "$ref": "#/components/schemas/InstitutionsResponse"
+                }
               }
             }
           },
@@ -225,6 +253,9 @@
     },
     "/api/v1/institutions/{institution_id}/programs": {
       "get": {
+        "tags": [
+          "institutions"
+        ],
         "summary": "Programs",
         "operationId": "programs_api_v1_institutions__institution_id__programs_get",
         "parameters": [
@@ -244,7 +275,9 @@
             "description": "Successful Response",
             "content": {
               "application/json": {
-                "schema": {}
+                "schema": {
+                  "$ref": "#/components/schemas/ProgramsResponse"
+                }
               }
             }
           },
@@ -263,6 +296,9 @@
     },
     "/api/v1/dashboard": {
       "get": {
+        "tags": [
+          "students"
+        ],
         "summary": "Get Dashboard",
         "operationId": "get_dashboard_api_v1_dashboard_get",
         "parameters": [
@@ -308,6 +344,9 @@
     },
     "/api/v1/students/search": {
       "get": {
+        "tags": [
+          "students"
+        ],
         "summary": "Search",
         "operationId": "search_api_v1_students_search_get",
         "parameters": [
@@ -460,6 +499,9 @@
     },
     "/api/v1/students/{student_id}": {
       "get": {
+        "tags": [
+          "students"
+        ],
         "summary": "Student",
         "operationId": "student_api_v1_students__student_id__get",
         "parameters": [
@@ -496,6 +538,9 @@
         }
       },
       "patch": {
+        "tags": [
+          "students"
+        ],
         "summary": "Patch Student",
         "operationId": "patch_student_api_v1_students__student_id__patch",
         "parameters": [
@@ -544,6 +589,9 @@
     },
     "/api/v1/student/{apaar_id}": {
       "get": {
+        "tags": [
+          "students"
+        ],
         "summary": "Student By Id",
         "operationId": "student_by_id_api_v1_student__apaar_id__get",
         "parameters": [
@@ -579,46 +627,11 @@
         }
       }
     },
-    "/api/v1/students/{student_id}/trust": {
-      "get": {
-        "summary": "Student Trust",
-        "operationId": "student_trust_api_v1_students__student_id__trust_get",
-        "parameters": [
-          {
-            "name": "student_id",
-            "in": "path",
-            "required": true,
-            "schema": {
-              "type": "string",
-              "format": "uuid",
-              "title": "Student Id"
-            }
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "Successful Response",
-            "content": {
-              "application/json": {
-                "schema": {}
-              }
-            }
-          },
-          "422": {
-            "description": "Validation Error",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/HTTPValidationError"
-                }
-              }
-            }
-          }
-        }
-      }
-    },
     "/api/v1/students/{student_id}/versions": {
       "get": {
+        "tags": [
+          "students"
+        ],
         "summary": "Versions",
         "operationId": "versions_api_v1_students__student_id__versions_get",
         "parameters": [
@@ -677,6 +690,9 @@
     },
     "/api/v1/imports": {
       "post": {
+        "tags": [
+          "imports"
+        ],
         "summary": "Upload Import",
         "operationId": "upload_import_api_v1_imports_post",
         "requestBody": {
@@ -711,6 +727,9 @@
         }
       },
       "get": {
+        "tags": [
+          "imports"
+        ],
         "summary": "List Imports",
         "operationId": "list_imports_api_v1_imports_get",
         "parameters": [
@@ -759,6 +778,9 @@
     },
     "/api/v1/imports/{batch_id}": {
       "get": {
+        "tags": [
+          "imports"
+        ],
         "summary": "Import Detail",
         "operationId": "import_detail_api_v1_imports__batch_id__get",
         "parameters": [
@@ -797,6 +819,9 @@
     },
     "/api/v1/imports/{batch_id}/mapping": {
       "put": {
+        "tags": [
+          "imports"
+        ],
         "summary": "Set Mapping",
         "operationId": "set_mapping_api_v1_imports__batch_id__mapping_put",
         "parameters": [
@@ -845,6 +870,9 @@
     },
     "/api/v1/imports/{batch_id}/validate": {
       "post": {
+        "tags": [
+          "imports"
+        ],
         "summary": "Validate Import",
         "operationId": "validate_import_api_v1_imports__batch_id__validate_post",
         "parameters": [
@@ -893,6 +921,9 @@
     },
     "/api/v1/import-jobs/{job_id}": {
       "get": {
+        "tags": [
+          "imports"
+        ],
         "summary": "Get Job",
         "operationId": "get_job_api_v1_import_jobs__job_id__get",
         "parameters": [
@@ -931,6 +962,9 @@
     },
     "/api/v1/import-jobs/{job_id}/retry": {
       "post": {
+        "tags": [
+          "imports"
+        ],
         "summary": "Retry Job",
         "operationId": "retry_job_api_v1_import_jobs__job_id__retry_post",
         "parameters": [
@@ -979,6 +1013,9 @@
     },
     "/api/v1/imports/{batch_id}/report": {
       "get": {
+        "tags": [
+          "imports"
+        ],
         "summary": "Import Report",
         "operationId": "import_report_api_v1_imports__batch_id__report_get",
         "parameters": [
@@ -1017,6 +1054,9 @@
     },
     "/api/v1/imports/{batch_id}/errors.csv": {
       "get": {
+        "tags": [
+          "imports"
+        ],
         "summary": "Errors Csv",
         "operationId": "errors_csv_api_v1_imports__batch_id__errors_csv_get",
         "parameters": [
@@ -1055,6 +1095,9 @@
     },
     "/api/v1/cases": {
       "get": {
+        "tags": [
+          "reviews"
+        ],
         "summary": "List Cases",
         "operationId": "list_cases_api_v1_cases_get",
         "parameters": [
@@ -1162,6 +1205,9 @@
     },
     "/api/v1/cases/{case_id}": {
       "get": {
+        "tags": [
+          "reviews"
+        ],
         "summary": "Case Detail",
         "operationId": "case_detail_api_v1_cases__case_id__get",
         "parameters": [
@@ -1200,6 +1246,9 @@
     },
     "/api/v1/cases/{case_id}/access": {
       "post": {
+        "tags": [
+          "reviews"
+        ],
         "summary": "Case Access",
         "operationId": "case_access_api_v1_cases__case_id__access_post",
         "parameters": [
@@ -1248,6 +1297,9 @@
     },
     "/api/v1/cases/{case_id}/decisions": {
       "post": {
+        "tags": [
+          "reviews"
+        ],
         "summary": "Decide",
         "operationId": "decide_api_v1_cases__case_id__decisions_post",
         "parameters": [
@@ -1294,8 +1346,62 @@
         }
       }
     },
+    "/api/v1/duplicate-candidates/{candidate_id}/decision": {
+      "post": {
+        "tags": [
+          "reviews"
+        ],
+        "summary": "Candidate Decision",
+        "operationId": "candidate_decision_api_v1_duplicate_candidates__candidate_id__decision_post",
+        "parameters": [
+          {
+            "name": "candidate_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid",
+              "title": "Candidate Id"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CandidateDecision"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {}
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
     "/api/v1/students/{student_id}/timeline": {
       "get": {
+        "tags": [
+          "audit"
+        ],
         "summary": "Timeline",
         "operationId": "timeline_api_v1_students__student_id__timeline_get",
         "parameters": [
@@ -1354,6 +1460,9 @@
     },
     "/api/v1/audit/verify-chain": {
       "get": {
+        "tags": [
+          "audit"
+        ],
         "summary": "Verify Chain",
         "operationId": "verify_chain_api_v1_audit_verify_chain_get",
         "parameters": [
@@ -1390,8 +1499,139 @@
         }
       }
     },
+    "/api/v1/audit/events": {
+      "get": {
+        "tags": [
+          "audit"
+        ],
+        "summary": "Audit Events",
+        "operationId": "audit_events_api_v1_audit_events_get",
+        "parameters": [
+          {
+            "name": "institution_id",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string",
+                  "format": "uuid"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "Institution Id"
+            }
+          },
+          {
+            "name": "case_id",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string",
+                  "format": "uuid"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "Case Id"
+            }
+          },
+          {
+            "name": "page",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "integer",
+              "default": 1,
+              "title": "Page"
+            }
+          },
+          {
+            "name": "page_size",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "integer",
+              "default": 25,
+              "title": "Page Size"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {}
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/students/{student_id}/trust": {
+      "get": {
+        "tags": [
+          "trust"
+        ],
+        "summary": "Student Trust",
+        "operationId": "student_trust_api_v1_students__student_id__trust_get",
+        "parameters": [
+          {
+            "name": "student_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid",
+              "title": "Student Id"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/TrustResponse"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
     "/api/v1/students/{student_id}/certificates": {
       "post": {
+        "tags": [
+          "certificates"
+        ],
         "summary": "Upload Certificate",
         "operationId": "upload_certificate_api_v1_students__student_id__certificates_post",
         "parameters": [
@@ -1440,6 +1680,9 @@
     },
     "/api/v1/certificates/{certificate_id}/verify": {
       "post": {
+        "tags": [
+          "certificates"
+        ],
         "summary": "Verify Certificate",
         "operationId": "verify_certificate_api_v1_certificates__certificate_id__verify_post",
         "parameters": [
@@ -1478,6 +1721,9 @@
     },
     "/api/v1/certificate-verifications/{verification_id}": {
       "get": {
+        "tags": [
+          "certificates"
+        ],
         "summary": "Report",
         "operationId": "report_api_v1_certificate_verifications__verification_id__get",
         "parameters": [
@@ -1516,6 +1762,9 @@
     },
     "/api/v1/certificate-verifications/{verification_id}/fraud": {
       "get": {
+        "tags": [
+          "certificates"
+        ],
         "summary": "Fraud",
         "operationId": "fraud_api_v1_certificate_verifications__verification_id__fraud_get",
         "parameters": [
@@ -1554,6 +1803,9 @@
     },
     "/api/v1/certificates/{certificate_id}/file": {
       "get": {
+        "tags": [
+          "certificates"
+        ],
         "summary": "Certificate File",
         "operationId": "certificate_file_api_v1_certificates__certificate_id__file_get",
         "parameters": [
@@ -1592,6 +1844,9 @@
     },
     "/api/v1/certificates/{certificate_id}/acceptance": {
       "post": {
+        "tags": [
+          "certificates"
+        ],
         "summary": "Acceptance",
         "operationId": "acceptance_api_v1_certificates__certificate_id__acceptance_post",
         "parameters": [
@@ -1638,10 +1893,23 @@
         }
       }
     },
-    "/api/v1/career/roles": {
-      "get": {
-        "summary": "Career Roles",
-        "operationId": "career_roles_api_v1_career_roles_get",
+    "/api/v1/verify": {
+      "post": {
+        "tags": [
+          "certificates"
+        ],
+        "summary": "Verify Alias",
+        "operationId": "verify_alias_api_v1_verify_post",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/VerifyAlias"
+              }
+            }
+          },
+          "required": true
+        },
         "responses": {
           "200": {
             "description": "Successful Response",
@@ -1650,12 +1918,46 @@
                 "schema": {}
               }
             }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/career/roles": {
+      "get": {
+        "tags": [
+          "career"
+        ],
+        "summary": "Career Roles",
+        "operationId": "career_roles_api_v1_career_roles_get",
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/RolesResponse"
+                }
+              }
+            }
           }
         }
       }
     },
     "/api/v1/students/{student_id}/career": {
       "post": {
+        "tags": [
+          "career"
+        ],
         "summary": "Ask Career",
         "operationId": "ask_career_api_v1_students__student_id__career_post",
         "parameters": [
@@ -1685,7 +1987,9 @@
             "description": "Successful Response",
             "content": {
               "application/json": {
-                "schema": {}
+                "schema": {
+                  "$ref": "#/components/schemas/CareerResponse"
+                }
               }
             }
           },
@@ -1704,6 +2008,9 @@
     },
     "/api/v1/students/{student_id}/career/history": {
       "get": {
+        "tags": [
+          "career"
+        ],
         "summary": "Career History",
         "operationId": "career_history_api_v1_students__student_id__career_history_get",
         "parameters": [
@@ -1743,7 +2050,9 @@
             "description": "Successful Response",
             "content": {
               "application/json": {
-                "schema": {}
+                "schema": {
+                  "$ref": "#/components/schemas/HistoryResponse"
+                }
               }
             }
           },
@@ -1762,6 +2071,9 @@
     },
     "/api/v1/oversight": {
       "get": {
+        "tags": [
+          "analytics"
+        ],
         "summary": "Oversight",
         "operationId": "oversight_api_v1_oversight_get",
         "parameters": [
@@ -1860,6 +2172,9 @@
     },
     "/api/v1/analytics/admissions": {
       "get": {
+        "tags": [
+          "analytics"
+        ],
         "summary": "Analytics Admissions",
         "operationId": "analytics_admissions_api_v1_analytics_admissions_get",
         "parameters": [
@@ -1954,6 +2269,9 @@
     },
     "/api/v1/analytics/placements": {
       "get": {
+        "tags": [
+          "analytics"
+        ],
         "summary": "Analytics Placements",
         "operationId": "analytics_placements_api_v1_analytics_placements_get",
         "parameters": [
@@ -2048,6 +2366,9 @@
     },
     "/api/v1/analytics/performance": {
       "get": {
+        "tags": [
+          "analytics"
+        ],
         "summary": "Analytics Performance",
         "operationId": "analytics_performance_api_v1_analytics_performance_get",
         "parameters": [
@@ -2142,6 +2463,9 @@
     },
     "/api/v1/analytics/data-quality": {
       "get": {
+        "tags": [
+          "analytics"
+        ],
         "summary": "Analytics Data Quality",
         "operationId": "analytics_data_quality_api_v1_analytics_data_quality_get",
         "parameters": [
@@ -2236,6 +2560,9 @@
     },
     "/api/v1/analytics/refresh": {
       "post": {
+        "tags": [
+          "analytics"
+        ],
         "summary": "Refresh Analytics",
         "operationId": "refresh_analytics_api_v1_analytics_refresh_post",
         "responses": {
@@ -2252,6 +2579,9 @@
     },
     "/api/v1/analytics/refresh-status": {
       "get": {
+        "tags": [
+          "analytics"
+        ],
         "summary": "Refresh Status",
         "operationId": "refresh_status_api_v1_analytics_refresh_status_get",
         "responses": {
@@ -2266,189 +2596,11 @@
         }
       }
     },
-    "/api/v1/demo/config": {
-      "get": {
-        "summary": "Demo Config",
-        "operationId": "demo_config_api_v1_demo_config_get",
-        "responses": {
-          "200": {
-            "description": "Successful Response",
-            "content": {
-              "application/json": {
-                "schema": {}
-              }
-            }
-          }
-        }
-      }
-    },
-    "/api/v1/demo/manifest": {
-      "get": {
-        "summary": "Demo Manifest",
-        "operationId": "demo_manifest_api_v1_demo_manifest_get",
-        "responses": {
-          "200": {
-            "description": "Successful Response",
-            "content": {
-              "application/json": {
-                "schema": {}
-              }
-            }
-          }
-        }
-      }
-    },
-    "/api/v1/demo/fixtures/{fixture_key}": {
-      "get": {
-        "summary": "Fixture",
-        "operationId": "fixture_api_v1_demo_fixtures__fixture_key__get",
-        "parameters": [
-          {
-            "name": "fixture_key",
-            "in": "path",
-            "required": true,
-            "schema": {
-              "type": "string",
-              "title": "Fixture Key"
-            }
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "Successful Response",
-            "content": {
-              "application/json": {
-                "schema": {}
-              }
-            }
-          },
-          "422": {
-            "description": "Validation Error",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/HTTPValidationError"
-                }
-              }
-            }
-          }
-        }
-      }
-    },
-    "/api/v1/demo/audit-sandbox/verify": {
-      "get": {
-        "summary": "Sandbox Status",
-        "operationId": "sandbox_status_api_v1_demo_audit_sandbox_verify_get",
-        "parameters": [
-          {
-            "name": "institution_id",
-            "in": "query",
-            "required": true,
-            "schema": {
-              "type": "string",
-              "format": "uuid",
-              "title": "Institution Id"
-            }
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "Successful Response",
-            "content": {
-              "application/json": {
-                "schema": {}
-              }
-            }
-          },
-          "422": {
-            "description": "Validation Error",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/HTTPValidationError"
-                }
-              }
-            }
-          }
-        }
-      }
-    },
-    "/api/v1/demo/audit-sandbox": {
-      "get": {
-        "summary": "Sandbox Status",
-        "operationId": "sandbox_status_api_v1_demo_audit_sandbox_get",
-        "parameters": [
-          {
-            "name": "institution_id",
-            "in": "query",
-            "required": true,
-            "schema": {
-              "type": "string",
-              "format": "uuid",
-              "title": "Institution Id"
-            }
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "Successful Response",
-            "content": {
-              "application/json": {
-                "schema": {}
-              }
-            }
-          },
-          "422": {
-            "description": "Validation Error",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/HTTPValidationError"
-                }
-              }
-            }
-          }
-        }
-      }
-    },
-    "/api/v1/verify": {
-      "post": {
-        "summary": "Verify Alias",
-        "operationId": "verify_alias_api_v1_verify_post",
-        "requestBody": {
-          "content": {
-            "application/json": {
-              "schema": {
-                "$ref": "#/components/schemas/VerifyAlias"
-              }
-            }
-          },
-          "required": true
-        },
-        "responses": {
-          "200": {
-            "description": "Successful Response",
-            "content": {
-              "application/json": {
-                "schema": {}
-              }
-            }
-          },
-          "422": {
-            "description": "Validation Error",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/HTTPValidationError"
-                }
-              }
-            }
-          }
-        }
-      }
-    },
     "/api/v1/students/{student_id}/checks": {
       "post": {
+        "tags": [
+          "verification"
+        ],
         "summary": "Checks",
         "operationId": "checks_api_v1_students__student_id__checks_post",
         "parameters": [
@@ -2497,6 +2649,9 @@
     },
     "/api/v1/students/{student_id}/external-check": {
       "post": {
+        "tags": [
+          "verification"
+        ],
         "summary": "External Check",
         "operationId": "external_check_api_v1_students__student_id__external_check_post",
         "parameters": [
@@ -2543,32 +2698,62 @@
         }
       }
     },
-    "/api/v1/duplicate-candidates/{candidate_id}/decision": {
-      "post": {
-        "summary": "Candidate Decision",
-        "operationId": "candidate_decision_api_v1_duplicate_candidates__candidate_id__decision_post",
+    "/api/v1/demo/config": {
+      "get": {
+        "tags": [
+          "demo"
+        ],
+        "summary": "Demo Config",
+        "operationId": "demo_config_api_v1_demo_config_get",
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {}
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/demo/manifest": {
+      "get": {
+        "tags": [
+          "demo"
+        ],
+        "summary": "Demo Manifest",
+        "operationId": "demo_manifest_api_v1_demo_manifest_get",
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {}
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/demo/fixtures/{fixture_key}": {
+      "get": {
+        "tags": [
+          "demo"
+        ],
+        "summary": "Fixture",
+        "operationId": "fixture_api_v1_demo_fixtures__fixture_key__get",
         "parameters": [
           {
-            "name": "candidate_id",
+            "name": "fixture_key",
             "in": "path",
             "required": true,
             "schema": {
               "type": "string",
-              "format": "uuid",
-              "title": "Candidate Id"
+              "title": "Fixture Key"
             }
           }
         ],
-        "requestBody": {
-          "required": true,
-          "content": {
-            "application/json": {
-              "schema": {
-                "$ref": "#/components/schemas/CandidateDecision"
-              }
-            }
-          }
-        },
         "responses": {
           "200": {
             "description": "Successful Response",
@@ -2591,63 +2776,63 @@
         }
       }
     },
-    "/api/v1/audit/events": {
+    "/api/v1/demo/audit-sandbox/verify": {
       "get": {
-        "summary": "Audit Events",
-        "operationId": "audit_events_api_v1_audit_events_get",
+        "tags": [
+          "demo"
+        ],
+        "summary": "Sandbox Status",
+        "operationId": "sandbox_status_api_v1_demo_audit_sandbox_verify_get",
         "parameters": [
           {
             "name": "institution_id",
             "in": "query",
-            "required": false,
+            "required": true,
             "schema": {
-              "anyOf": [
-                {
-                  "type": "string",
-                  "format": "uuid"
-                },
-                {
-                  "type": "null"
-                }
-              ],
+              "type": "string",
+              "format": "uuid",
               "title": "Institution Id"
             }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {}
+              }
+            }
           },
-          {
-            "name": "case_id",
-            "in": "query",
-            "required": false,
-            "schema": {
-              "anyOf": [
-                {
-                  "type": "string",
-                  "format": "uuid"
-                },
-                {
-                  "type": "null"
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
                 }
-              ],
-              "title": "Case Id"
+              }
             }
-          },
+          }
+        }
+      }
+    },
+    "/api/v1/demo/audit-sandbox": {
+      "get": {
+        "tags": [
+          "demo"
+        ],
+        "summary": "Sandbox Status",
+        "operationId": "sandbox_status_api_v1_demo_audit_sandbox_get",
+        "parameters": [
           {
-            "name": "page",
+            "name": "institution_id",
             "in": "query",
-            "required": false,
+            "required": true,
             "schema": {
-              "type": "integer",
-              "default": 1,
-              "title": "Page"
-            }
-          },
-          {
-            "name": "page_size",
-            "in": "query",
-            "required": false,
-            "schema": {
-              "type": "integer",
-              "default": 25,
-              "title": "Page Size"
+              "type": "string",
+              "format": "uuid",
+              "title": "Institution Id"
             }
           }
         ],
@@ -2675,6 +2860,9 @@
     },
     "/api/v1/demo/session-controls": {
       "put": {
+        "tags": [
+          "demo"
+        ],
         "summary": "Session Controls",
         "operationId": "session_controls_api_v1_demo_session_controls_put",
         "requestBody": {
@@ -2711,6 +2899,9 @@
     },
     "/api/v1/demo/performance": {
       "get": {
+        "tags": [
+          "demo"
+        ],
         "summary": "Performance",
         "operationId": "performance_api_v1_demo_performance_get",
         "responses": {
@@ -2727,6 +2918,9 @@
     },
     "/api/v1/demo/benchmarks": {
       "post": {
+        "tags": [
+          "demo"
+        ],
         "summary": "Web Benchmark",
         "operationId": "web_benchmark_api_v1_demo_benchmarks_post",
         "requestBody": {
@@ -2763,6 +2957,9 @@
     },
     "/api/v1/demo/benchmarks/{run_id}": {
       "get": {
+        "tags": [
+          "demo"
+        ],
         "summary": "Benchmark Result",
         "operationId": "benchmark_result_api_v1_demo_benchmarks__run_id__get",
         "parameters": [
@@ -2951,6 +3148,156 @@
         ],
         "title": "Career"
       },
+      "CareerResponse": {
+        "properties": {
+          "role_code": {
+            "type": "string",
+            "title": "Role Code"
+          },
+          "readiness_percent": {
+            "type": "integer",
+            "maximum": 100.0,
+            "minimum": 0.0,
+            "title": "Readiness Percent"
+          },
+          "matched_skills": {
+            "items": {
+              "$ref": "#/components/schemas/MatchedSkill"
+            },
+            "type": "array",
+            "title": "Matched Skills"
+          },
+          "missing_skills": {
+            "items": {
+              "$ref": "#/components/schemas/MissingSkill"
+            },
+            "type": "array",
+            "title": "Missing Skills"
+          },
+          "recommended_steps": {
+            "items": {
+              "$ref": "#/components/schemas/Step"
+            },
+            "type": "array",
+            "title": "Recommended Steps"
+          },
+          "suggested_courses": {
+            "items": {
+              "$ref": "#/components/schemas/Course"
+            },
+            "type": "array",
+            "title": "Suggested Courses"
+          },
+          "explanation": {
+            "type": "string",
+            "title": "Explanation"
+          },
+          "phrasing_source": {
+            "type": "string",
+            "enum": [
+              "RULE_BASED",
+              "GEMINI"
+            ],
+            "title": "Phrasing Source"
+          },
+          "catalogue_version": {
+            "type": "integer",
+            "const": 1,
+            "title": "Catalogue Version"
+          },
+          "session_id": {
+            "type": "string",
+            "format": "uuid",
+            "title": "Session Id"
+          }
+        },
+        "type": "object",
+        "required": [
+          "role_code",
+          "readiness_percent",
+          "matched_skills",
+          "missing_skills",
+          "recommended_steps",
+          "suggested_courses",
+          "explanation",
+          "phrasing_source",
+          "catalogue_version",
+          "session_id"
+        ],
+        "title": "CareerResponse"
+      },
+      "CareerResult": {
+        "properties": {
+          "role_code": {
+            "type": "string",
+            "title": "Role Code"
+          },
+          "readiness_percent": {
+            "type": "integer",
+            "maximum": 100.0,
+            "minimum": 0.0,
+            "title": "Readiness Percent"
+          },
+          "matched_skills": {
+            "items": {
+              "$ref": "#/components/schemas/MatchedSkill"
+            },
+            "type": "array",
+            "title": "Matched Skills"
+          },
+          "missing_skills": {
+            "items": {
+              "$ref": "#/components/schemas/MissingSkill"
+            },
+            "type": "array",
+            "title": "Missing Skills"
+          },
+          "recommended_steps": {
+            "items": {
+              "$ref": "#/components/schemas/Step"
+            },
+            "type": "array",
+            "title": "Recommended Steps"
+          },
+          "suggested_courses": {
+            "items": {
+              "$ref": "#/components/schemas/Course"
+            },
+            "type": "array",
+            "title": "Suggested Courses"
+          },
+          "explanation": {
+            "type": "string",
+            "title": "Explanation"
+          },
+          "phrasing_source": {
+            "type": "string",
+            "enum": [
+              "RULE_BASED",
+              "GEMINI"
+            ],
+            "title": "Phrasing Source"
+          },
+          "catalogue_version": {
+            "type": "integer",
+            "const": 1,
+            "title": "Catalogue Version"
+          }
+        },
+        "type": "object",
+        "required": [
+          "role_code",
+          "readiness_percent",
+          "matched_skills",
+          "missing_skills",
+          "recommended_steps",
+          "suggested_courses",
+          "explanation",
+          "phrasing_source",
+          "catalogue_version"
+        ],
+        "title": "CareerResult"
+      },
       "Confirm": {
         "properties": {
           "confirm_synthetic_data": {
@@ -2964,6 +3311,36 @@
           "confirm_synthetic_data"
         ],
         "title": "Confirm"
+      },
+      "Course": {
+        "properties": {
+          "title": {
+            "type": "string",
+            "title": "Title"
+          },
+          "provider": {
+            "type": "string",
+            "title": "Provider"
+          },
+          "url": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Url"
+          }
+        },
+        "type": "object",
+        "required": [
+          "title",
+          "provider",
+          "url"
+        ],
+        "title": "Course"
       },
       "Decision": {
         "properties": {
@@ -3000,6 +3377,93 @@
         ],
         "title": "Decision"
       },
+      "DemoAccount": {
+        "properties": {
+          "key": {
+            "type": "string",
+            "title": "Key"
+          },
+          "email": {
+            "type": "string",
+            "title": "Email"
+          },
+          "label": {
+            "type": "string",
+            "title": "Label"
+          },
+          "role": {
+            "type": "string",
+            "enum": [
+              "OPERATOR",
+              "OFFICER",
+              "ADMIN",
+              "STUDENT"
+            ],
+            "title": "Role"
+          }
+        },
+        "type": "object",
+        "required": [
+          "key",
+          "email",
+          "label",
+          "role"
+        ],
+        "title": "DemoAccount"
+      },
+      "DemoAccountsResponse": {
+        "properties": {
+          "accounts": {
+            "items": {
+              "$ref": "#/components/schemas/DemoAccount"
+            },
+            "type": "array",
+            "title": "Accounts"
+          },
+          "password_required": {
+            "type": "boolean",
+            "const": true,
+            "title": "Password Required"
+          }
+        },
+        "type": "object",
+        "required": [
+          "accounts",
+          "password_required"
+        ],
+        "title": "DemoAccountsResponse"
+      },
+      "Evidence": {
+        "properties": {
+          "kind": {
+            "type": "string",
+            "title": "Kind"
+          },
+          "id": {
+            "type": "string",
+            "format": "uuid",
+            "title": "Id"
+          },
+          "title": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Title"
+          }
+        },
+        "type": "object",
+        "required": [
+          "kind",
+          "id",
+          "title"
+        ],
+        "title": "Evidence"
+      },
       "HTTPValidationError": {
         "properties": {
           "detail": {
@@ -3013,6 +3477,138 @@
         "type": "object",
         "title": "HTTPValidationError"
       },
+      "HistoryItem": {
+        "properties": {
+          "session_id": {
+            "type": "string",
+            "format": "uuid",
+            "title": "Session Id"
+          },
+          "question": {
+            "type": "string",
+            "title": "Question"
+          },
+          "role_code": {
+            "type": "string",
+            "title": "Role Code"
+          },
+          "readiness_percent": {
+            "type": "integer",
+            "maximum": 100.0,
+            "minimum": 0.0,
+            "title": "Readiness Percent"
+          },
+          "response": {
+            "$ref": "#/components/schemas/CareerResult"
+          },
+          "created_at": {
+            "type": "string",
+            "format": "date-time",
+            "title": "Created At"
+          }
+        },
+        "type": "object",
+        "required": [
+          "session_id",
+          "question",
+          "role_code",
+          "readiness_percent",
+          "response",
+          "created_at"
+        ],
+        "title": "HistoryItem"
+      },
+      "HistoryResponse": {
+        "properties": {
+          "items": {
+            "items": {
+              "$ref": "#/components/schemas/HistoryItem"
+            },
+            "type": "array",
+            "title": "Items"
+          },
+          "total": {
+            "type": "integer",
+            "title": "Total"
+          },
+          "page": {
+            "type": "integer",
+            "title": "Page"
+          },
+          "page_size": {
+            "type": "integer",
+            "title": "Page Size"
+          }
+        },
+        "type": "object",
+        "required": [
+          "items",
+          "total",
+          "page",
+          "page_size"
+        ],
+        "title": "HistoryResponse"
+      },
+      "Institution": {
+        "properties": {
+          "id": {
+            "type": "string",
+            "format": "uuid",
+            "title": "Id"
+          },
+          "name": {
+            "type": "string",
+            "title": "Name"
+          },
+          "state": {
+            "type": "string",
+            "title": "State"
+          },
+          "aicte_code": {
+            "type": "string",
+            "title": "Aicte Code"
+          }
+        },
+        "type": "object",
+        "required": [
+          "id",
+          "name",
+          "state",
+          "aicte_code"
+        ],
+        "title": "Institution"
+      },
+      "InstitutionsResponse": {
+        "properties": {
+          "items": {
+            "items": {
+              "$ref": "#/components/schemas/Institution"
+            },
+            "type": "array",
+            "title": "Items"
+          },
+          "total": {
+            "type": "integer",
+            "title": "Total"
+          },
+          "page": {
+            "type": "integer",
+            "title": "Page"
+          },
+          "page_size": {
+            "type": "integer",
+            "title": "Page Size"
+          }
+        },
+        "type": "object",
+        "required": [
+          "items",
+          "total",
+          "page",
+          "page_size"
+        ],
+        "title": "InstitutionsResponse"
+      },
       "Login": {
         "properties": {
           "email": {
@@ -3022,8 +3618,8 @@
           },
           "password": {
             "type": "string",
-            "maxLength": 72,
-            "title": "Password"
+            "title": "Password",
+            "description": "At most 72 UTF-8 bytes; enforced before bcrypt."
           }
         },
         "additionalProperties": false,
@@ -3046,6 +3642,20 @@
         "type": "object",
         "title": "Logout"
       },
+      "LogoutResponse": {
+        "properties": {
+          "logged_out": {
+            "type": "boolean",
+            "const": true,
+            "title": "Logged Out"
+          }
+        },
+        "type": "object",
+        "required": [
+          "logged_out"
+        ],
+        "title": "LogoutResponse"
+      },
       "Mapping": {
         "properties": {
           "mapping": {
@@ -3067,6 +3677,60 @@
           "mapping"
         ],
         "title": "Mapping"
+      },
+      "MatchedSkill": {
+        "properties": {
+          "code": {
+            "type": "string",
+            "title": "Code"
+          },
+          "weight": {
+            "type": "integer",
+            "title": "Weight"
+          },
+          "label": {
+            "type": "string",
+            "title": "Label"
+          },
+          "evidence": {
+            "items": {
+              "$ref": "#/components/schemas/Evidence"
+            },
+            "type": "array",
+            "title": "Evidence"
+          }
+        },
+        "type": "object",
+        "required": [
+          "code",
+          "weight",
+          "label",
+          "evidence"
+        ],
+        "title": "MatchedSkill"
+      },
+      "MissingSkill": {
+        "properties": {
+          "code": {
+            "type": "string",
+            "title": "Code"
+          },
+          "weight": {
+            "type": "integer",
+            "title": "Weight"
+          },
+          "label": {
+            "type": "string",
+            "title": "Label"
+          }
+        },
+        "type": "object",
+        "required": [
+          "code",
+          "weight",
+          "label"
+        ],
+        "title": "MissingSkill"
       },
       "Patch": {
         "properties": {
@@ -3096,6 +3760,100 @@
         ],
         "title": "Patch"
       },
+      "Program": {
+        "properties": {
+          "id": {
+            "type": "string",
+            "format": "uuid",
+            "title": "Id"
+          },
+          "institution_id": {
+            "type": "string",
+            "format": "uuid",
+            "title": "Institution Id"
+          },
+          "level": {
+            "type": "string",
+            "enum": [
+              "BTECH",
+              "PGDM"
+            ],
+            "title": "Level"
+          },
+          "name": {
+            "type": "string",
+            "title": "Name"
+          },
+          "branch": {
+            "type": "string",
+            "title": "Branch"
+          },
+          "duration_years": {
+            "type": "integer",
+            "title": "Duration Years"
+          },
+          "term_type": {
+            "type": "string",
+            "enum": [
+              "SEMESTER",
+              "TRIMESTER"
+            ],
+            "title": "Term Type"
+          },
+          "total_terms": {
+            "type": "integer",
+            "title": "Total Terms"
+          },
+          "intake": {
+            "type": "integer",
+            "title": "Intake"
+          }
+        },
+        "type": "object",
+        "required": [
+          "id",
+          "institution_id",
+          "level",
+          "name",
+          "branch",
+          "duration_years",
+          "term_type",
+          "total_terms",
+          "intake"
+        ],
+        "title": "Program"
+      },
+      "ProgramsResponse": {
+        "properties": {
+          "items": {
+            "items": {
+              "$ref": "#/components/schemas/Program"
+            },
+            "type": "array",
+            "title": "Items"
+          },
+          "total": {
+            "type": "integer",
+            "title": "Total"
+          },
+          "page": {
+            "type": "integer",
+            "title": "Page"
+          },
+          "page_size": {
+            "type": "integer",
+            "title": "Page Size"
+          }
+        },
+        "type": "object",
+        "required": [
+          "items",
+          "total",
+          "page",
+          "page_size"
+        ],
+        "title": "ProgramsResponse"
+      },
       "Reason": {
         "properties": {
           "reason": {
@@ -3116,6 +3874,8 @@
         "properties": {
           "refresh_token": {
             "type": "string",
+            "maxLength": 512,
+            "minLength": 1,
             "title": "Refresh Token"
           }
         },
@@ -3125,6 +3885,54 @@
           "refresh_token"
         ],
         "title": "Refresh"
+      },
+      "Role": {
+        "properties": {
+          "code": {
+            "type": "string",
+            "title": "Code"
+          },
+          "label": {
+            "type": "string",
+            "title": "Label"
+          },
+          "skills": {
+            "items": {
+              "$ref": "#/components/schemas/SkillWeight"
+            },
+            "type": "array",
+            "title": "Skills"
+          }
+        },
+        "type": "object",
+        "required": [
+          "code",
+          "label",
+          "skills"
+        ],
+        "title": "Role"
+      },
+      "RolesResponse": {
+        "properties": {
+          "catalogue_version": {
+            "type": "integer",
+            "const": 1,
+            "title": "Catalogue Version"
+          },
+          "roles": {
+            "items": {
+              "$ref": "#/components/schemas/Role"
+            },
+            "type": "array",
+            "title": "Roles"
+          }
+        },
+        "type": "object",
+        "required": [
+          "catalogue_version",
+          "roles"
+        ],
+        "title": "RolesResponse"
       },
       "SearchResponse": {
         "properties": {
@@ -3189,6 +3997,52 @@
           "cache_enabled"
         ],
         "title": "SessionControls"
+      },
+      "SkillWeight": {
+        "properties": {
+          "code": {
+            "type": "string",
+            "title": "Code"
+          },
+          "weight": {
+            "type": "integer",
+            "title": "Weight"
+          }
+        },
+        "type": "object",
+        "required": [
+          "code",
+          "weight"
+        ],
+        "title": "SkillWeight"
+      },
+      "Step": {
+        "properties": {
+          "priority": {
+            "type": "integer",
+            "title": "Priority"
+          },
+          "action": {
+            "type": "string",
+            "title": "Action"
+          },
+          "estimated_weeks": {
+            "type": "integer",
+            "title": "Estimated Weeks"
+          },
+          "reason": {
+            "type": "string",
+            "title": "Reason"
+          }
+        },
+        "type": "object",
+        "required": [
+          "priority",
+          "action",
+          "estimated_weeks",
+          "reason"
+        ],
+        "title": "Step"
       },
       "StudentSummary": {
         "properties": {
@@ -3294,6 +4148,179 @@
           "version_no"
         ],
         "title": "StudentSummary"
+      },
+      "TokenResponse": {
+        "properties": {
+          "access_token": {
+            "type": "string",
+            "title": "Access Token"
+          },
+          "refresh_token": {
+            "type": "string",
+            "title": "Refresh Token"
+          },
+          "csrf_token": {
+            "type": "string",
+            "title": "Csrf Token"
+          },
+          "token_type": {
+            "type": "string",
+            "const": "bearer",
+            "title": "Token Type"
+          },
+          "expires_in": {
+            "type": "integer",
+            "title": "Expires In"
+          },
+          "user": {
+            "$ref": "#/components/schemas/UserResponse"
+          }
+        },
+        "type": "object",
+        "required": [
+          "access_token",
+          "refresh_token",
+          "csrf_token",
+          "token_type",
+          "expires_in",
+          "user"
+        ],
+        "title": "TokenResponse"
+      },
+      "TrustComponent": {
+        "properties": {
+          "key": {
+            "type": "string",
+            "enum": [
+              "completeness",
+              "local",
+              "certificates",
+              "fraud",
+              "review",
+              "external"
+            ],
+            "title": "Key"
+          },
+          "earned": {
+            "type": "number",
+            "title": "Earned"
+          },
+          "max": {
+            "type": "integer",
+            "title": "Max"
+          },
+          "reason": {
+            "type": "string",
+            "title": "Reason"
+          },
+          "raw_inputs": {
+            "$ref": "#/components/schemas/TrustInputs"
+          }
+        },
+        "type": "object",
+        "required": [
+          "key",
+          "earned",
+          "max",
+          "reason",
+          "raw_inputs"
+        ],
+        "title": "TrustComponent"
+      },
+      "TrustInputs": {
+        "properties": {
+          "complete_fields": {
+            "type": "integer",
+            "title": "Complete Fields"
+          },
+          "errors": {
+            "type": "integer",
+            "title": "Errors"
+          },
+          "warnings": {
+            "type": "integer",
+            "title": "Warnings"
+          },
+          "missing_mandatory": {
+            "type": "boolean",
+            "title": "Missing Mandatory"
+          },
+          "certificates": {
+            "type": "integer",
+            "title": "Certificates"
+          },
+          "approved": {
+            "type": "boolean",
+            "title": "Approved"
+          },
+          "risk": {
+            "type": "integer",
+            "title": "Risk"
+          }
+        },
+        "type": "object",
+        "required": [
+          "complete_fields",
+          "errors",
+          "warnings",
+          "missing_mandatory",
+          "certificates",
+          "approved",
+          "risk"
+        ],
+        "title": "TrustInputs"
+      },
+      "TrustResponse": {
+        "properties": {
+          "score": {
+            "type": "integer",
+            "maximum": 100.0,
+            "minimum": 0.0,
+            "title": "Score"
+          },
+          "maximum": {
+            "type": "integer",
+            "const": 100,
+            "title": "Maximum"
+          },
+          "components": {
+            "items": {
+              "$ref": "#/components/schemas/TrustComponent"
+            },
+            "type": "array",
+            "title": "Components"
+          },
+          "formula_version": {
+            "type": "integer",
+            "const": 1,
+            "title": "Formula Version"
+          },
+          "officially_verified": {
+            "type": "boolean",
+            "const": false,
+            "title": "Officially Verified"
+          },
+          "student_version": {
+            "type": "integer",
+            "title": "Student Version"
+          },
+          "computed_at": {
+            "type": "string",
+            "format": "date-time",
+            "title": "Computed At"
+          }
+        },
+        "type": "object",
+        "required": [
+          "score",
+          "maximum",
+          "components",
+          "formula_version",
+          "officially_verified",
+          "student_version",
+          "computed_at"
+        ],
+        "title": "TrustResponse"
       },
       "UserResponse": {
         "properties": {

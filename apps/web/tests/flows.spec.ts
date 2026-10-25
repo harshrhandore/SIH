@@ -48,6 +48,13 @@ test("operator ledger and real search MISS HIT", async ({ page }) => {
   await expect(
     page.getByRole("link", { name: "Riya Sharma", exact: true }),
   ).toBeVisible();
+  const roomy = await page.locator("tbody tr").first().boundingBox();
+  await page.getByRole("button", { name: "Comfortable · 44 px" }).click();
+  const compactToggle = page.getByRole("button", { name: "Compact · 32 px" });
+  await expect(compactToggle).toHaveAttribute("aria-pressed", "true");
+  const compact = await page.locator("tbody tr").first().boundingBox();
+  expect(compact!.height).toBeLessThan(roomy!.height);
+  await compactToggle.click();
   await page.screenshot({
     path: path.join(root, "docs/search-desktop.png"),
     fullPage: true,

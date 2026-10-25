@@ -70,3 +70,33 @@ Start 2026-10-25T19:27:36.060828+00:00; end 2026-10-25T19:30:29.032011+00:00. Fu
 R3-6 (high, cloud guard follow-up): parse_qs discarded blank host/SSL query values although psycopg honored them. Fixed with keep_blank_values=True, effective host equality and exact singleton SSL validation. Added pre-connection blank-host/duplicate-SSL regressions; 17 connection-guard tests pass. No remote connection attempted. Final Python-only regression evidence is recorded separately in final-python-regression.json.
 
 Final nearby regression: lint PASS, mypy PASS, **47 Python tests passed** (one dependency deprecation warning). See [raw results](final-python-regression.json). The seven browser flows/build passed in attempt 3 before the final lifecycle-only parser fix; no web code changed afterward.
+
+## Automation attempt 4 and focused refactor review
+
+Start **2026-10-25T19:45:44.123645Z**; end **2026-10-25T19:48:45.245500Z**. [Archive](audits/20261025T194544111273Z/automation.json). 12/13 checks passed; only exact artifacts failed. Python: **63 passed**; browser: **7 passed**. Fresh100k seed:77.639s,457482767bytes; showcase acceptance matched. Missing exact paths fell to107 after substantive module extraction.
+
+The entry point now registers twelve domain routers. Auth, institutions, career and trust have schemas/service/repository boundaries. Record matching/rules, import mapping, certificate extract/OCR/risk, audit canonicalization, UTC clock and allowlisted request telemetry are separate implementations with compatibility imports for existing callers. Other routers still contain SQL and business policy; V2 is open.
+
+Independent reviewer /root/independent_review confirmed imports in tested orders, no duplicate method/path operations, schema validation of12institutions/62programs, preservation of career result keys and trust91. Its five findings were treated as defects:
+
+| ID | Severity | Finding | Fix and proof |
+|---|---|---|---|
+| F1 | Medium | Refactor mistakenly denied student program access required by operation9. | Restore own-institution student access, hide other institutions with404; role regression test covers both. This corrects the builder's earlier interpretation, not a previously existing permission leak. |
+| F2 | Medium | Career history omitted top-level readiness_percent required by operation46. | Extract numeric score in repository; include typed field; creation/replay/history integration regression checks74 and one saved session. |
+| F3 | Medium | Career plan combined stages into one6week step. | Separate study/project/deployment templates lasting2/3/1weeks per missing skill; unit/API tests assert durations and priorities. |
+| F4 | Low | Unknown institution state returned empty200 rather than422. | Validate against states represented in synthetic catalogue; regression checks UNKNOWN_STATE. |
+| F5 | Low | Architecture document still placed domain routes in main.py. | Update source map and disclose remaining router-to-service extraction. |
+
+A test-isolation failure during development hit the real login limiter because several new tests reused a shared account. Fixed tests to create isolated synthetic accounts, deactivate them afterward, and preserve the product limiter. No production rate limit was relaxed.
+
+## Automation attempt 5
+
+Start **2026-10-25T19:54:09.885569Z**; end **2026-10-25T19:58:09.174051Z**. [Archive](audits/20261025T195409884571Z/automation.json). Python collection and exact artifacts failed; the other11checks passed. Collection defect T1 (medium test infrastructure): unit and integration modules both named test_career collided under pytest's default import mode. Fixed configuration to importlib mode so domain test filenames coexist. Immediate full Python rerun: **65 passed**. The following full sweep rechecks the fix.
+
+Shared table, badge, loading/error, heading, formatting, typed view aliases and data hook are now extracted from workspace.tsx. The table has an accessible32/44px density toggle. Browser regression verifies pressed state and actual row-height reduction, then restores the default. Print hides controls and resets table spacing; generated A4 passport has3pages. Last page rendered and visually reviewed without clipping. Exact artifact gap is now102paths, with no fixture hash failures. Full screen-state/chart/router-layout work remains V7; these are not complete audit cycles.
+
+## Automation attempt 6
+
+Start **2026-10-25T19:58:53.284725+00:00**; end **2026-10-25T20:01:43.432173+00:00**. [Full archive](audits/20261025T195853284725Z/automation.json). **12/13 checks passed**, process exit1: only exact artifacts remain FAIL (**102 missing paths**, zero fixture hash mismatches, font licenses present). **65 Python tests** and **7 browser flows** passed; production build, client diff, schema/body/grants, scanner, fresh100k and benchmark passed. The collection fix is now verified by the complete sweep. Core acceptance numbers still match.
+
+These are six automation attempts, not six full ordered A?E cycles. The prompt stopping rule remains unsatisfied; V9 stays OPEN. Typed success models now cover12of61operations. Remaining module/repository, typed-contract, UI, OCR and full-conformance work is recorded without claiming completion.

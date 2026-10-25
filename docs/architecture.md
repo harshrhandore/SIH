@@ -58,4 +58,4 @@ sequenceDiagram
  API->>DB: Decision, audit, trust and epoch transaction
 ```
 
-Current structural departure: many routes remain in `app/main.py`, and web screens share `components/workspace.tsx`. Service modules separate import, corrections, certificates and passport computations, but the exact per-domain router/service/repository tree from the prompt is not fully delivered. See S1 in the owner register.
+The API entry point now owns transport, errors, lifecycle and health checks and registers twelve domain routers. Auth, institutions, career and trust have separate schemas, service policy and repositories. Import mapping/rules/matching, certificate extraction/OCR/risk and audit canonicalization are separate modules. Some remaining domain routers still contain SQL and service policy; completing their service/repository extraction remains V2. Web screens still share components/workspace.tsx; table, badge, loading/error view, page heading, formatting and the shared data hook are extracted into their own modules. Tables have 32/44 px row-density controls hidden in print. The exact required tree is not complete; see the artifact report and S1 in the owner register.

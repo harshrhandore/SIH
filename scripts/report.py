@@ -1,6 +1,7 @@
 """Render measured evidence and conservative requirement-by-requirement audit inventory."""
 
 import json, re
+import subprocess
 from pathlib import Path
 from datetime import datetime, timezone
 
@@ -114,14 +115,38 @@ def conformance():
 def verification():
     path = ROOT / "docs/verification-results.json"
     results = json.loads(path.read_text()) if path.exists() else []
+    checkpoint = subprocess.check_output(["git", "rev-parse", "HEAD"], cwd=ROOT, text=True).strip()
     text = "# Verification report\n\nThis is a partial implementation and measured local verification report, not completion of the full prompt. Native Windows/PostgreSQL16 is the execution path. The exact audit stopping rule and full specification remain incomplete (V9). Docker is UNVERIFIED-ENV (V1); cloud preview is UNVERIFIED-HUMAN (V3); live Gemini/PNG OCR are UNVERIFIED-ENV (V10); hosted CI is UNVERIFIED-HUMAN (V11).\n\n"
+    text += f"Source checkpoint: `{checkpoint}`. Report generated {datetime.now(timezone.utc).isoformat()}. Raw sweep timestamps below identify the tested working state.\n\n"
     text += "## Vertical slices\n\n| Phase | Measured behavior | Remaining gates |\n|---|---|---|\n| 1 | 100k bootstrap, four roles, scoped search, refresh reuse, fresh DB, schema | Exact module tree V2; Docker V1 |\n| 2 | 880/110/10,140findings,50pairs,120cases; crash500→501; correction counts9881/109/10/119 | Broader import/API adversarial coverage V4,V9 |\n| 3 | 100concurrent appends, runtime privilege tests, valid production chain and broken sandbox, masking | Full grants and analytics/UI contract V4,V7,V9 |\n| 4 | CGPA8.42, PDF confidence95, tampered risk83, trust91, readiness74;3page print; browser flows | Visual fraud/Paddle V6; real OCR/model V10 |\n| 5 | Local lint/type/build/client, seven browser flows, isolated50k/100k benchmark, EXPLAIN, synthetic fraud sanity | Exact artifacts V2; broad screen/seed/audit/CI V5,V7,V9,V11 |\n\n"
     text += "## Latest automation sweep\n\n| Check | Result | Started UTC | Command |\n|---|---|---|---|\n"
     for r in results:
         command = " ".join(r["command"]).replace(str(ROOT), "[repo]")
         text += f"| {r['name']} | {'PASS' if r['exit_code'] == 0 else 'FAIL'} | {r['start']} | {command} |\n"
     text += "\nRaw commands, outputs, exit codes and timestamps are in verification-results.json. Additional measured evidence: acceptance-results.json, reproduction-results.json, fault-rehearsal-results.json, audit-sandbox-clean.json, audit-sandbox-tampered.json, volume-benchmark-results.json, explain-results.json, fraud-benchmark.json, schema-check.json and playwright-results.json.\n\n"
-    text += "Final lifecycle regression: 47 Python tests, lint and mypy pass (final-python-regression.json). Seven browser flows cover role screens, mobile/axe, print and concurrent refresh. The latest fresh seed also independently validates all canonical identifiers, cumulative credit-weighted grades, enrichment ownership percentages, certificate bytes and file hashes. Web benchmark requests use the requesting officer's institution assignments; polling is owner-scoped and respects the same local demo gates. These targeted checks do not close the broader V4/V5/V7/V9 requirements.\n\n"
+    tests = next((r["stdout"] for r in results if r["name"] == "python tests"), "")
+    match = re.search(r"(\d+) passed", tests)
+    test_count = match.group(1) if match else "No completed"
+    test_result = next((r for r in results if r["name"] == "python tests"), None)
+    test_status = "PASS" if test_result and test_result["exit_code"] == 0 else "FAIL or not completed"
+    text += f"Latest Python suite: {test_status}; {test_count} tests passed; raw results above are authoritative. Historical lifecycle-only evidence remains in final-python-regression.json. Seven browser flows cover role screens, mobile/axe, print and concurrent refresh. The latest fresh seed also independently validates all canonical identifiers, cumulative credit-weighted grades, enrichment ownership percentages, certificate bytes and file hashes. Web benchmark requests use the requesting officer's institution assignments; polling is owner-scoped and respects the same local demo gates. These targeted checks do not close the broader V4/V5/V7/V9 requirements.\n\n"
+    api = json.loads((ROOT / "packages/api-client/openapi.json").read_text())
+    operations = [
+        op
+        for methods in api["paths"].values()
+        for method, op in methods.items()
+        if method in {"get", "post", "patch", "put", "delete"}
+    ]
+    typed_count = sum(
+        any(
+            "$ref" in response.get("content", {}).get("application/json", {}).get("schema", {})
+            for code, response in op["responses"].items()
+            if code.startswith("2")
+        )
+        for op in operations
+    )
+    artifact = json.loads((ROOT / "docs/artifact-check.json").read_text())
+    text += f"Exact artifact gap: {len(artifact['missing'])} required paths absent; {len(artifact['bad_fixture_hashes'])} fixture hash mismatches. {typed_count} of {len(operations)} current operations have typed JSON success models; the remaining response contracts and repository boundaries stay open.\n\n"
     text += "The exact-tree checker reports missing files rather than generating hollow substitutes. The owner register records incomplete implementation, decisions, provider placeholders and every human-only item. No cloud service was provisioned and no remote was added or pushed.\n"
     (ROOT / "docs/verification-report.md").write_text(text, encoding="utf-8")
 

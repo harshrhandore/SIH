@@ -2,7 +2,7 @@
 import Link from "next/link";
 import Image from "next/image";
 import { usePathname, useSearchParams } from "next/navigation";
-import { useState, useEffect, useCallback } from "react";
+import { useState, useEffect } from "react";
 import {
   BookOpen,
   LayoutDashboard,
@@ -16,7 +16,6 @@ import {
   ArrowUpRight,
   CheckCircle2,
   Clock3,
-  AlertTriangle,
   ShieldCheck,
   FileText,
   ArrowRight,
@@ -26,241 +25,17 @@ import {
   Settings,
   GraduationCap,
 } from "lucide-react";
-import { api, ApiError } from "@/lib/api";
-import type { components } from "@/lib/generated/api";
-
-type Row = Record<string, unknown>;
-type User = components["schemas"]["UserResponse"];
-type Envelope = { items: Row[]; total: number; [key: string]: unknown };
-const text = (v: unknown) =>
-  v === null || v === undefined
-    ? "—"
-    : typeof v === "object"
-      ? JSON.stringify(v)
-      : String(v);
-const number = (v: unknown) => Number(v || 0).toLocaleString("en-IN");
-
-function useData<T>(path: string | null, interval = 0, grant = "") {
-  const [dataGrant, setDataGrant] = useState(grant);
-  const [data, setData] = useState<T | null>(null),
-    [error, setError] = useState<ApiError | null>(null),
-    [loading, setLoading] = useState(true);
-  const reload = useCallback(async () => {
-    if (!path) {
-      setLoading(false);
-      return;
-    }
-    try {
-      const result = await api<T>(path, {
-        headers: grant ? { "X-Case-Access": grant } : {},
-      });
-      setData(result);
-      setDataGrant(grant);
-      setError(null);
-    } catch (e) {
-      if ([401, 403, 404].includes((e as ApiError).status || 0)) setData(null);
-      setError(e as ApiError);
-    } finally {
-      setLoading(false);
-    }
-  }, [path, grant]);
-  useEffect(() => {
-    let active = true;
-    async function fetchData() {
-      if (!path) {
-        setLoading(false);
-        return;
-      }
-      try {
-        const result = await api<T>(path, {
-          headers: grant ? { "X-Case-Access": grant } : {},
-        });
-        if (active) {
-          setData(result);
-          setDataGrant(grant);
-          setError(null);
-        }
-      } catch (e) {
-        if (active) {
-          if ([401, 403, 404].includes((e as ApiError).status || 0))
-            setData(null);
-          setError(e as ApiError);
-        }
-      } finally {
-        if (active) setLoading(false);
-      }
-    }
-    fetchData();
-    const id = interval
-      ? setInterval(() => {
-          if (!document.hidden) fetchData();
-        }, interval)
-      : undefined;
-    return () => {
-      active = false;
-      if (id) clearInterval(id);
-    };
-  }, [path, interval, grant]);
-  return { data: dataGrant === grant ? data : null, error, loading, reload };
-}
-function State({
-  loading,
-  error,
-  children,
-  retry,
-}: {
-  loading?: boolean;
-  error?: ApiError | null;
-  children: React.ReactNode;
-  retry?: () => void;
-}) {
-  if (error)
-    return (
-      <div className="error" role="alert">
-        <AlertTriangle />
-        {error.message}
-        <small>{error.requestId}</small>
-        <button onClick={retry}>Retry</button>
-      </div>
-    );
-  if (loading)
-    return (
-      <div role="status" aria-label="Loading records" className="skeleton">
-        <span />
-        <span />
-        <span />
-      </div>
-    );
-  return children;
-}
-function Badge({ value }: { value: unknown }) {
-  const v = text(value);
-  const ok =
-    v.includes("PASSED") ||
-    v === "APPROVED" ||
-    v === "ACCEPTED" ||
-    v === "VERIFIED_LOCAL" ||
-    v === "COMPLETED";
-  const pending = v.includes("PENDING");
-  return (
-    <span
-      className={
-        "badge " +
-        (ok
-          ? "ok"
-          : pending
-            ? "pending"
-            : v === "INCOMPLETE"
-              ? "neutral"
-              : "warn")
-      }
-    >
-      {ok ? (
-        <CheckCircle2 size={13} />
-      ) : pending ? (
-        <Clock3 size={13} />
-      ) : (
-        <AlertTriangle size={13} />
-      )}{" "}
-      {v.replaceAll("_", " ").toLowerCase()}
-    </span>
-  );
-}
-function Title({
-  eyebrow,
-  title,
-  description,
-  children,
-}: {
-  eyebrow: string;
-  title: string;
-  description?: string;
-  children?: React.ReactNode;
-}) {
-  return (
-    <header className="page-heading">
-      <div>
-        <div className="eyebrow">{eyebrow}</div>
-        <h1>{title}</h1>
-        {description ? <p className="muted">{description}</p> : null}
-      </div>
-      <div className="heading-actions">{children}</div>
-    </header>
-  );
-}
-function Table({
-  rows,
-  columns,
-  href,
-}: {
-  rows: Row[];
-  columns: [string, string][];
-  href?: (row: Row) => string;
-}) {
-  if (!rows.length)
-    return (
-      <div className="empty">
-        <FileText />
-        <h3>No records to display</h3>
-        <p>Try clearing your filters or complete a synthetic import.</p>
-      </div>
-    );
-  return (
-    <div
-      className="table-scroll"
-      tabIndex={0}
-      role="region"
-      aria-label="Scrollable record table"
-    >
-      <table>
-        <thead>
-          <tr>
-            {columns.map(([key, label]) => (
-              <th key={key}>{label}</th>
-            ))}
-            {href ? (
-              <th>
-                <span className="sr-only">Open record</span>
-              </th>
-            ) : null}
-          </tr>
-        </thead>
-        <tbody>
-          {rows.map((r, i) => (
-            <tr key={text(r.id || r.case_id || i)}>
-              {columns.map(([key]) => (
-                <td key={key}>
-                  {key.includes("status") ? (
-                    <Badge value={r[key]} />
-                  ) : key === "full_name" && href ? (
-                    <Link className="record-link" href={href(r)}>
-                      {text(r[key])}
-                    </Link>
-                  ) : (
-                    text(r[key])
-                  )}
-                </td>
-              ))}
-              {href ? (
-                <td>
-                  <Link
-                    aria-label={
-                      "Open " +
-                      text(r.full_name || r.filename || r.id || r.case_id)
-                    }
-                    href={href(r)}
-                  >
-                    <ArrowUpRight size={17} />
-                  </Link>
-                </td>
-              ) : null}
-            </tr>
-          ))}
-        </tbody>
-      </table>
-    </div>
-  );
-}
+import { api } from "@/lib/api";
+import { Row } from "@/lib/schemas";
+import { User } from "@/lib/schemas";
+import { Envelope } from "@/lib/schemas";
+import { text } from "@/lib/format";
+import { number } from "@/lib/format";
+import { useData } from "@/hooks/use-data";
+import { State } from "@/components/shared/view-state";
+import { Badge } from "@/components/shared/status-badge";
+import { Title } from "@/components/shared/page-heading";
+import { Table } from "@/components/shared/data-table";
 
 const nav = [
   [
@@ -743,6 +518,7 @@ const fields = [
   "email",
   "gender",
 ];
+
 function ImportWizard({ user }: { user: User }) {
   const [file, setFile] = useState<File | null>(null),
     [confirmed, setConfirmed] = useState(false),
@@ -1858,6 +1634,7 @@ function Oversight() {
     </>
   );
 }
+
 function Analytics({ user }: { user: User }) {
   const [kind, setKind] = useState("admissions");
   const [inst, setInst] = useState(
@@ -1955,6 +1732,7 @@ function Analytics({ user }: { user: User }) {
     </>
   );
 }
+
 function Architecture() {
   const [tab, setTab] = useState("Search");
   return (
@@ -2046,6 +1824,7 @@ function Architecture() {
     </>
   );
 }
+
 function DemoControls({ user }: { user: User }) {
   const query = useData<Row>("/demo/config");
   const institutions = useData<Envelope>(

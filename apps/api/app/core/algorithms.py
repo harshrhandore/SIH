@@ -1,14 +1,22 @@
 """Version-one deterministic algorithms for synthetic records only."""
 
+from app.core.identifiers import luhn as luhn, synthetic_id as synthetic_id, valid_id as valid_id
+from app.core.numbers import money_round as money_round
+from app.modules.trust.service import trust as trust
+from app.modules.career.service import career as career
+from app.modules.career.catalogue import CATALOGUE as CATALOGUE
+from app.modules.verification.matching import (
+    normalized_name as normalized_name,
+    name_match as name_match,
+    possible_match as possible_match,
+)
+
+
 import re
 import json
 import unicodedata
-from typing import Any
 from datetime import date
-from decimal import Decimal, ROUND_HALF_UP
-from rapidfuzz import fuzz
-from unidecode import unidecode
-from app.core.weights import load_weights
+from decimal import Decimal
 from app.settings import ROOT
 
 MISSING = {"", "na", "n/a", "null", "none", "-"}
@@ -21,50 +29,6 @@ def clean(value):
     return None if text.casefold() in MISSING else text
 
 
-def normalized_name(value):
-    text = unicodedata.normalize("NFC", value or "").casefold()
-    text = "".join(c if c.isalnum() or c.isspace() else " " for c in text)
-    tokens = text.split()
-    while tokens and tokens[0] in {"mr", "mrs", "ms", "dr"}:
-        tokens.pop(0)
-    return " ".join(tokens)
-
-
-def name_match(a, b):
-    x, y = normalized_name(a), normalized_name(b)
-    if not x or not y:
-        return 0.0, False
-    score = max(fuzz.token_set_ratio(x, y), fuzz.token_set_ratio(unidecode(x), unidecode(y)))
-    guard = min(len(x.split()), len(y.split())) / max(len(x.split()), len(y.split())) >= 0.67
-    guard = guard and (
-        x == y or max(fuzz.token_sort_ratio(x, y), fuzz.token_sort_ratio(unidecode(x), unidecode(y))) >= 85
-    )
-    return score, guard
-
-
-def luhn(digits):
-    return (
-        sum(
-            (int(c) * 2 - 9 if int(c) * 2 > 9 else int(c) * 2) if i % 2 else int(c)
-            for i, c in enumerate(reversed(digits))
-        )
-        % 10
-    )
-
-
-def synthetic_id(counter):
-    base = f"{counter:012d}"
-    return "SYN-" + base + str((10 - luhn(base + "0")) % 10)
-
-
-def valid_id(value):
-    return bool(value and re.fullmatch(r"SYN-[0-9]{13}", value) and luhn(value[4:]) == 0)
-
-
-def money_round(value, places="0.01"):
-    return Decimal(str(value)).quantize(Decimal(places), rounding=ROUND_HALF_UP)
-
-
 def academic_cgpas(terms):
     weighted, credits = Decimal(0), Decimal(0)
     out = []
@@ -73,115 +37,6 @@ def academic_cgpas(terms):
         credits += Decimal(str(credit))
         out.append(money_round(weighted / credits))
     return out
-
-
-def possible_match(a, b):
-    n, guard = name_match(a.get("full_name"), b.get("full_name"))
-    p = (
-        name_match(a.get("parent_name"), b.get("parent_name"))[0]
-        if a.get("parent_name") and b.get("parent_name")
-        else 0
-    )
-    same_dob = bool(a.get("dob") and str(a["dob"]) == str(b.get("dob")))
-    score = 0.75 * n + 0.20 * (100 if same_dob else 0) + 0.05 * p
-    return score, n >= 90 and guard and score >= 87 and (same_dob or p >= 90)
-
-
-CATALOGUE: dict[str, dict[str, int]] = json.loads((ROOT / "db/seed/catalogue.json").read_text(encoding="utf-8"))
-
-
-def career(role, skills):
-    weights = CATALOGUE[role]
-    matched: list[dict[str, Any]] = [
-        {"code": k, "label": k.replace("_", " ").title(), "weight": w, "evidence": skills[k]}
-        for k, w in weights.items()
-        if k in skills
-    ]
-    missing_inputs: list[dict[str, Any]] = [
-        {"code": k, "label": k.replace("_", " ").title(), "weight": w} for k, w in weights.items() if k not in skills
-    ]
-    missing = sorted(missing_inputs, key=lambda x: (-x["weight"], x["code"]))
-    score = sum(s["weight"] for s in matched)
-    return dict(
-        role_code=role,
-        readiness_percent=score,
-        matched_skills=matched,
-        missing_skills=missing,
-        recommended_steps=[
-            dict(
-                priority=i + 1,
-                action=f"Study {s['label']}, build a measured project, then deploy and document it.",
-                estimated_weeks=6,
-                reason=f"{s['label']} contributes {s['weight']} missing points.",
-            )
-            for i, s in enumerate(missing)
-        ],
-        suggested_courses=[
-            dict(title=s["label"] + " Foundations", provider="Generic learning resource", url=None) for s in missing
-        ],
-        explanation=f"Your evidenced skills cover {score} of 100 role-weight points. Self-reported skills add no points.",
-        phrasing_source="RULE_BASED",
-        catalogue_version=1,
-    )
-
-
-def trust(inputs):
-    weights = load_weights("trust")
-    thresholds = load_weights("fraud")["thresholds"]
-    local = (
-        0
-        if inputs.get("missing_mandatory")
-        else max(
-            0,
-            weights["local"]
-            - weights["local_error_penalty"] * inputs.get("errors", 0)
-            - weights["local_warning_penalty"] * inputs.get("warnings", 0),
-        )
-    )
-    risk = inputs.get("risk", 0)
-    values = [
-        (
-            "completeness",
-            Decimal(str(weights["completeness"])) / 10 * inputs.get("complete_fields", 0),
-            weights["completeness"],
-        ),
-        ("local", local, weights["local"]),
-        (
-            "certificates",
-            min(weights["certificates"], weights["certificate_points_each"] * inputs.get("certificates", 0)),
-            weights["certificates"],
-        ),
-        (
-            "fraud",
-            0
-            if risk >= thresholds["high"]
-            else weights["fraud_medium"]
-            if risk >= thresholds["medium"]
-            else weights["fraud"],
-            weights["fraud"],
-        ),
-        ("review", weights["review"] if inputs.get("approved") else 0, weights["review"]),
-        ("external", 0, weights["external"]),
-    ]
-    components = [
-        dict(
-            key=k,
-            earned=float(v),
-            max=m,
-            reason={"external": "No official verification; mock contributes zero."}.get(
-                k, f"Computed from {k} inputs."
-            ),
-            raw_inputs=inputs,
-        )
-        for k, v, m in values
-    ]
-    return dict(
-        score=int(money_round(sum(Decimal(str(v)) for _, v, _ in values), "1")),
-        maximum=100,
-        components=components,
-        formula_version=1,
-        officially_verified=False,
-    )
 
 
 def certificate_confidence(extracted, student, as_of):

@@ -15,149 +15,149 @@
     "8371aee0-881d-5d09-8e93-9a1c5e96ff61"
   ],
   "application_cold": {
-    "min_ms": 4.976,
-    "max_ms": 107.022,
-    "p50_ms": 9.6765,
-    "p95_ms": 82.395
+    "min_ms": 5.878,
+    "max_ms": 134.643,
+    "p50_ms": 11.225999999999999,
+    "p95_ms": 95.727
   },
   "cached": {
-    "min_ms": 3.456,
-    "max_ms": 51.191,
-    "p50_ms": 4.2095,
-    "p95_ms": 5.703
+    "min_ms": 4.187,
+    "max_ms": 6.418,
+    "p50_ms": 4.923,
+    "p95_ms": 6.011
   },
   "testclient_roundtrip_cold": {
-    "min_ms": 10.526199999731034,
-    "max_ms": 113.32000000402331,
-    "p50_ms": 15.679600001021754,
-    "p95_ms": 89.21019999979762
+    "min_ms": 12.945800001034513,
+    "max_ms": 142.9227999979048,
+    "p50_ms": 19.12340000126278,
+    "p95_ms": 103.47859999455977
   },
   "testclient_roundtrip_cached": {
-    "min_ms": 9.236000001692446,
-    "max_ms": 56.919700000435114,
-    "p50_ms": 10.719899999457994,
-    "p95_ms": 12.979300001461525
+    "min_ms": 10.758700002043042,
+    "max_ms": 14.664000002085231,
+    "p50_ms": 12.79689999864786,
+    "p95_ms": 14.343800001370255
   },
   "samples": [
     {
       "query": "q=Riya",
       "total": 589,
-      "cold_ms": 9.667,
-      "cached_ms": 5.657
+      "cold_ms": 10.45,
+      "cached_ms": 4.654
     },
     {
       "query": "q=Sharma",
       "total": 183,
-      "cold_ms": 9.686,
-      "cached_ms": 51.191
+      "cold_ms": 11.165,
+      "cached_ms": 6.011
     },
     {
       "query": "q=Riya%20Sharma",
       "total": 3,
-      "cold_ms": 8.603,
-      "cached_ms": 3.669
+      "cold_ms": 10.476,
+      "cached_ms": 4.953
     },
     {
       "query": "q=%C5%9Ah%C3%A1rm%C3%A1",
       "total": 183,
-      "cold_ms": 13.142,
-      "cached_ms": 3.907
+      "cold_ms": 17.068,
+      "cached_ms": 5.112
     },
     {
       "query": "q=NoSuchSyntheticName",
       "total": 0,
-      "cold_ms": 5.997,
-      "cached_ms": 3.903
+      "cold_ms": 7.228,
+      "cached_ms": 4.592
     },
     {
       "query": "q=SYN-0000000000018",
       "total": 1,
-      "cold_ms": 6.093,
-      "cached_ms": 3.929
+      "cold_ms": 7.287,
+      "cached_ms": 5.481
     },
     {
       "query": "q=SYN-9999999999992",
       "total": 0,
-      "cold_ms": 5.872,
-      "cached_ms": 3.628
+      "cold_ms": 5.878,
+      "cached_ms": 4.187
     },
     {
       "query": "q=SYN-A-000002",
       "total": 1,
-      "cold_ms": 5.499,
-      "cached_ms": 4.407
+      "cold_ms": 7.45,
+      "cached_ms": 4.911
     },
     {
       "query": "q=SYN-A-000003",
       "total": 1,
-      "cold_ms": 4.976,
-      "cached_ms": 3.456
+      "cold_ms": 6.431,
+      "cached_ms": 4.66
     },
     {
       "query": "branch=CSE",
       "total": 42732,
-      "cold_ms": 71.371,
-      "cached_ms": 5.018
+      "cold_ms": 80.049,
+      "cached_ms": 4.809
     },
     {
       "query": "branch=ECE",
       "total": 12519,
-      "cold_ms": 63.759,
-      "cached_ms": 4.73
+      "cold_ms": 70.811,
+      "cached_ms": 4.924
     },
     {
       "query": "current_year=4",
       "total": 32716,
-      "cold_ms": 72.356,
-      "cached_ms": 4.336
+      "cold_ms": 82.698,
+      "cached_ms": 4.249
     },
     {
       "query": "q=Sharma&branch=CSE",
       "total": 77,
-      "cold_ms": 8.294,
-      "cached_ms": 4.038
+      "cold_ms": 11.287,
+      "cached_ms": 4.973
     },
     {
       "query": "q=Riya&current_year=4",
       "total": 203,
-      "cold_ms": 8.294,
-      "cached_ms": 4.745
+      "cold_ms": 10.407,
+      "cached_ms": 5.619
     },
     {
       "query": "page=1",
       "total": 101000,
-      "cold_ms": 82.395,
-      "cached_ms": 3.887
+      "cold_ms": 93.813,
+      "cached_ms": 5.057
     },
     {
       "query": "page=10",
       "total": 101000,
-      "cold_ms": 80.952,
-      "cached_ms": 4.495
+      "cold_ms": 95.727,
+      "cached_ms": 4.922
     },
     {
       "query": "branch=IT&current_year=2",
       "total": 1665,
-      "cold_ms": 61.979,
-      "cached_ms": 4.083
+      "cold_ms": 67.317,
+      "cached_ms": 6.418
     },
     {
       "query": "q=SYN-0000000010017",
       "total": 1,
-      "cold_ms": 5.598,
-      "cached_ms": 3.78
+      "cold_ms": 7.622,
+      "cached_ms": 4.549
     },
     {
       "query": "q=An",
       "total": 39387,
-      "cold_ms": 107.022,
-      "cached_ms": 5.703
+      "cold_ms": 134.643,
+      "cached_ms": 5.072
     },
     {
       "query": "current_year=1",
       "total": 19994,
-      "cold_ms": 69.135,
-      "cached_ms": 4.77
+      "cold_ms": 76.319,
+      "cached_ms": 4.708
     }
   ],
   "hardware": "Windows-11-10.0.26300-SP0; AMD64 Family 25 Model 80 Stepping 0, AuthenticAMD",

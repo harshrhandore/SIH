@@ -1279,3 +1279,36 @@ code {
     font-size: 28pt;
   }
 }
+
+.table-tools {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 12px;
+  padding: 8px 12px;
+  font-size: 11px;
+  color: var(--ink-muted);
+  border-bottom: 1px solid var(--border);
+}
+.table-tools button {
+  min-height: 32px;
+  padding: 4px 10px;
+  font-size: 11px;
+}
+.table-scroll[data-density="comfortable"] td {
+  height: 44px;
+  padding: 6px 20px;
+}
+.table-scroll[data-density="compact"] td {
+  height: 32px;
+  padding: 2px 20px;
+}
+@media print {
+  .table-tools {
+    display: none !important;
+  }
+  .table-scroll[data-density] td {
+    height: auto;
+    padding: 6pt;
+  }
+}

@@ -1,0 +1,165 @@
+{
+  "student_count": 101000,
+  "institution_scope": [
+    "cf8bbf15-095d-521b-822a-30a89404691d",
+    "bca5b097-7b6c-522e-a787-be2018ac6f68",
+    "72caa991-8df4-5958-bb0f-8b7d8f9b23a9",
+    "5cf9552b-1f59-57b6-8f7a-197fa876e07c",
+    "3d5bc271-10c6-5285-a8b1-2ebad1efe4aa",
+    "227cb62e-a0ca-5dd2-83b9-09560e34e648",
+    "4dcf735b-3001-575f-982c-b8c4e445a610",
+    "f830fe63-7331-523a-bf2f-c7d28185e44b",
+    "5aa90f55-b6df-5652-bfed-823ee27276c5",
+    "c5b027be-a391-57dd-9f87-1be789467c1c",
+    "0a86830d-f686-5c78-9c62-602182f22070",
+    "8371aee0-881d-5d09-8e93-9a1c5e96ff61"
+  ],
+  "application_cold": {
+    "min_ms": 5.278,
+    "max_ms": 128.917,
+    "p50_ms": 12.6015,
+    "p95_ms": 100.797
+  },
+  "cached": {
+    "min_ms": 3.559,
+    "max_ms": 7.004,
+    "p50_ms": 4.2095,
+    "p95_ms": 5.915
+  },
+  "testclient_roundtrip_cold": {
+    "min_ms": 11.602699996728916,
+    "max_ms": 136.36920000135433,
+    "p50_ms": 20.43434999723104,
+    "p95_ms": 107.39599999942584
+  },
+  "testclient_roundtrip_cached": {
+    "min_ms": 9.513599994534161,
+    "max_ms": 14.981100001023151,
+    "p50_ms": 11.072899997088825,
+    "p95_ms": 13.980600000650156
+  },
+  "samples": [
+    {
+      "query": "q=Riya",
+      "total": 589,
+      "cold_ms": 13.37,
+      "cached_ms": 7.004
+    },
+    {
+      "query": "q=Sharma",
+      "total": 183,
+      "cold_ms": 12.324,
+      "cached_ms": 5.443
+    },
+    {
+      "query": "q=Riya%20Sharma",
+      "total": 3,
+      "cold_ms": 10.752,
+      "cached_ms": 3.903
+    },
+    {
+      "query": "q=%C5%9Ah%C3%A1rm%C3%A1",
+      "total": 183,
+      "cold_ms": 12.879,
+      "cached_ms": 5.044
+    },
+    {
+      "query": "q=NoSuchSyntheticName",
+      "total": 0,
+      "cold_ms": 7.1,
+      "cached_ms": 4.521
+    },
+    {
+      "query": "q=SYN-0000000000018",
+      "total": 1,
+      "cold_ms": 6.304,
+      "cached_ms": 4.952
+    },
+    {
+      "query": "q=SYN-9999999999992",
+      "total": 0,
+      "cold_ms": 6.898,
+      "cached_ms": 3.753
+    },
+    {
+      "query": "q=SYN-A-000002",
+      "total": 1,
+      "cold_ms": 6.724,
+      "cached_ms": 5.915
+    },
+    {
+      "query": "q=SYN-A-000003",
+      "total": 1,
+      "cold_ms": 6.876,
+      "cached_ms": 3.559
+    },
+    {
+      "query": "branch=CSE",
+      "total": 42732,
+      "cold_ms": 80.662,
+      "cached_ms": 4.178
+    },
+    {
+      "query": "branch=ECE",
+      "total": 12519,
+      "cold_ms": 72.475,
+      "cached_ms": 4.138
+    },
+    {
+      "query": "current_year=4",
+      "total": 32716,
+      "cold_ms": 74.163,
+      "cached_ms": 3.952
+    },
+    {
+      "query": "q=Sharma&branch=CSE",
+      "total": 77,
+      "cold_ms": 8.146,
+      "cached_ms": 4.479
+    },
+    {
+      "query": "q=Riya&current_year=4",
+      "total": 203,
+      "cold_ms": 8.985,
+      "cached_ms": 4.899
+    },
+    {
+      "query": "page=1",
+      "total": 101000,
+      "cold_ms": 100.797,
+      "cached_ms": 4.15
+    },
+    {
+      "query": "page=10",
+      "total": 101000,
+      "cold_ms": 89.853,
+      "cached_ms": 5.19
+    },
+    {
+      "query": "branch=IT&current_year=2",
+      "total": 1665,
+      "cold_ms": 67.643,
+      "cached_ms": 4.066
+    },
+    {
+      "query": "q=SYN-0000000010017",
+      "total": 1,
+      "cold_ms": 5.278,
+      "cached_ms": 3.91
+    },
+    {
+      "query": "q=An",
+      "total": 39387,
+      "cold_ms": 128.917,
+      "cached_ms": 4.241
+    },
+    {
+      "query": "current_year=1",
+      "total": 19994,
+      "cold_ms": 69.874,
+      "cached_ms": 3.966
+    }
+  ],
+  "hardware": "Windows-11-10.0.26300-SP0; AMD64 Family 25 Model 80 Stepping 0, AuthenticAMD",
+  "cache_semantics": "Application cold bypasses only result cache; database buffers remain warm. TestClient roundtrip is in-process, not browser network latency."
+}

@@ -1,33 +1,10 @@
+from app.core.clock import utc_stamp as stamp
+from app.modules.audit.canonical import canonical as canonical, normalize as normalize
 import hashlib
 import json
-import unicodedata
-from datetime import datetime, timezone
+from datetime import datetime
 from uuid import uuid4
 from app.db.session import one, many
-
-
-def normalize(value):
-    if isinstance(value, float):
-        raise ValueError("Floats are forbidden in canonical events")
-    if isinstance(value, str):
-        return unicodedata.normalize("NFC", value)
-    if isinstance(value, list):
-        return [normalize(v) for v in value]
-    if isinstance(value, dict):
-        if not all(isinstance(k, str) for k in value):
-            raise ValueError("Canonical object keys must be strings")
-        return {normalize(k): normalize(v) for k, v in value.items()}
-    if value is None or isinstance(value, (int, bool)):
-        return value
-    raise ValueError(f"Unsupported canonical type {type(value).__name__}")
-
-
-def canonical(value):
-    return json.dumps(normalize(value), sort_keys=True, separators=(",", ":"), ensure_ascii=False, allow_nan=False)
-
-
-def stamp(value=None):
-    return (value or datetime.now(timezone.utc)).astimezone(timezone.utc).strftime("%Y-%m-%dT%H:%M:%S.%fZ")
 
 
 def append(conn, institution, actor, action, entity_type, entity_id, reason, payload=None, student=None):
