@@ -1,0 +1,22 @@
+services:
+  - type: web
+    name: shiksham-apaar-api
+    runtime: docker
+    plan: free
+    dockerfilePath: ./apps/api/Dockerfile
+    dockerContext: .
+    healthCheckPath: /api/v1/health/ready
+    autoDeploy: false
+    envVars:
+      - {key: DATABASE_URL, sync: false}
+      - {key: JWT_SECRET, sync: false}
+      - {key: MASK_SECRET, sync: false}
+      - {key: GRANT_SECRET, sync: false}
+      - {key: WEB_ORIGIN, sync: false}
+      - {key: COOKIE_SECURE, value: "true"}
+      - {key: DEMO_MODE, value: "true"}
+      - {key: DEMO_CONTROLS_ENABLED, value: "false"}
+      - {key: LOCAL_BENCHMARK_ENABLED, value: "false"}
+      - {key: LLM_ENABLED, value: "false"}
+      - {key: STORAGE_ROOT, value: /tmp/shiksham-storage}
+      - {key: FIXTURES_ROOT, value: /workspace/fixtures}

@@ -1,0 +1,31 @@
+{
+  "seed": 2026263,
+  "clock": "2026-10-25",
+  "showcase_student_id": "f7e0429c-ccc5-5aa1-a332-94bacb2b0383",
+  "showcase_apaar_id": "SYN-0000000000018",
+  "institution_a_id": "cf8bbf15-095d-521b-822a-30a89404691d",
+  "correction_row": 32,
+  "correct_to": "SYN-0000001000322",
+  "correction_enrollment": "DEMO-A-0032",
+  "expected_import": {
+    "clean": 880,
+    "flagged": 110,
+    "incomplete": 10,
+    "primary": 120,
+    "secondary": 20,
+    "candidates": 50,
+    "cases": 120
+  },
+  "fixture_import": "demo-import-1000.csv",
+  "showcase_readiness": 74,
+  "showcase_trust": 91,
+  "hashes": {
+    "certificates/showcase-genuine.pdf": "c065f172ca671b515148cb4632b6941da06d1bd27799b85762e69bbb51ed52ec",
+    "certificates/showcase-genuine.png": "fdb0a759f9f62182bef0c9ebc453f852b3f2791db80f96a25608309e62b5e720",
+    "certificates/showcase-python.pdf": "94be7000e7dd07c25cd811917a3e92003101570486ebd707e62124a969bc30d3",
+    "certificates/showcase-tampered.pdf": "4998ae3da0ce89de735733fccb9df249528b10ac224977dfe0a6269874d68536",
+    "demo-import-1000.csv": "354bfb69e1e0ba937044042e4ea9e913e1e840974d7a701505badd758fca701c",
+    "demo-import-1000.xlsx": "e32f1186c07bb7dcdfecba809d0c9c94e5bb983dd151a26a0a138ef2c10b6414",
+    "expected_findings.json": "6f80cfade4bff04617808b3746052ead8340a49ecb5f893028451ba98a3db08e"
+  }
+}

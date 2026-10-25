@@ -1,0 +1,447 @@
+{
+  "label": "Synthetic sanity check; not accuracy on real certificates",
+  "seed": 2026263,
+  "confusion_matrix": {
+    "true_positive": 30,
+    "false_positive": 0,
+    "true_negative": 30,
+    "false_negative": 0
+  },
+  "weights": {
+    "label": "heuristic, not validated",
+    "formula_version": 1,
+    "NAME_MISMATCH": 65,
+    "NAME_PARTIAL": 35,
+    "NAME_MISSING": 25,
+    "SHA_REUSE_OTHER_STUDENT": 60,
+    "CREDENTIAL_REUSE_OTHER_STUDENT": 65,
+    "PDF_EDIT_METADATA": 10,
+    "PDF_EDITOR_TOOL": 8,
+    "thresholds": {
+      "medium": 30,
+      "high": 60
+    }
+  },
+  "samples": [
+    {
+      "tampered": false,
+      "score": 0,
+      "codes": []
+    },
+    {
+      "tampered": false,
+      "score": 0,
+      "codes": []
+    },
+    {
+      "tampered": false,
+      "score": 0,
+      "codes": []
+    },
+    {
+      "tampered": false,
+      "score": 0,
+      "codes": []
+    },
+    {
+      "tampered": false,
+      "score": 0,
+      "codes": []
+    },
+    {
+      "tampered": false,
+      "score": 0,
+      "codes": []
+    },
+    {
+      "tampered": false,
+      "score": 0,
+      "codes": []
+    },
+    {
+      "tampered": false,
+      "score": 0,
+      "codes": []
+    },
+    {
+      "tampered": false,
+      "score": 0,
+      "codes": []
+    },
+    {
+      "tampered": false,
+      "score": 0,
+      "codes": []
+    },
+    {
+      "tampered": false,
+      "score": 0,
+      "codes": []
+    },
+    {
+      "tampered": false,
+      "score": 0,
+      "codes": []
+    },
+    {
+      "tampered": false,
+      "score": 0,
+      "codes": []
+    },
+    {
+      "tampered": false,
+      "score": 0,
+      "codes": []
+    },
+    {
+      "tampered": false,
+      "score": 0,
+      "codes": []
+    },
+    {
+      "tampered": false,
+      "score": 0,
+      "codes": []
+    },
+    {
+      "tampered": false,
+      "score": 0,
+      "codes": []
+    },
+    {
+      "tampered": false,
+      "score": 0,
+      "codes": []
+    },
+    {
+      "tampered": false,
+      "score": 0,
+      "codes": []
+    },
+    {
+      "tampered": false,
+      "score": 0,
+      "codes": []
+    },
+    {
+      "tampered": false,
+      "score": 0,
+      "codes": []
+    },
+    {
+      "tampered": false,
+      "score": 0,
+      "codes": []
+    },
+    {
+      "tampered": false,
+      "score": 0,
+      "codes": []
+    },
+    {
+      "tampered": false,
+      "score": 0,
+      "codes": []
+    },
+    {
+      "tampered": false,
+      "score": 0,
+      "codes": []
+    },
+    {
+      "tampered": false,
+      "score": 0,
+      "codes": []
+    },
+    {
+      "tampered": false,
+      "score": 0,
+      "codes": []
+    },
+    {
+      "tampered": false,
+      "score": 0,
+      "codes": []
+    },
+    {
+      "tampered": false,
+      "score": 0,
+      "codes": []
+    },
+    {
+      "tampered": false,
+      "score": 0,
+      "codes": []
+    },
+    {
+      "tampered": true,
+      "score": 83,
+      "codes": [
+        "NAME_MISMATCH",
+        "PDF_EDIT_METADATA",
+        "PDF_EDITOR_TOOL"
+      ]
+    },
+    {
+      "tampered": true,
+      "score": 83,
+      "codes": [
+        "NAME_MISMATCH",
+        "PDF_EDIT_METADATA",
+        "PDF_EDITOR_TOOL"
+      ]
+    },
+    {
+      "tampered": true,
+      "score": 83,
+      "codes": [
+        "NAME_MISMATCH",
+        "PDF_EDIT_METADATA",
+        "PDF_EDITOR_TOOL"
+      ]
+    },
+    {
+      "tampered": true,
+      "score": 83,
+      "codes": [
+        "NAME_MISMATCH",
+        "PDF_EDIT_METADATA",
+        "PDF_EDITOR_TOOL"
+      ]
+    },
+    {
+      "tampered": true,
+      "score": 83,
+      "codes": [
+        "NAME_MISMATCH",
+        "PDF_EDIT_METADATA",
+        "PDF_EDITOR_TOOL"
+      ]
+    },
+    {
+      "tampered": true,
+      "score": 83,
+      "codes": [
+        "NAME_MISMATCH",
+        "PDF_EDIT_METADATA",
+        "PDF_EDITOR_TOOL"
+      ]
+    },
+    {
+      "tampered": true,
+      "score": 83,
+      "codes": [
+        "NAME_MISMATCH",
+        "PDF_EDIT_METADATA",
+        "PDF_EDITOR_TOOL"
+      ]
+    },
+    {
+      "tampered": true,
+      "score": 83,
+      "codes": [
+        "NAME_MISMATCH",
+        "PDF_EDIT_METADATA",
+        "PDF_EDITOR_TOOL"
+      ]
+    },
+    {
+      "tampered": true,
+      "score": 83,
+      "codes": [
+        "NAME_MISMATCH",
+        "PDF_EDIT_METADATA",
+        "PDF_EDITOR_TOOL"
+      ]
+    },
+    {
+      "tampered": true,
+      "score": 83,
+      "codes": [
+        "NAME_MISMATCH",
+        "PDF_EDIT_METADATA",
+        "PDF_EDITOR_TOOL"
+      ]
+    },
+    {
+      "tampered": true,
+      "score": 83,
+      "codes": [
+        "NAME_MISMATCH",
+        "PDF_EDIT_METADATA",
+        "PDF_EDITOR_TOOL"
+      ]
+    },
+    {
+      "tampered": true,
+      "score": 83,
+      "codes": [
+        "NAME_MISMATCH",
+        "PDF_EDIT_METADATA",
+        "PDF_EDITOR_TOOL"
+      ]
+    },
+    {
+      "tampered": true,
+      "score": 83,
+      "codes": [
+        "NAME_MISMATCH",
+        "PDF_EDIT_METADATA",
+        "PDF_EDITOR_TOOL"
+      ]
+    },
+    {
+      "tampered": true,
+      "score": 83,
+      "codes": [
+        "NAME_MISMATCH",
+        "PDF_EDIT_METADATA",
+        "PDF_EDITOR_TOOL"
+      ]
+    },
+    {
+      "tampered": true,
+      "score": 83,
+      "codes": [
+        "NAME_MISMATCH",
+        "PDF_EDIT_METADATA",
+        "PDF_EDITOR_TOOL"
+      ]
+    },
+    {
+      "tampered": true,
+      "score": 83,
+      "codes": [
+        "NAME_MISMATCH",
+        "PDF_EDIT_METADATA",
+        "PDF_EDITOR_TOOL"
+      ]
+    },
+    {
+      "tampered": true,
+      "score": 83,
+      "codes": [
+        "NAME_MISMATCH",
+        "PDF_EDIT_METADATA",
+        "PDF_EDITOR_TOOL"
+      ]
+    },
+    {
+      "tampered": true,
+      "score": 83,
+      "codes": [
+        "NAME_MISMATCH",
+        "PDF_EDIT_METADATA",
+        "PDF_EDITOR_TOOL"
+      ]
+    },
+    {
+      "tampered": true,
+      "score": 83,
+      "codes": [
+        "NAME_MISMATCH",
+        "PDF_EDIT_METADATA",
+        "PDF_EDITOR_TOOL"
+      ]
+    },
+    {
+      "tampered": true,
+      "score": 83,
+      "codes": [
+        "NAME_MISMATCH",
+        "PDF_EDIT_METADATA",
+        "PDF_EDITOR_TOOL"
+      ]
+    },
+    {
+      "tampered": true,
+      "score": 83,
+      "codes": [
+        "NAME_MISMATCH",
+        "PDF_EDIT_METADATA",
+        "PDF_EDITOR_TOOL"
+      ]
+    },
+    {
+      "tampered": true,
+      "score": 83,
+      "codes": [
+        "NAME_MISMATCH",
+        "PDF_EDIT_METADATA",
+        "PDF_EDITOR_TOOL"
+      ]
+    },
+    {
+      "tampered": true,
+      "score": 83,
+      "codes": [
+        "NAME_MISMATCH",
+        "PDF_EDIT_METADATA",
+        "PDF_EDITOR_TOOL"
+      ]
+    },
+    {
+      "tampered": true,
+      "score": 83,
+      "codes": [
+        "NAME_MISMATCH",
+        "PDF_EDIT_METADATA",
+        "PDF_EDITOR_TOOL"
+      ]
+    },
+    {
+      "tampered": true,
+      "score": 83,
+      "codes": [
+        "NAME_MISMATCH",
+        "PDF_EDIT_METADATA",
+        "PDF_EDITOR_TOOL"
+      ]
+    },
+    {
+      "tampered": true,
+      "score": 83,
+      "codes": [
+        "NAME_MISMATCH",
+        "PDF_EDIT_METADATA",
+        "PDF_EDITOR_TOOL"
+      ]
+    },
+    {
+      "tampered": true,
+      "score": 83,
+      "codes": [
+        "NAME_MISMATCH",
+        "PDF_EDIT_METADATA",
+        "PDF_EDITOR_TOOL"
+      ]
+    },
+    {
+      "tampered": true,
+      "score": 83,
+      "codes": [
+        "NAME_MISMATCH",
+        "PDF_EDIT_METADATA",
+        "PDF_EDITOR_TOOL"
+      ]
+    },
+    {
+      "tampered": true,
+      "score": 83,
+      "codes": [
+        "NAME_MISMATCH",
+        "PDF_EDIT_METADATA",
+        "PDF_EDITOR_TOOL"
+      ]
+    },
+    {
+      "tampered": true,
+      "score": 83,
+      "codes": [
+        "NAME_MISMATCH",
+        "PDF_EDIT_METADATA",
+        "PDF_EDITOR_TOOL"
+      ]
+    }
+  ]
+}

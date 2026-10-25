@@ -1,0 +1,79 @@
+{
+  "import_report": {
+    "batch_id": "e1d4438e-a9c9-4fa0-a16f-f24ba2a32e26",
+    "clean": 880,
+    "flagged": 110,
+    "incomplete": 10,
+    "affected_rows": 120,
+    "primary_findings": [
+      {
+        "code": "DUPLICATE_APAAR",
+        "count": 20
+      },
+      {
+        "code": "IMPOSSIBLE_ACADEMIC",
+        "count": 10
+      },
+      {
+        "code": "INVALID_APAAR",
+        "count": 20
+      },
+      {
+        "code": "MISSING_APAAR",
+        "count": 30
+      },
+      {
+        "code": "MISSING_MANDATORY",
+        "count": 10
+      },
+      {
+        "code": "NAME_INCONSISTENCY",
+        "count": 20
+      },
+      {
+        "code": "POSSIBLE_DUPLICATE",
+        "count": 10
+      }
+    ],
+    "all_findings": 140,
+    "secondary_findings": 20,
+    "processed_rows": 1000,
+    "total_rows": 1000,
+    "status": "COMPLETED"
+  },
+  "dashboard": {
+    "total": 10000,
+    "clean": 9881,
+    "flagged": 109,
+    "incomplete": 10,
+    "institution_name": "Synthetic Vidya Institute",
+    "submission_percent": 90.91,
+    "missing_records": 1000,
+    "pending_reviews": 119,
+    "pending_corrections": 0,
+    "recent_imports": [
+      {
+        "id": "e1d4438e-a9c9-4fa0-a16f-f24ba2a32e26",
+        "filename": "demo-import-1000.csv",
+        "status": "COMPLETED",
+        "total_rows": 1000,
+        "clean_rows": 880,
+        "flagged_rows": 110,
+        "incomplete_rows": 10,
+        "created_at": "2026-10-25T22:03:34.703101+05:30"
+      }
+    ],
+    "data_epoch": 7
+  },
+  "search": {
+    "total": 1,
+    "miss_ms": 15.615,
+    "hit_ms": 2.926
+  },
+  "cgpa": 8.42,
+  "trust": 91,
+  "readiness": 74,
+  "genuine_confidence": 95.0,
+  "tampered_risk": 83,
+  "chain_valid": true
+}

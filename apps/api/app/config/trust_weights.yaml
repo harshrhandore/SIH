@@ -1,0 +1,12 @@
+label: heuristic, not validated
+formula_version: 1
+completeness: 25
+local: 25
+certificates: 20
+fraud: 15
+review: 10
+external: 5
+local_error_penalty: 8
+local_warning_penalty: 4
+certificate_points_each: 8
+fraud_medium: 7

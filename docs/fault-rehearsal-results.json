@@ -1,0 +1,50 @@
+{
+  "crashed_after": 500,
+  "resumed_at": 501,
+  "student_import_events": 1000,
+  "versions": 1200,
+  "candidates": 50,
+  "open_cases": 120,
+  "report": {
+    "batch_id": "448c36cf-ecf7-45d7-8040-37cfb8a017fd",
+    "clean": 880,
+    "flagged": 110,
+    "incomplete": 10,
+    "affected_rows": 120,
+    "primary_findings": [
+      {
+        "code": "DUPLICATE_APAAR",
+        "count": 20
+      },
+      {
+        "code": "IMPOSSIBLE_ACADEMIC",
+        "count": 10
+      },
+      {
+        "code": "INVALID_APAAR",
+        "count": 20
+      },
+      {
+        "code": "MISSING_APAAR",
+        "count": 30
+      },
+      {
+        "code": "MISSING_MANDATORY",
+        "count": 10
+      },
+      {
+        "code": "NAME_INCONSISTENCY",
+        "count": 20
+      },
+      {
+        "code": "POSSIBLE_DUPLICATE",
+        "count": 10
+      }
+    ],
+    "all_findings": 140,
+    "secondary_findings": 20,
+    "processed_rows": 1000,
+    "total_rows": 1000,
+    "status": "COMPLETED"
+  }
+}

@@ -1,0 +1,67 @@
+name: shiksham-apaar
+x-runtime-env: &runtime-env
+  DATABASE_URL: postgresql://shiksham_runtime:${RUNTIME_DB_PASSWORD}@db:5432/shiksham
+  JWT_SECRET: ${JWT_SECRET}
+  MASK_SECRET: ${MASK_SECRET}
+  GRANT_SECRET: ${GRANT_SECRET}
+  WEB_ORIGIN: ${WEB_ORIGIN:-http://localhost:3000}
+  COOKIE_SECURE: ${COOKIE_SECURE:-false}
+  DEMO_MODE: "true"
+  DEMO_CONTROLS_ENABLED: ${DEMO_CONTROLS_ENABLED:-true}
+  LLM_ENABLED: "false"
+  STORAGE_ROOT: /storage
+  FIXTURES_ROOT: /workspace/fixtures
+services:
+  db:
+    image: postgres:16
+    environment:
+      POSTGRES_DB: shiksham
+      POSTGRES_USER: shiksham_owner
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+    volumes: ["pgdata:/var/lib/postgresql/data"]
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U shiksham_owner -d shiksham"]
+      interval: 5s
+      timeout: 3s
+      retries: 20
+  bootstrap:
+    build: {context: ., dockerfile: apps/api/Dockerfile, target: runtime}
+    environment:
+      <<: *runtime-env
+      DATABASE_OWNER_URL: postgresql://shiksham_owner:${POSTGRES_PASSWORD}@db:5432/shiksham
+      RUNTIME_DB_PASSWORD: ${RUNTIME_DB_PASSWORD}
+      DEMO_PASSWORD: ${DEMO_PASSWORD}
+    volumes: ["storage:/storage", "./fixtures:/workspace/fixtures"]
+    depends_on:
+      db: {condition: service_healthy}
+    command: ["python", "-m", "app.cli", "bootstrap", "--students", "100000"]
+    profiles: [tools]
+  api:
+    build: {context: ., dockerfile: apps/api/Dockerfile, target: runtime}
+    environment: *runtime-env
+    volumes: ["storage:/storage", "./fixtures:/workspace/fixtures:ro"]
+    ports: ["127.0.0.1:8000:8000"]
+    depends_on:
+      db: {condition: service_healthy}
+  api-test:
+    build: {context: ., dockerfile: apps/api/Dockerfile, target: test}
+    environment:
+      <<: *runtime-env
+      DATABASE_OWNER_URL: postgresql://shiksham_owner:${POSTGRES_PASSWORD}@db:5432/shiksham
+      DEMO_PASSWORD: ${DEMO_PASSWORD}
+    volumes: ["storage:/storage", "./fixtures:/workspace/fixtures:ro"]
+    depends_on:
+      db: {condition: service_healthy}
+    profiles: [tools]
+    command: ["python", "-m", "pytest", "tests/unit", "tests/integration"]
+  web:
+    build: {context: ., dockerfile: apps/web/Dockerfile}
+    environment:
+      API_INTERNAL_ORIGIN: http://api:8000
+      WEB_ORIGIN: ${WEB_ORIGIN:-http://localhost:3000}
+      COOKIE_SECURE: ${COOKIE_SECURE:-false}
+    ports: ["127.0.0.1:3000:3000"]
+    depends_on: [api]
+volumes:
+  pgdata:
+  storage:

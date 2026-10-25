@@ -1,0 +1,657 @@
+{
+  "schema_version": 1,
+  "seed": 2026263,
+  "clock": "2026-10-25",
+  "fixtureSHA": "354bfb69e1e0ba937044042e4ea9e913e1e840974d7a701505badd758fca701c",
+  "rows": {
+    "1": {
+      "primary": "MISSING_APAAR",
+      "secondary": [],
+      "candidate_reference_id": null
+    },
+    "2": {
+      "primary": "MISSING_APAAR",
+      "secondary": [],
+      "candidate_reference_id": null
+    },
+    "3": {
+      "primary": "MISSING_APAAR",
+      "secondary": [],
+      "candidate_reference_id": null
+    },
+    "4": {
+      "primary": "MISSING_APAAR",
+      "secondary": [],
+      "candidate_reference_id": null
+    },
+    "5": {
+      "primary": "MISSING_APAAR",
+      "secondary": [],
+      "candidate_reference_id": null
+    },
+    "6": {
+      "primary": "MISSING_APAAR",
+      "secondary": [],
+      "candidate_reference_id": null
+    },
+    "7": {
+      "primary": "MISSING_APAAR",
+      "secondary": [],
+      "candidate_reference_id": null
+    },
+    "8": {
+      "primary": "MISSING_APAAR",
+      "secondary": [],
+      "candidate_reference_id": null
+    },
+    "9": {
+      "primary": "MISSING_APAAR",
+      "secondary": [],
+      "candidate_reference_id": null
+    },
+    "10": {
+      "primary": "MISSING_APAAR",
+      "secondary": [],
+      "candidate_reference_id": null
+    },
+    "11": {
+      "primary": "MISSING_APAAR",
+      "secondary": [],
+      "candidate_reference_id": null
+    },
+    "12": {
+      "primary": "MISSING_APAAR",
+      "secondary": [],
+      "candidate_reference_id": null
+    },
+    "13": {
+      "primary": "MISSING_APAAR",
+      "secondary": [],
+      "candidate_reference_id": null
+    },
+    "14": {
+      "primary": "MISSING_APAAR",
+      "secondary": [],
+      "candidate_reference_id": null
+    },
+    "15": {
+      "primary": "MISSING_APAAR",
+      "secondary": [],
+      "candidate_reference_id": null
+    },
+    "16": {
+      "primary": "MISSING_APAAR",
+      "secondary": [],
+      "candidate_reference_id": null
+    },
+    "17": {
+      "primary": "MISSING_APAAR",
+      "secondary": [],
+      "candidate_reference_id": null
+    },
+    "18": {
+      "primary": "MISSING_APAAR",
+      "secondary": [],
+      "candidate_reference_id": null
+    },
+    "19": {
+      "primary": "MISSING_APAAR",
+      "secondary": [],
+      "candidate_reference_id": null
+    },
+    "20": {
+      "primary": "MISSING_APAAR",
+      "secondary": [],
+      "candidate_reference_id": null
+    },
+    "21": {
+      "primary": "MISSING_APAAR",
+      "secondary": [],
+      "candidate_reference_id": null
+    },
+    "22": {
+      "primary": "MISSING_APAAR",
+      "secondary": [],
+      "candidate_reference_id": null
+    },
+    "23": {
+      "primary": "MISSING_APAAR",
+      "secondary": [],
+      "candidate_reference_id": null
+    },
+    "24": {
+      "primary": "MISSING_APAAR",
+      "secondary": [],
+      "candidate_reference_id": null
+    },
+    "25": {
+      "primary": "MISSING_APAAR",
+      "secondary": [],
+      "candidate_reference_id": null
+    },
+    "26": {
+      "primary": "MISSING_APAAR",
+      "secondary": [],
+      "candidate_reference_id": null
+    },
+    "27": {
+      "primary": "MISSING_APAAR",
+      "secondary": [],
+      "candidate_reference_id": null
+    },
+    "28": {
+      "primary": "MISSING_APAAR",
+      "secondary": [],
+      "candidate_reference_id": null
+    },
+    "29": {
+      "primary": "MISSING_APAAR",
+      "secondary": [],
+      "candidate_reference_id": null
+    },
+    "30": {
+      "primary": "MISSING_APAAR",
+      "secondary": [],
+      "candidate_reference_id": null
+    },
+    "31": {
+      "primary": "INVALID_APAAR",
+      "secondary": [],
+      "candidate_reference_id": null
+    },
+    "32": {
+      "primary": "INVALID_APAAR",
+      "secondary": [],
+      "candidate_reference_id": null
+    },
+    "33": {
+      "primary": "INVALID_APAAR",
+      "secondary": [],
+      "candidate_reference_id": null
+    },
+    "34": {
+      "primary": "INVALID_APAAR",
+      "secondary": [],
+      "candidate_reference_id": null
+    },
+    "35": {
+      "primary": "INVALID_APAAR",
+      "secondary": [],
+      "candidate_reference_id": null
+    },
+    "36": {
+      "primary": "INVALID_APAAR",
+      "secondary": [],
+      "candidate_reference_id": null
+    },
+    "37": {
+      "primary": "INVALID_APAAR",
+      "secondary": [],
+      "candidate_reference_id": null
+    },
+    "38": {
+      "primary": "INVALID_APAAR",
+      "secondary": [],
+      "candidate_reference_id": null
+    },
+    "39": {
+      "primary": "INVALID_APAAR",
+      "secondary": [],
+      "candidate_reference_id": null
+    },
+    "40": {
+      "primary": "INVALID_APAAR",
+      "secondary": [],
+      "candidate_reference_id": null
+    },
+    "41": {
+      "primary": "INVALID_APAAR",
+      "secondary": [],
+      "candidate_reference_id": null
+    },
+    "42": {
+      "primary": "INVALID_APAAR",
+      "secondary": [],
+      "candidate_reference_id": null
+    },
+    "43": {
+      "primary": "INVALID_APAAR",
+      "secondary": [],
+      "candidate_reference_id": null
+    },
+    "44": {
+      "primary": "INVALID_APAAR",
+      "secondary": [],
+      "candidate_reference_id": null
+    },
+    "45": {
+      "primary": "INVALID_APAAR",
+      "secondary": [],
+      "candidate_reference_id": null
+    },
+    "46": {
+      "primary": "INVALID_APAAR",
+      "secondary": [],
+      "candidate_reference_id": null
+    },
+    "47": {
+      "primary": "INVALID_APAAR",
+      "secondary": [],
+      "candidate_reference_id": null
+    },
+    "48": {
+      "primary": "INVALID_APAAR",
+      "secondary": [],
+      "candidate_reference_id": null
+    },
+    "49": {
+      "primary": "INVALID_APAAR",
+      "secondary": [],
+      "candidate_reference_id": null
+    },
+    "50": {
+      "primary": "INVALID_APAAR",
+      "secondary": [],
+      "candidate_reference_id": null
+    },
+    "51": {
+      "primary": "DUPLICATE_APAAR",
+      "secondary": [],
+      "candidate_reference_id": "c9b01bbd-9af8-50e1-9fa3-a11946153f74"
+    },
+    "52": {
+      "primary": "DUPLICATE_APAAR",
+      "secondary": [],
+      "candidate_reference_id": "c6aafd2b-d2a5-55e1-a4b8-28ff69bae58b"
+    },
+    "53": {
+      "primary": "DUPLICATE_APAAR",
+      "secondary": [],
+      "candidate_reference_id": "cdd2ccc8-daca-53f6-bffc-338a10bf6f65"
+    },
+    "54": {
+      "primary": "DUPLICATE_APAAR",
+      "secondary": [],
+      "candidate_reference_id": "40868a17-6e18-588a-b4b7-4c5575d94f02"
+    },
+    "55": {
+      "primary": "DUPLICATE_APAAR",
+      "secondary": [],
+      "candidate_reference_id": "a0855cc8-e3de-5262-ad67-eb47e1f0de6e"
+    },
+    "56": {
+      "primary": "DUPLICATE_APAAR",
+      "secondary": [],
+      "candidate_reference_id": "6533c415-dc2c-52d5-bfc3-0c9100eefdf8"
+    },
+    "57": {
+      "primary": "DUPLICATE_APAAR",
+      "secondary": [],
+      "candidate_reference_id": "7013c6fc-4468-5ca7-b4d2-974e0897ca88"
+    },
+    "58": {
+      "primary": "DUPLICATE_APAAR",
+      "secondary": [],
+      "candidate_reference_id": "06e5d4be-24b6-53ec-a838-dec8adade3ca"
+    },
+    "59": {
+      "primary": "DUPLICATE_APAAR",
+      "secondary": [],
+      "candidate_reference_id": "f7f76150-113b-5588-a1ae-0e5184b7c9b3"
+    },
+    "60": {
+      "primary": "DUPLICATE_APAAR",
+      "secondary": [],
+      "candidate_reference_id": "7a5eca75-1c22-5b21-9363-d8bfbba40be2"
+    },
+    "61": {
+      "primary": "DUPLICATE_APAAR",
+      "secondary": [],
+      "candidate_reference_id": "1a819c04-ee3c-57b1-9a49-6713d555d836"
+    },
+    "62": {
+      "primary": "DUPLICATE_APAAR",
+      "secondary": [],
+      "candidate_reference_id": "49d1766b-9670-54f6-959f-9293c6b4b2fc"
+    },
+    "63": {
+      "primary": "DUPLICATE_APAAR",
+      "secondary": [],
+      "candidate_reference_id": "509a08e7-51da-594a-acea-4e94571fb896"
+    },
+    "64": {
+      "primary": "DUPLICATE_APAAR",
+      "secondary": [],
+      "candidate_reference_id": "a332d55c-b3ed-5fd6-a28e-0def9785caaa"
+    },
+    "65": {
+      "primary": "DUPLICATE_APAAR",
+      "secondary": [],
+      "candidate_reference_id": "17b334cc-8573-50e3-883c-7d95fe3e1cce"
+    },
+    "66": {
+      "primary": "DUPLICATE_APAAR",
+      "secondary": [],
+      "candidate_reference_id": "d2e4879b-7623-509b-ab04-423ce423b627"
+    },
+    "67": {
+      "primary": "DUPLICATE_APAAR",
+      "secondary": [],
+      "candidate_reference_id": "11336f6f-7237-548a-b4fa-11b4fc089f34"
+    },
+    "68": {
+      "primary": "DUPLICATE_APAAR",
+      "secondary": [],
+      "candidate_reference_id": "bf235349-a53c-5846-acf7-469e6958a942"
+    },
+    "69": {
+      "primary": "DUPLICATE_APAAR",
+      "secondary": [],
+      "candidate_reference_id": "eadca24f-2375-5ba0-a624-5c2dbddc3986"
+    },
+    "70": {
+      "primary": "DUPLICATE_APAAR",
+      "secondary": [],
+      "candidate_reference_id": "7c12513d-3dfa-5ce4-bc37-20fb127cef7d"
+    },
+    "71": {
+      "primary": "NAME_INCONSISTENCY",
+      "secondary": [
+        "ENROLLMENT_CONFLICT"
+      ],
+      "candidate_reference_id": "eedde765-c5de-5c1f-8177-27c093973009"
+    },
+    "72": {
+      "primary": "NAME_INCONSISTENCY",
+      "secondary": [
+        "ENROLLMENT_CONFLICT"
+      ],
+      "candidate_reference_id": "48533dc6-f420-5022-87fb-03babe3931c3"
+    },
+    "73": {
+      "primary": "NAME_INCONSISTENCY",
+      "secondary": [
+        "ENROLLMENT_CONFLICT"
+      ],
+      "candidate_reference_id": "e2eec31c-0a21-50dd-9ec1-e1fb013abe8b"
+    },
+    "74": {
+      "primary": "NAME_INCONSISTENCY",
+      "secondary": [
+        "ENROLLMENT_CONFLICT"
+      ],
+      "candidate_reference_id": "b4137492-8fd7-551e-bd11-4a31d95d58ed"
+    },
+    "75": {
+      "primary": "NAME_INCONSISTENCY",
+      "secondary": [
+        "ENROLLMENT_CONFLICT"
+      ],
+      "candidate_reference_id": "a54149da-389e-509d-9aa4-bd4b21985e66"
+    },
+    "76": {
+      "primary": "NAME_INCONSISTENCY",
+      "secondary": [
+        "ENROLLMENT_CONFLICT"
+      ],
+      "candidate_reference_id": "5b7318c1-322d-5f5e-a5f0-f74fb26b970d"
+    },
+    "77": {
+      "primary": "NAME_INCONSISTENCY",
+      "secondary": [
+        "ENROLLMENT_CONFLICT"
+      ],
+      "candidate_reference_id": "88cdcb75-29c3-565d-878d-5994cc6583a5"
+    },
+    "78": {
+      "primary": "NAME_INCONSISTENCY",
+      "secondary": [
+        "ENROLLMENT_CONFLICT"
+      ],
+      "candidate_reference_id": "209f8b81-158a-5c0f-8902-be3e1a306447"
+    },
+    "79": {
+      "primary": "NAME_INCONSISTENCY",
+      "secondary": [
+        "ENROLLMENT_CONFLICT"
+      ],
+      "candidate_reference_id": "64d21868-e852-5b2b-becb-4d734e65713c"
+    },
+    "80": {
+      "primary": "NAME_INCONSISTENCY",
+      "secondary": [
+        "ENROLLMENT_CONFLICT"
+      ],
+      "candidate_reference_id": "4ac165ee-51ea-5c8c-9c08-260b7a0d8c23"
+    },
+    "81": {
+      "primary": "NAME_INCONSISTENCY",
+      "secondary": [
+        "ENROLLMENT_CONFLICT"
+      ],
+      "candidate_reference_id": "bef898e5-148b-5521-a968-dc31f521e282"
+    },
+    "82": {
+      "primary": "NAME_INCONSISTENCY",
+      "secondary": [
+        "ENROLLMENT_CONFLICT"
+      ],
+      "candidate_reference_id": "15abd42a-6176-53d5-8d67-7739ca8497d2"
+    },
+    "83": {
+      "primary": "NAME_INCONSISTENCY",
+      "secondary": [
+        "ENROLLMENT_CONFLICT"
+      ],
+      "candidate_reference_id": "97da2825-b9a7-5ae4-aeef-7a5ccb1a86e1"
+    },
+    "84": {
+      "primary": "NAME_INCONSISTENCY",
+      "secondary": [
+        "ENROLLMENT_CONFLICT"
+      ],
+      "candidate_reference_id": "b9904272-f0af-5d57-90da-eefba1d81c23"
+    },
+    "85": {
+      "primary": "NAME_INCONSISTENCY",
+      "secondary": [
+        "ENROLLMENT_CONFLICT"
+      ],
+      "candidate_reference_id": "1d4ee512-8ffa-55ac-9ce4-811db51174f8"
+    },
+    "86": {
+      "primary": "NAME_INCONSISTENCY",
+      "secondary": [
+        "ENROLLMENT_CONFLICT"
+      ],
+      "candidate_reference_id": "39d92416-5631-51cb-b0e3-266a357e23db"
+    },
+    "87": {
+      "primary": "NAME_INCONSISTENCY",
+      "secondary": [
+        "ENROLLMENT_CONFLICT"
+      ],
+      "candidate_reference_id": "37f2f3cb-e9d9-56c1-92a1-7e74ae7a5120"
+    },
+    "88": {
+      "primary": "NAME_INCONSISTENCY",
+      "secondary": [
+        "ENROLLMENT_CONFLICT"
+      ],
+      "candidate_reference_id": "d008c062-54c4-5c55-9091-16f34b8c5aee"
+    },
+    "89": {
+      "primary": "NAME_INCONSISTENCY",
+      "secondary": [
+        "ENROLLMENT_CONFLICT"
+      ],
+      "candidate_reference_id": "cec84152-d3f5-576a-88f4-06a52c578170"
+    },
+    "90": {
+      "primary": "NAME_INCONSISTENCY",
+      "secondary": [
+        "ENROLLMENT_CONFLICT"
+      ],
+      "candidate_reference_id": "68e44402-3337-5f7e-9fa5-f48d730603f2"
+    },
+    "91": {
+      "primary": "IMPOSSIBLE_ACADEMIC",
+      "secondary": [],
+      "candidate_reference_id": null
+    },
+    "92": {
+      "primary": "IMPOSSIBLE_ACADEMIC",
+      "secondary": [],
+      "candidate_reference_id": null
+    },
+    "93": {
+      "primary": "IMPOSSIBLE_ACADEMIC",
+      "secondary": [],
+      "candidate_reference_id": null
+    },
+    "94": {
+      "primary": "IMPOSSIBLE_ACADEMIC",
+      "secondary": [],
+      "candidate_reference_id": null
+    },
+    "95": {
+      "primary": "IMPOSSIBLE_ACADEMIC",
+      "secondary": [],
+      "candidate_reference_id": null
+    },
+    "96": {
+      "primary": "IMPOSSIBLE_ACADEMIC",
+      "secondary": [],
+      "candidate_reference_id": null
+    },
+    "97": {
+      "primary": "IMPOSSIBLE_ACADEMIC",
+      "secondary": [],
+      "candidate_reference_id": null
+    },
+    "98": {
+      "primary": "IMPOSSIBLE_ACADEMIC",
+      "secondary": [],
+      "candidate_reference_id": null
+    },
+    "99": {
+      "primary": "IMPOSSIBLE_ACADEMIC",
+      "secondary": [],
+      "candidate_reference_id": null
+    },
+    "100": {
+      "primary": "IMPOSSIBLE_ACADEMIC",
+      "secondary": [],
+      "candidate_reference_id": null
+    },
+    "101": {
+      "primary": "POSSIBLE_DUPLICATE",
+      "secondary": [],
+      "candidate_reference_id": "b5a026d6-193f-5e94-8856-c89598a60396"
+    },
+    "102": {
+      "primary": "POSSIBLE_DUPLICATE",
+      "secondary": [],
+      "candidate_reference_id": "dd922bed-e8a9-5b59-b11a-354fa138a645"
+    },
+    "103": {
+      "primary": "POSSIBLE_DUPLICATE",
+      "secondary": [],
+      "candidate_reference_id": "e5d20862-fdea-5e1b-9610-1f1e243c60a9"
+    },
+    "104": {
+      "primary": "POSSIBLE_DUPLICATE",
+      "secondary": [],
+      "candidate_reference_id": "7d9e500f-1e24-502e-a9f7-a43a28bee0c1"
+    },
+    "105": {
+      "primary": "POSSIBLE_DUPLICATE",
+      "secondary": [],
+      "candidate_reference_id": "1d75760e-3536-556c-b190-82d06a173982"
+    },
+    "106": {
+      "primary": "POSSIBLE_DUPLICATE",
+      "secondary": [],
+      "candidate_reference_id": "5ab81141-3e2a-5da5-8658-f45e6690ae5e"
+    },
+    "107": {
+      "primary": "POSSIBLE_DUPLICATE",
+      "secondary": [],
+      "candidate_reference_id": "a5ee6296-73e7-58dd-8e53-238469cab1cf"
+    },
+    "108": {
+      "primary": "POSSIBLE_DUPLICATE",
+      "secondary": [],
+      "candidate_reference_id": "db072338-0232-53a0-8c2f-45b3a288cecc"
+    },
+    "109": {
+      "primary": "POSSIBLE_DUPLICATE",
+      "secondary": [],
+      "candidate_reference_id": "f48b4e7c-cc12-5de9-829c-9f03fd20af15"
+    },
+    "110": {
+      "primary": "POSSIBLE_DUPLICATE",
+      "secondary": [],
+      "candidate_reference_id": "d63e7208-ba61-57bb-8ac0-82c1170016ee"
+    },
+    "111": {
+      "primary": "MISSING_MANDATORY",
+      "secondary": [],
+      "candidate_reference_id": null
+    },
+    "112": {
+      "primary": "MISSING_MANDATORY",
+      "secondary": [],
+      "candidate_reference_id": null
+    },
+    "113": {
+      "primary": "MISSING_MANDATORY",
+      "secondary": [],
+      "candidate_reference_id": null
+    },
+    "114": {
+      "primary": "MISSING_MANDATORY",
+      "secondary": [],
+      "candidate_reference_id": null
+    },
+    "115": {
+      "primary": "MISSING_MANDATORY",
+      "secondary": [],
+      "candidate_reference_id": null
+    },
+    "116": {
+      "primary": "MISSING_MANDATORY",
+      "secondary": [],
+      "candidate_reference_id": null
+    },
+    "117": {
+      "primary": "MISSING_MANDATORY",
+      "secondary": [],
+      "candidate_reference_id": null
+    },
+    "118": {
+      "primary": "MISSING_MANDATORY",
+      "secondary": [],
+      "candidate_reference_id": null
+    },
+    "119": {
+      "primary": "MISSING_MANDATORY",
+      "secondary": [],
+      "candidate_reference_id": null
+    },
+    "120": {
+      "primary": "MISSING_MANDATORY",
+      "secondary": [],
+      "candidate_reference_id": null
+    }
+  },
+  "totals": {
+    "clean": 880,
+    "flagged": 110,
+    "incomplete": 10,
+    "primary": 120,
+    "secondary": 20,
+    "candidates": 50,
+    "cases": 120
+  }
+}

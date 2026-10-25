@@ -1,0 +1,12 @@
+label: heuristic, not validated
+formula_version: 1
+NAME_MISMATCH: 65
+NAME_PARTIAL: 35
+NAME_MISSING: 25
+SHA_REUSE_OTHER_STUDENT: 60
+CREDENTIAL_REUSE_OTHER_STUDENT: 65
+PDF_EDIT_METADATA: 10
+PDF_EDITOR_TOOL: 8
+thresholds:
+  medium: 30
+  high: 60
