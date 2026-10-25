@@ -26,16 +26,10 @@ import {
   GraduationCap,
 } from "lucide-react";
 import { api, ApiError } from "@/lib/api";
+import type { components } from "@/lib/generated/api";
 
 type Row = Record<string, unknown>;
-type User = {
-  id: string;
-  full_name: string;
-  role: string;
-  institution_id: string | null;
-  student_id: string | null;
-  assigned_institutions: string[];
-};
+type User = components["schemas"]["UserResponse"];
 type Envelope = { items: Row[]; total: number; [key: string]: unknown };
 const text = (v: unknown) =>
   v === null || v === undefined
@@ -135,6 +129,7 @@ function Badge({ value }: { value: unknown }) {
   const ok =
     v.includes("PASSED") ||
     v === "APPROVED" ||
+    v === "ACCEPTED" ||
     v === "VERIFIED_LOCAL" ||
     v === "COMPLETED";
   const pending = v.includes("PENDING");

@@ -1156,10 +1156,88 @@ export interface components {
             /** Refresh Token */
             refresh_token: string;
         };
+        /** SearchResponse */
+        SearchResponse: {
+            /** Items */
+            items: components["schemas"]["StudentSummary"][];
+            /** Total */
+            total: number;
+            /** Page */
+            page: number;
+            /** Page Size */
+            page_size: number;
+            /** Took Ms */
+            took_ms: number;
+            /**
+             * Cache
+             * @enum {string}
+             */
+            cache: "HIT" | "MISS";
+            /** Data Epoch */
+            data_epoch: number;
+        };
         /** SessionControls */
         SessionControls: {
             /** Cache Enabled */
             cache_enabled: boolean;
+        };
+        /** StudentSummary */
+        StudentSummary: {
+            /**
+             * Id
+             * Format: uuid
+             */
+            id: string;
+            /** Full Name */
+            full_name: string | null;
+            /** Apaar Id */
+            apaar_id: string | null;
+            /**
+             * Institution Id
+             * Format: uuid
+             */
+            institution_id: string;
+            /** Program */
+            program: string | null;
+            /** Branch */
+            branch: string | null;
+            /** Current Year */
+            current_year: number | null;
+            /**
+             * Data Quality Status
+             * @enum {string}
+             */
+            data_quality_status: "PASSED_LOCAL_CHECKS" | "FLAGGED_FOR_REVIEW" | "INCOMPLETE";
+            /**
+             * External Status
+             * @enum {string}
+             */
+            external_status: "EXTERNAL_VERIFICATION_PENDING" | "MOCK_MATCH" | "MOCK_NO_MATCH";
+            /** Version No */
+            version_no: number;
+        };
+        /** UserResponse */
+        UserResponse: {
+            /**
+             * Id
+             * Format: uuid
+             */
+            id: string;
+            /** Email */
+            email: string;
+            /** Full Name */
+            full_name: string;
+            /**
+             * Role
+             * @enum {string}
+             */
+            role: "OPERATOR" | "OFFICER" | "ADMIN" | "STUDENT";
+            /** Institution Id */
+            institution_id: string | null;
+            /** Student Id */
+            student_id: string | null;
+            /** Assigned Institutions */
+            assigned_institutions: string[];
         };
         /** ValidationError */
         ValidationError: {
@@ -1370,7 +1448,7 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content: {
-                    "application/json": unknown;
+                    "application/json": components["schemas"]["UserResponse"];
                 };
             };
         };
@@ -1492,7 +1570,7 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content: {
-                    "application/json": unknown;
+                    "application/json": components["schemas"]["SearchResponse"];
                 };
             };
             /** @description Validation Error */
@@ -2452,6 +2530,7 @@ export interface operations {
             query?: {
                 state?: string | null;
                 institution_id?: string | null;
+                program_id?: string | null;
                 page?: number;
                 page_size?: number;
             };

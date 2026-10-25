@@ -36,6 +36,7 @@ from app.core.audit import append, verify
 from app.modules.students.service import passport, trust_for, evidenced_skills, dashboard, epoch, jsonable
 from app.modules.imports import service as imports
 from app.modules.certificates import service as certificates
+from app.schemas import UserResponse, SearchResponse
 
 
 @asynccontextmanager
@@ -314,7 +315,7 @@ def logout(body: Logout, user=Depends(authenticated)):
     return dict(logged_out=True)
 
 
-@router.get("/auth/me")
+@router.get("/auth/me", response_model=UserResponse)
 def me(user=Depends(authenticated)):
     with connect() as conn:
         return public_user(conn, user)
@@ -350,7 +351,7 @@ def get_dashboard(institution_id: UUID | None = None, user=Depends(authenticated
         return dashboard(conn, ids[0])
 
 
-@router.get("/students/search")
+@router.get("/students/search", response_model=SearchResponse)
 def search(
     request: Request,
     q: str = "",

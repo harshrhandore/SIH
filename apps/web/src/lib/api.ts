@@ -1,3 +1,17 @@
+import createClient from "openapi-fetch";
+import type { paths } from "./generated/api";
+const generatedClient = createClient<paths>({ baseUrl: "/api/backend" });
+generatedClient.use({
+  onRequest({ request }) {
+    const url = new URL(request.url);
+    url.pathname = url.pathname.replace(
+      "/api/backend/api/v1/",
+      "/api/backend/",
+    );
+    return new Request(url, request);
+  },
+});
+
 export class ApiError extends Error {
   constructor(
     public code: string,
@@ -28,12 +42,25 @@ export async function api<T = Record<string, unknown>>(
       ?.split("=")[1];
     if (csrf) headers.set("x-csrf-token", csrf);
   }
-  const response = await fetch("/api/backend" + path, {
-    ...init,
-    headers,
-    cache: "no-store",
-  });
-  if (response.status === 401 && refresh && !path.startsWith("/auth/")) {
+  const response =
+    path === "/auth/me" && (!init.method || init.method === "GET")
+      ? (
+          await generatedClient.GET("/api/v1/auth/me", {
+            headers,
+            cache: "no-store",
+            parseAs: "stream",
+          })
+        ).response
+      : await fetch("/api/backend" + path, {
+          ...init,
+          headers,
+          cache: "no-store",
+        });
+  if (
+    response.status === 401 &&
+    refresh &&
+    (!path.startsWith("/auth/") || path === "/auth/me")
+  ) {
     try {
       if (!refreshInFlight)
         refreshInFlight = api(

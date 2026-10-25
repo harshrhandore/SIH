@@ -8,6 +8,9 @@ from typing import Protocol
 class CacheBackend(Protocol):
     def get(self, key): ...
     def put(self, key, value): ...
+    def set(self, key, value, ttl_seconds=None): ...
+    def delete_prefix(self, prefix): ...
+    def clear(self): ...
 
 
 class MemoryCache:
@@ -29,6 +32,24 @@ class MemoryCache:
             self.values[key] = (monotonic() + self.ttl, deepcopy(value))
             while len(self.values) > self.capacity:
                 self.values.popitem(last=False)
+
+    def set(self, key, value, ttl_seconds=None):
+        with self.lock:
+            self.values[key] = (monotonic() + (self.ttl if ttl_seconds is None else ttl_seconds), deepcopy(value))
+            while len(self.values) > self.capacity:
+                self.values.popitem(last=False)
+
+    def delete_prefix(self, prefix):
+        with self.lock:
+            for key in list(self.values):
+                if (isinstance(key, tuple) and isinstance(prefix, tuple) and key[: len(prefix)] == prefix) or str(
+                    key
+                ).startswith(str(prefix)):
+                    del self.values[key]
+
+    def clear(self):
+        with self.lock:
+            self.values.clear()
 
 
 cache = MemoryCache()
