@@ -137,23 +137,24 @@ def fields_from_text(text):
         ("date", "Date"),
         ("credential_id", "Credential"),
     ]:
-        match = re.search(r"^\s*" + label + r":\s*([^\r\n]{1,300})", text, re.M | re.I)
-        fields[key] = match.group(1).strip() if match else None
+        match = re.search(r"^[ \t]*" + label + r":[ \t]*([^\r\n]{0,300})", text, re.M | re.I)
+        fields[key] = (match.group(1).strip() or None) if match else None
     return fields
 
 
-def evaluate(data, mime, student, reuse=None):
+def evaluate(data, mime, student, reuse=None, actor=None):
     start = perf_counter()
     text, engine, metadata, warnings = extract_text(data, mime)
     extracted = fields_from_text(text)
     from app.integrations.gemini import extract
 
-    llm_fields = extract(text) if text else None
+    llm_fields = extract(text, actor) if text else None
     if llm_fields:
         extracted = llm_fields
     confidence, matches, guard = certificate_confidence(extracted, student, settings.demo_as_of)
     reasons = []
     weights = load_weights("fraud")
+    thresholds = weights["thresholds"]
 
     def add(code, weight, expected, observed, method):
         weight = weights.get("NAME_PARTIAL" if code == "NAME_MISMATCH" and weight == 35 else code, weight)
@@ -175,10 +176,10 @@ def evaluate(data, mime, student, reuse=None):
         )
 
     n = matches["name"]
-    if extracted["name"] and n < 0.90:
+    if extracted["name"] and n < weights["name_verify"]:
         add(
             "NAME_MISMATCH",
-            65 if n < 0.70 else 35,
+            65 if n < weights["name_reject"] else 35,
             student["full_name"],
             extracted["name"],
             "Normalized token matching",
@@ -206,15 +207,15 @@ def evaluate(data, mime, student, reuse=None):
             "Scoped database reuse lookup",
         )
     risk = min(100, sum(r["weight"] for r in reasons))
-    level = "high" if risk >= 60 else "medium" if risk >= 30 else "low"
+    level = "high" if risk >= thresholds["high"] else "medium" if risk >= thresholds["medium"] else "low"
     verified = bool(
         text
-        and n >= 0.90
+        and n >= weights["name_verify"]
         and guard
         and matches["date"] == 1
         and matches["credential_id"] > 0
-        and confidence >= 85
-        and risk < 30
+        and confidence >= weights["minimum_confidence"]
+        and risk < thresholds["medium"]
     )
     verdict = (
         "UNREADABLE"
@@ -224,7 +225,7 @@ def evaluate(data, mime, student, reuse=None):
         else "NEEDS_REVIEW"
         if not extracted["name"]
         else "REJECTED"
-        if n < 0.70 or risk >= 60
+        if n < weights["name_reject"] or risk >= thresholds["high"]
         else "NEEDS_REVIEW"
     )
     return dict(

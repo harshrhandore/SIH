@@ -136,6 +136,7 @@ def career(role, skills):
 
 def trust(inputs):
     weights = load_weights("trust")
+    thresholds = load_weights("fraud")["thresholds"]
     local = (
         0
         if inputs.get("missing_mandatory")
@@ -159,7 +160,15 @@ def trust(inputs):
             min(weights["certificates"], weights["certificate_points_each"] * inputs.get("certificates", 0)),
             weights["certificates"],
         ),
-        ("fraud", 0 if risk >= 60 else weights["fraud_medium"] if risk >= 30 else weights["fraud"], weights["fraud"]),
+        (
+            "fraud",
+            0
+            if risk >= thresholds["high"]
+            else weights["fraud_medium"]
+            if risk >= thresholds["medium"]
+            else weights["fraud"],
+            weights["fraud"],
+        ),
         ("review", weights["review"] if inputs.get("approved") else 0, weights["review"]),
         ("external", 0, weights["external"]),
     ]

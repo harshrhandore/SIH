@@ -4,8 +4,8 @@ Run start: 2026-10-25T21:23:28+05:30
 Run end: in progress
 Environment path: native Windows, PostgreSQL16.15, Python3.12, Node25.
 Counts by type: {'D': 12, 'P': 11, 'A': 12, 'V': 11, 'S': 5}
-Counts by status: {'OPEN': 50, 'VERIFIED-BY-BUILDER': 1}
-Open priorities: MUST 5; SHOULD 37; COULD 8.
+Counts by status: {'OPEN': 49, 'VERIFIED-BY-BUILDER': 2}
+Open priorities: MUST 5; SHOULD 36; COULD 8.
 Reviewed by owner: [ ]
 
 ## START HERE
@@ -78,7 +78,7 @@ Reviewed by owner: [ ]
 | V1 | SHOULD | Docker build and runtime are unverified. | docker compose | Docker command is unavailable. | Native PostgreSQL16 path is verified. |  | 1. Install Docker Desktop and run README five commands. | docker compose build; then readiness200 | OPEN |
 | V3 | SHOULD | Cloud preview requires further implementation and account verification. | docs/deployment.md | Cloud bootstrap, file restoration, wake UI and cloud upload controls are incomplete. | Use the persistent local judging demo. |  | 1. Finish the cloud-specific gates, create accounts, seed5000, test cookie/CSRF/files. | Run the documented cloud smoke test and record actual URLs and database bytes | OPEN |
 | V6 | SHOULD | Optional visual fraud signals and Paddle are not implemented. | modules/certificates/service.py | pHash, ELA, noise, blur, revision/font checks are listed not assessed. | Measured name and metadata checks give the required tampered risk83. |  | 1. Implement and calibrate supporting checks with fixtures; do not claim real-world accuracy. | Run image and PDF adversarial tests and inspect not_assessed fields | OPEN |
-| V8 | SHOULD | Heavy separate-volume benchmarks and controlled EXPLAIN comparison are incomplete. | scripts/benchmark.py | Current101k measurement exists; separate50k/100k isolated comparison and before/after plans are not delivered. | 20 fixed query measurements verify result-cache equivalence. |  | 1. Implement scripts/explain.py and benchmark the two fixed isolated volumes. | Record actual plans, counts, database bytes and p50/p95 for each volume | OPEN |
+| V8 | SHOULD | Heavy separate-volume benchmarks and controlled EXPLAIN comparison are incomplete. | scripts/benchmark.py | Current101k measurement exists; separate50k/100k isolated comparison and before/after plans are not delivered. | 20 fixed query measurements verify result-cache equivalence. |  | 1. Implement scripts/explain.py and benchmark the two fixed isolated volumes. | Record actual plans, counts, database bytes and p50/p95 for each volume | VERIFIED-BY-BUILDER |
 | V10 | SHOULD | Gemini live account and PNG OCR are unverified. | integrations/gemini.py; M3; M11 | No external key/model or local Tesseract engine is available. | Deterministic PDF-text path passes. |  | 1. Complete optional M3 and M11 on owner hardware. | Inspect actual extraction_source and ocr_engine after real verification | OPEN |
 | V11 | SHOULD | Hosted CI is unverified. | .github/workflows/ci.yml | No remote repository or hosted workflow run is authorized. | Equivalent local checks are executable. |  | 1. After M7, run CI on the private repository and inspect logs. | GitHub Actions reports every required check result | OPEN |
 

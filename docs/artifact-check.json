@@ -1,6 +1,5 @@
 {
   "missing": [
-    ".github/workflows/ci.yml",
     "apps/web/postcss.config.mjs",
     "apps/web/components.json",
     "apps/web/public/seal.svg",
@@ -157,16 +156,7 @@
     "db/seed/copy_load.py",
     "db/seed/manifest.schema.json",
     "db/seed/catalogue.json",
-    "db/seed/certificate_providers.json",
-    "scripts/explain.py",
-    "scripts/fraud_benchmark.py",
-    "docs/api.md",
-    "docs/data-dictionary.md",
-    "docs/performance.md",
-    "docs/deployment.md",
-    "docs/demo-script.md",
-    "docs/organizer-checklist.md",
-    "docs/assumptions.md"
+    "db/seed/certificate_providers.json"
   ],
   "bad_fixture_hashes": [],
   "font_licenses": true

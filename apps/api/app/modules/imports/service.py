@@ -80,7 +80,21 @@ def parse(data, filename):
             if any(c.data_type == "f" for row in cells for c in row):
                 fail("XLSX_FORMULA_NOT_SUPPORTED")
             headers = [str(c.value or "") for c in cells[0]]
-            rows = [{h: str(c.value) if c.value is not None else "" for h, c in zip(headers, row)} for row in cells[1:]]
+            rows = [
+                {
+                    h: (
+                        c.value.date().isoformat()
+                        if isinstance(c.value, datetime)
+                        else c.value.isoformat()
+                        if isinstance(c.value, date)
+                        else str(c.value)
+                        if c.value is not None
+                        else ""
+                    )
+                    for h, c in zip(headers, row)
+                }
+                for row in cells[1:]
+            ]
         except (zipfile.BadZipFile, ValueError):
             fail("UNSUPPORTED_SPREADSHEET")
     elif filename.lower().endswith(".csv"):
@@ -188,7 +202,11 @@ def evaluate(row, program, indexes):
         add("MISSING_MANDATORY", ",".join(missing))
     if row.get("dob"):
         dob = date.fromisoformat(str(row["dob"]))
-        admission = date(int(row.get("admission_year") or 2026), 7, 1)
+        try:
+            admission_year = int(row.get("admission_year") or 2026)
+            admission = date(admission_year if 1950 <= admission_year <= 2100 else 2026, 7, 1)
+        except (ValueError, TypeError):
+            admission = date(2026, 7, 1)
         age = admission.year - dob.year - ((admission.month, admission.day) < (dob.month, dob.day))
         if dob > date(2026, 10, 25) or not 14 <= age <= 80:
             add("INVALID_DOB", "dob", dob)
@@ -317,6 +335,14 @@ def process(job_id, fail_after=None):
                         )
                         if claim:
                             indexes[0].setdefault(data["submitted_apaar_id"], {"id": str(claim["id"])})
+                    if staged["row_no"] >= current["next_row"] and data.get("submitted_enrollment_no"):
+                        live = one(
+                            conn,
+                            "SELECT id,submitted_enrollment_no,full_name,parent_name,dob FROM students WHERE institution_id=%s AND enrollment_no=%s AND id<>%s",
+                            (batch["institution_id"], data["submitted_enrollment_no"], sid),
+                        )
+                        if live:
+                            indexes[1].setdefault(data["submitted_enrollment_no"], live)
                     findings, candidates, quality = evaluate(data, programs.get(data.get("program_code")), indexes)
                     if staged["row_no"] >= current["next_row"]:
                         program = programs.get(data.get("program_code"))

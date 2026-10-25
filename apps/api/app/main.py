@@ -103,6 +103,21 @@ async def validation_error(request, exc):
     )
 
 
+@app.exception_handler(Exception)
+async def unexpected_error(request, exc):
+    return JSONResponse(
+        {
+            "error": {
+                "code": "INTERNAL_ERROR",
+                "message": "The operation failed. Retry or inspect the protected local server log.",
+                "fields": [],
+                "request_id": getattr(request.state, "request_id", "unavailable"),
+            }
+        },
+        status_code=500,
+    )
+
+
 class Strict(BaseModel):
     model_config = ConfigDict(extra="forbid")
 
@@ -1005,7 +1020,7 @@ def verify_certificate_locked(certificate_id, request, user):
             (certificate["file_sha256"], student["id"]),
         ):
             reuse.append(("SHA_REUSE_OTHER_STUDENT", 60))
-    result = certificates.evaluate(data, certificate["mime_type"], student, reuse)
+    result = certificates.evaluate(data, certificate["mime_type"], student, reuse, actor=user["id"])
     with connect() as conn:
         student_scope(conn, user, student["id"], request)
         extracted = result["extracted"]
@@ -1019,7 +1034,11 @@ def verify_certificate_locked(certificate_id, request, user):
             )
         ):
             result = certificates.evaluate(
-                data, certificate["mime_type"], student, reuse + [("CREDENTIAL_REUSE_OTHER_STUDENT", 65)]
+                data,
+                certificate["mime_type"],
+                student,
+                reuse + [("CREDENTIAL_REUSE_OTHER_STUDENT", 65)],
+                actor=user["id"],
             )
         current = one(conn, "SELECT * FROM certificates WHERE id=%s FOR UPDATE", (certificate_id,))
         prior = one(
@@ -1205,6 +1224,7 @@ def career_history(student_id: UUID, request: Request, page: int = 1, page_size:
 def oversight(
     state: str | None = None,
     institution_id: UUID | None = None,
+    program_id: UUID | None = None,
     page: int = 1,
     page_size: int = 25,
     user=Depends(authenticated),
@@ -1212,6 +1232,11 @@ def oversight(
     allow(user, "ADMIN")
     offset = pagination(page, page_size)
     with connect() as conn:
+        from app.modules.students.aggregates import program_dashboard
+
+        program_data = program_dashboard(conn, program_id, institution_id) if program_id else None
+        if program_data:
+            institution_id = program_data["institution_id"]
         insts = many(
             conn,
             "SELECT id,name,state FROM institutions WHERE (%s::text IS NULL OR state=%s) AND (%s::uuid IS NULL OR id=%s) ORDER BY name LIMIT %s OFFSET %s",
@@ -1219,7 +1244,7 @@ def oversight(
         )
         rows = []
         for inst in insts:
-            data = dashboard(conn, inst["id"])
+            data = program_data or dashboard(conn, inst["id"])
             rows.append(
                 dict(
                     institution_id=inst["id"],
@@ -1232,7 +1257,17 @@ def oversight(
                     pending_reviews=data["pending_reviews"],
                 )
             )
-        return listing(rows, page=page, page_size=page_size, trend=[])
+        total = one(
+            conn,
+            "SELECT count(*) AS n FROM institutions WHERE (%s::text IS NULL OR state=%s) AND (%s::uuid IS NULL OR id=%s)",
+            (state, state, institution_id, institution_id),
+        )["n"]
+        trend = many(
+            conn,
+            "SELECT snapshot_date AS date,round(100.0*sum(s.clean)/nullif(sum(s.total),0),2) AS clean_percent FROM data_quality_snapshots s JOIN institutions i ON i.id=s.institution_id WHERE (%s::text IS NULL OR i.state=%s) AND (%s::uuid IS NULL OR i.id=%s) GROUP BY snapshot_date ORDER BY snapshot_date",
+            (state, state, institution_id, institution_id),
+        )
+        return listing(rows, total=total, page=page, page_size=page_size, trend=trend)
 
 
 def analytics_data(kind, user, institution_id, program_id, year, state):
@@ -1246,8 +1281,28 @@ def analytics_data(kind, user, institution_id, program_id, year, state):
     }[kind]
     start = perf_counter()
     with connect() as conn:
-        if kind == "data-quality" and (program_id or year):
-            fail("PROGRAM_QUALITY_FILTER_NOT_YET_SUPPORTED")
+        if kind == "data-quality" and year:
+            fail(
+                "INVALID_FILTER_COMBINATION",
+                422,
+                "Year-scoped expected-record denominators are not configured for data quality.",
+            )
+        if kind == "data-quality" and program_id:
+            from app.modules.students.aggregates import program_dashboard
+
+            result = program_dashboard(conn, program_id, institution_id)
+            institution_scope(user, result["institution_id"], admin=True)
+            state_row = one(conn, "SELECT state FROM institutions WHERE id=%s", (result["institution_id"],))
+            if state and state_row["state"] != state:
+                fail("INVALID_FILTER_COMBINATION")
+            return dict(
+                items=[result],
+                trend=[],
+                took_ms=round((perf_counter() - start) * 1000, 3),
+                data_as_of=datetime.now(timezone.utc),
+                refreshing=False,
+                stale=False,
+            )
         pred = "(%s::uuid[] IS NULL OR v.institution_id=ANY(%s::uuid[])) AND (%s::text IS NULL OR i.state=%s)"
         params: tuple = (ids, ids, state, state)
         if kind != "data-quality":
@@ -1262,8 +1317,8 @@ def analytics_data(kind, user, institution_id, program_id, year, state):
         if kind == "data-quality":
             trend = many(
                 conn,
-                "SELECT snapshot_date AS date,round(100.0*sum(clean)/nullif(sum(total),0),2) AS clean_percent FROM data_quality_snapshots WHERE (%s::uuid[] IS NULL OR institution_id=ANY(%s::uuid[])) GROUP BY snapshot_date ORDER BY snapshot_date",
-                (ids, ids),
+                "SELECT snapshot_date AS date,round(100.0*sum(d.clean)/nullif(sum(d.total),0),2) AS clean_percent FROM data_quality_snapshots d JOIN institutions i ON i.id=d.institution_id WHERE (%s::uuid[] IS NULL OR d.institution_id=ANY(%s::uuid[])) AND (%s::text IS NULL OR i.state=%s) GROUP BY snapshot_date ORDER BY snapshot_date",
+                (ids, ids, state, state),
             )
         return dict(
             items=rows,

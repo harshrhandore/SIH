@@ -657,3 +657,15 @@ BEGIN
 END $$;
 REVOKE ALL ON FUNCTION refresh_demo_views() FROM PUBLIC;
 
+REVOKE CREATE ON SCHEMA public FROM PUBLIC;
+GRANT USAGE ON SCHEMA public TO shiksham_runtime;
+GRANT SELECT,INSERT,UPDATE,DELETE ON ALL TABLES IN SCHEMA public TO shiksham_runtime;
+GRANT USAGE,SELECT ON ALL SEQUENCES IN SCHEMA public TO shiksham_runtime;
+REVOKE ALL ON audit_events,audit_chains FROM shiksham_runtime;
+GRANT SELECT ON audit_events,audit_chains TO shiksham_runtime;
+REVOKE UPDATE,DELETE,TRUNCATE ON record_versions,review_decisions FROM shiksham_runtime;
+GRANT SELECT,INSERT ON record_versions,review_decisions TO shiksham_runtime;
+GRANT EXECUTE ON FUNCTION append_audit(uuid,text) TO shiksham_runtime;
+GRANT EXECUTE ON FUNCTION lock_audit_chain(uuid) TO shiksham_runtime;
+GRANT EXECUTE ON FUNCTION refresh_demo_views() TO shiksham_runtime;
+

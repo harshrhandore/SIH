@@ -1,6 +1,6 @@
 {
   "import_report": {
-    "batch_id": "e1d4438e-a9c9-4fa0-a16f-f24ba2a32e26",
+    "batch_id": "dea24564-292b-4010-95d6-3da2e928de8c",
     "clean": 880,
     "flagged": 110,
     "incomplete": 10,
@@ -53,22 +53,22 @@
     "pending_corrections": 0,
     "recent_imports": [
       {
-        "id": "e1d4438e-a9c9-4fa0-a16f-f24ba2a32e26",
+        "id": "dea24564-292b-4010-95d6-3da2e928de8c",
         "filename": "demo-import-1000.csv",
         "status": "COMPLETED",
         "total_rows": 1000,
         "clean_rows": 880,
         "flagged_rows": 110,
         "incomplete_rows": 10,
-        "created_at": "2026-10-25T22:03:34.703101+05:30"
+        "created_at": "2026-10-25T22:22:39.829997+05:30"
       }
     ],
     "data_epoch": 7
   },
   "search": {
     "total": 1,
-    "miss_ms": 15.615,
-    "hit_ms": 2.926
+    "miss_ms": 16.053,
+    "hit_ms": 3.346
   },
   "cgpa": 8.42,
   "trust": 91,

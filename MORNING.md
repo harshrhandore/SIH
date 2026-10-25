@@ -1,4 +1,4 @@
-[OWNER_DECISIONS.md](OWNER_DECISIONS.md) — open MUST 5, SHOULD 37, COULD 8.
+[OWNER_DECISIONS.md](OWNER_DECISIONS.md) — open MUST 5, SHOULD 36, COULD 8.
 
 1. Core synthetic local API demo has run end to end.
 2. Native PostgreSQL16 contains the100k baseline plus imported demonstration records.

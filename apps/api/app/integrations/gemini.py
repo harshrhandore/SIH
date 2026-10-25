@@ -19,7 +19,7 @@ class Extraction(BaseModel):
     credential_id: str | None = Field(default=None, max_length=100)
 
 
-def extract(text):
+def extract(text, actor=None):
     if not settings.llm_enabled or not settings.gemini_api_key or not settings.gemini_model:
         return None
     key = hashlib.sha256((text[:16000] + "schema1" + settings.gemini_model).encode()).hexdigest()
@@ -27,6 +27,7 @@ def extract(text):
     if hit:
         return hit
     try:
+        limit(("gemini", "user", str(actor)), 5, 60)
         limit(("gemini", "process"), 15, 60)
         limit(("gemini", "daily"), 100, 86400)
         from google import genai

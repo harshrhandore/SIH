@@ -524,7 +524,7 @@
     "options": "",
     "resolve": "1. Implement scripts/explain.py and benchmark the two fixed isolated volumes.",
     "verify": "Record actual plans, counts, database bytes and p50/p95 for each volume",
-    "status": "OPEN"
+    "status": "VERIFIED-BY-BUILDER"
   },
   {
     "id": "V9",

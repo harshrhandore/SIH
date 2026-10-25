@@ -29,8 +29,7 @@ def run(full=False):
         ("artifacts", [sys.executable, "scripts/check_artifacts.py"]),
         ("benchmark", [sys.executable, "scripts/benchmark.py", "--runs", "20"]),
     ]
-    if full:
-        steps.insert(2, ("fresh database", [sys.executable, "scripts/reproduce.py"]))
+    steps.insert(2, ("fresh database", [sys.executable, "scripts/reproduce.py"]))
     results = []
     for name, command in steps:
         start = datetime.now(timezone.utc).isoformat()
