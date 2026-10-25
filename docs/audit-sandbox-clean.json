@@ -1,1 +1,12 @@
-{"valid": true, "exists": true, "chain_id": "556818fe-5a62-52e6-a752-27f7dc1efe52", "events_checked": 1016, "head_seq": 1016, "head_hash": "cf7d50ab9e403f2dfb420ffa7a1d9350676f8bfa0a08fea2fb9e9560b8719f2b", "first_broken_link": null, "checked_at": "2026-10-25T17:21:22.790196Z", "is_copy": true, "production_chain_modified": false}
+{
+  "valid": true,
+  "exists": true,
+  "chain_id": "556818fe-5a62-52e6-a752-27f7dc1efe52",
+  "events_checked": 1016,
+  "head_seq": 1016,
+  "head_hash": "cf7d50ab9e403f2dfb420ffa7a1d9350676f8bfa0a08fea2fb9e9560b8719f2b",
+  "first_broken_link": null,
+  "checked_at": "2026-10-25T17:21:22.790196Z",
+  "is_copy": true,
+  "production_chain_modified": false
+}
