@@ -1,0 +1,10 @@
+{
+  "Shiksham Demo Academy": {
+    "pattern": "SDA-[0-9]{8}",
+    "synthetic": true
+  },
+  "Synthetic Cloud Institute": {
+    "pattern": "SCI-[A-Z]{3}-[0-9]{5}",
+    "synthetic": true
+  }
+}

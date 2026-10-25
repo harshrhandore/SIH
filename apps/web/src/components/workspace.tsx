@@ -1,6 +1,7 @@
 "use client";
 import Link from "next/link";
-import { usePathname } from "next/navigation";
+import Image from "next/image";
+import { usePathname, useSearchParams } from "next/navigation";
 import { useState, useEffect, useCallback } from "react";
 import {
   BookOpen,
@@ -40,6 +41,7 @@ const text = (v: unknown) =>
 const number = (v: unknown) => Number(v || 0).toLocaleString("en-IN");
 
 function useData<T>(path: string | null, interval = 0, grant = "") {
+  const [dataGrant, setDataGrant] = useState(grant);
   const [data, setData] = useState<T | null>(null),
     [error, setError] = useState<ApiError | null>(null),
     [loading, setLoading] = useState(true);
@@ -53,8 +55,10 @@ function useData<T>(path: string | null, interval = 0, grant = "") {
         headers: grant ? { "X-Case-Access": grant } : {},
       });
       setData(result);
+      setDataGrant(grant);
       setError(null);
     } catch (e) {
+      if ([401, 403, 404].includes((e as ApiError).status || 0)) setData(null);
       setError(e as ApiError);
     } finally {
       setLoading(false);
@@ -73,10 +77,15 @@ function useData<T>(path: string | null, interval = 0, grant = "") {
         });
         if (active) {
           setData(result);
+          setDataGrant(grant);
           setError(null);
         }
       } catch (e) {
-        if (active) setError(e as ApiError);
+        if (active) {
+          if ([401, 403, 404].includes((e as ApiError).status || 0))
+            setData(null);
+          setError(e as ApiError);
+        }
       } finally {
         if (active) setLoading(false);
       }
@@ -92,7 +101,7 @@ function useData<T>(path: string | null, interval = 0, grant = "") {
       if (id) clearInterval(id);
     };
   }, [path, interval, grant]);
-  return { data, error, loading, reload };
+  return { data: dataGrant === grant ? data : null, error, loading, reload };
 }
 function State({
   loading,
@@ -563,6 +572,7 @@ function Dashboard({ user }: { user: User }) {
 }
 
 function SearchScreen() {
+  const statusFilter = useSearchParams().get("quality");
   const [input, setInput] = useState(""),
     [q, setQ] = useState(""),
     [branch, setBranch] = useState(""),
@@ -581,6 +591,7 @@ function SearchScreen() {
         q,
         branch,
         ...(year ? { current_year: year } : {}),
+        ...(statusFilter ? { quality: statusFilter } : {}),
         page: String(page),
       }).toString(),
   );
@@ -593,6 +604,12 @@ function SearchScreen() {
       />
       <section className="panel">
         <div className="filters">
+          {statusFilter ? (
+            <span className="notice">
+              Status: {statusFilter}{" "}
+              <Link href="/students">Clear status filter</Link>
+            </span>
+          ) : null}
           <label className="search-field">
             <Search size={18} />
             <input
@@ -1323,7 +1340,12 @@ function PassportScreen({
           <>
             <section className="passport-header panel padded">
               <div className="passport-identity">
-                <span className="synthetic-seal large">S</span>
+                <Image
+                  src="/seal.svg"
+                  alt="Synthetic academic ledger seal"
+                  width={60}
+                  height={60}
+                />
                 <div>
                   <div className="eyebrow">
                     {text(profile.institution_name)}
@@ -2026,6 +2048,38 @@ function Architecture() {
 }
 function DemoControls({ user }: { user: User }) {
   const query = useData<Row>("/demo/config");
+  const institutions = useData<Envelope>(
+    user.role === "STUDENT" ? null : "/institutions",
+  );
+  const [institution, setInstitution] = useState(
+    user.institution_id || user.assigned_institutions[0] || "",
+  );
+  const [result, setResult] = useState<Row | null>(null),
+    [error, setError] = useState(""),
+    [pending, setPending] = useState(false);
+  const [runId, setRunId] = useState<string | null>(null);
+  const benchmark = useData<Row>(
+    runId ? "/demo/benchmarks/" + runId : null,
+    runId ? 1000 : 0,
+  );
+  async function verifyChain(copy: boolean) {
+    setPending(true);
+    setError("");
+    try {
+      setResult(
+        await api<Row>(
+          (copy ? "/demo/audit-sandbox/verify" : "/audit/verify-chain") +
+            "?institution_id=" +
+            institution,
+        ),
+      );
+    } catch (e) {
+      setResult(null);
+      setError((e as Error).message);
+    } finally {
+      setPending(false);
+    }
+  }
   return (
     <>
       <Title
@@ -2047,6 +2101,130 @@ function DemoControls({ user }: { user: User }) {
                   ["value", "Current state"],
                 ]}
               />
+              {user.role !== "STUDENT" ? (
+                <>
+                  <label>
+                    Institution for audit verification
+                    <select
+                      value={institution}
+                      onChange={(e) => setInstitution(e.target.value)}
+                    >
+                      <option value="">Choose an institution</option>
+                      {institutions.data?.items.map((row) => (
+                        <option key={text(row.id)} value={text(row.id)}>
+                          {text(row.name)}
+                        </option>
+                      ))}
+                    </select>
+                  </label>
+                  <div className="heading-actions">
+                    <button
+                      disabled={!institution || pending}
+                      onClick={() => verifyChain(true)}
+                    >
+                      Verify isolated copy
+                    </button>
+                    <button
+                      disabled={!institution || pending}
+                      onClick={() => verifyChain(false)}
+                    >
+                      Verify production chain
+                    </button>
+                  </div>
+                  {error ? (
+                    <p className="error" role="alert">
+                      {error}
+                    </p>
+                  ) : null}
+                  {result ? (
+                    <div
+                      className={result.valid ? "notice" : "error"}
+                      role="status"
+                    >
+                      <strong>
+                        {result.is_copy ? "Isolated copy" : "Production chain"}:{" "}
+                        {result.valid ? "valid" : "broken"}
+                      </strong>
+                      <span>
+                        {result.first_broken_link
+                          ? JSON.stringify(result.first_broken_link)
+                          : "Full chain verified through head " +
+                            text(result.head_seq)}
+                      </span>
+                      {result.is_copy ? (
+                        <p>Isolated copy · production chain unchanged</p>
+                      ) : null}
+                    </div>
+                  ) : null}
+                  <label className="checkbox">
+                    <input
+                      type="checkbox"
+                      checked={query.data.cache_enabled_for_session !== false}
+                      onChange={async (e) => {
+                        try {
+                          await api("/demo/session-controls", {
+                            method: "PUT",
+                            body: JSON.stringify({
+                              cache_enabled: e.target.checked,
+                            }),
+                          });
+                          query.reload();
+                        } catch (e) {
+                          setError((e as Error).message);
+                        }
+                      }}
+                    />{" "}
+                    Use the application result cache for this session
+                  </label>
+                  {["ADMIN", "OFFICER"].includes(user.role) ? (
+                    <>
+                      <h2>Measured search performance</h2>
+                      <button
+                        disabled={
+                          pending || benchmark.data?.status === "RUNNING"
+                        }
+                        onClick={async () => {
+                          setPending(true);
+                          setError("");
+                          try {
+                            const run = await api<{ run_id: string }>(
+                              "/demo/benchmarks",
+                              {
+                                method: "POST",
+                                body: JSON.stringify({
+                                  dataset: "current",
+                                  runs: 20,
+                                  cache_mode: "BOTH",
+                                }),
+                              },
+                            );
+                            setRunId(run.run_id);
+                          } catch (e) {
+                            setError((e as Error).message);
+                          } finally {
+                            setPending(false);
+                          }
+                        }}
+                      >
+                        Run 20-query benchmark
+                      </button>
+                      {benchmark.data ? (
+                        <>
+                          <p role="status">
+                            Benchmark{" "}
+                            {text(benchmark.data.status).toLowerCase()}
+                          </p>
+                          {benchmark.data.result ? (
+                            <pre>
+                              {JSON.stringify(benchmark.data.result, null, 2)}
+                            </pre>
+                          ) : null}
+                        </>
+                      ) : null}
+                    </>
+                  ) : null}
+                </>
+              ) : null}
               <h2>Local CLI required</h2>
               <p>
                 Audit sandbox writes run with owner credentials in your

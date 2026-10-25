@@ -10,7 +10,7 @@
       "50000"
     ],
     "exit_code": 0,
-    "stdout": "{\"dataset_students\": 50000, \"seed_seconds\": 26.088, \"total_seconds\": 29.703, \"database_bytes\": 235848207}\n",
+    "stdout": "{\"dataset_students\": 50000, \"seed_seconds\": 25.902, \"total_seconds\": 30.982, \"database_bytes\": 240443919}\n",
     "stderr": ""
   },
   {
@@ -24,7 +24,7 @@
       "docs/benchmark-50000.json"
     ],
     "exit_code": 0,
-    "stdout": "{\"application_cold\": {\"min_ms\": 5.327, \"max_ms\": 40.129, \"p50_ms\": 8.16, \"p95_ms\": 39.356}, \"cached\": {\"min_ms\": 2.092, \"max_ms\": 34.835, \"p50_ms\": 2.7355, \"p95_ms\": 3.189}, \"hardware\": \"Windows-11-10.0.26300-SP0; AMD64 Family 25 Model 80 Stepping 0, AuthenticAMD\"}\n",
+    "stdout": "{\"application_cold\": {\"min_ms\": 5.641, \"max_ms\": 47.285, \"p50_ms\": 9.3515, \"p95_ms\": 40.763}, \"cached\": {\"min_ms\": 2.25, \"max_ms\": 3.555, \"p50_ms\": 2.7375, \"p95_ms\": 3.216}, \"hardware\": \"Windows-11-10.0.26300-SP0; AMD64 Family 25 Model 80 Stepping 0, AuthenticAMD\"}\n",
     "stderr": ""
   },
   {
@@ -38,7 +38,7 @@
       "100000"
     ],
     "exit_code": 0,
-    "stdout": "{\"dataset_students\": 100000, \"seed_seconds\": 53.909, \"total_seconds\": 57.688, \"database_bytes\": 448299535}\n",
+    "stdout": "{\"dataset_students\": 100000, \"seed_seconds\": 50.072, \"total_seconds\": 57.463, \"database_bytes\": 457507343}\n",
     "stderr": ""
   },
   {
@@ -52,7 +52,7 @@
       "docs/benchmark-100000.json"
     ],
     "exit_code": 0,
-    "stdout": "{\"application_cold\": {\"min_ms\": 8.136, \"max_ms\": 86.749, \"p50_ms\": 11.975, \"p95_ms\": 83.391}, \"cached\": {\"min_ms\": 2.194, \"max_ms\": 38.831, \"p50_ms\": 2.968, \"p95_ms\": 3.286}, \"hardware\": \"Windows-11-10.0.26300-SP0; AMD64 Family 25 Model 80 Stepping 0, AuthenticAMD\"}\n",
+    "stdout": "{\"application_cold\": {\"min_ms\": 8.383, \"max_ms\": 91.535, \"p50_ms\": 12.6465, \"p95_ms\": 84.803}, \"cached\": {\"min_ms\": 2.277, \"max_ms\": 37.45, \"p50_ms\": 2.8745000000000003, \"p95_ms\": 3.196}, \"hardware\": \"Windows-11-10.0.26300-SP0; AMD64 Family 25 Model 80 Stepping 0, AuthenticAMD\"}\n",
     "stderr": ""
   }
 ]

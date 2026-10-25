@@ -1,6 +1,7 @@
 from datetime import datetime
 from io import BytesIO
 import re
+import hashlib
 import shutil
 from time import perf_counter
 from uuid import uuid4
@@ -12,7 +13,7 @@ from PIL import Image
 from psycopg.types.json import Jsonb
 from app.core.algorithms import certificate_confidence
 from app.core.errors import fail
-from app.core.files import store
+from app.core.files import contained, root_path
 from app.core.audit import append
 from app.db.session import one
 from app.settings import ROOT, settings
@@ -313,8 +314,12 @@ def seed_certificates(conn):
         ("showcase-python.pdf", "Python Fundamentals"),
     ]:
         data = (ROOT / "fixtures/certificates" / filename).read_bytes()
-        key, sha = store(data, student["institution_id"], student["id"], "pdf")
-        cid = uuid4()
+        cid = uid("certificate", filename)
+        key = f"{student['institution_id']}/{student['id']}/{cid}.pdf"
+        path = contained(root_path(settings.storage_root), key)
+        path.parent.mkdir(parents=True, exist_ok=True)
+        path.write_bytes(data)
+        sha = hashlib.sha256(data).hexdigest()
         conn.execute(
             "INSERT INTO certificates(id,student_id,title,storage_key,file_sha256,mime_type,purpose,acceptance_status,created_by) VALUES (%s,%s,%s,%s,%s,'application/pdf','PASSPORT','ACCEPTED',%s)",
             (cid, student["id"], title, key, sha, uid("user", "operator_a")),
@@ -323,3 +328,6 @@ def seed_certificates(conn):
         persist_report(
             conn, certificate, student, evaluate(data, "application/pdf", student), uuid4(), uid("user", "operator_a")
         )
+    from app.modules.students.service import trust_for
+
+    trust_for(conn, student)

@@ -2,7 +2,6 @@
   "missing": [
     "apps/web/postcss.config.mjs",
     "apps/web/components.json",
-    "apps/web/public/seal.svg",
     "apps/web/src/app/providers.tsx",
     "apps/web/src/app/(workspace)/layout.tsx",
     "apps/web/src/app/(workspace)/dashboard/page.tsx",
@@ -74,7 +73,6 @@
     "apps/web/tests/passport-ai.spec.ts",
     "apps/web/tests/privacy.spec.ts",
     "apps/web/tests/audit-demo.spec.ts",
-    "apps/api/requirements-ocr.lock",
     "apps/api/app/db/models.py",
     "apps/api/app/db/scope.py",
     "apps/api/app/core/clock.py",
@@ -137,7 +135,6 @@
     "apps/api/app/modules/demo/service.py",
     "apps/api/app/integrations/ocr_paddle.py",
     "apps/api/app/integrations/ocr_tesseract.py",
-    "apps/api/app/integrations/mock_apaar.py",
     "apps/api/tests/unit/test_ids.py",
     "apps/api/tests/unit/test_rules.py",
     "apps/api/tests/unit/test_matching.py",
@@ -153,10 +150,7 @@
     "apps/api/tests/integration/test_files.py",
     "apps/api/tests/performance/test_search.py",
     "db/bootstrap.sh",
-    "db/seed/copy_load.py",
-    "db/seed/manifest.schema.json",
-    "db/seed/catalogue.json",
-    "db/seed/certificate_providers.json"
+    "db/seed/manifest.schema.json"
   ],
   "bad_fixture_hashes": [],
   "font_licenses": true

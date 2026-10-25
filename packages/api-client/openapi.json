@@ -170,7 +170,9 @@
             "description": "Successful Response",
             "content": {
               "application/json": {
-                "schema": {}
+                "schema": {
+                  "$ref": "#/components/schemas/UserResponse"
+                }
               }
             }
           }
@@ -386,6 +388,22 @@
             }
           },
           {
+            "name": "quality",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "Quality"
+            }
+          },
+          {
             "name": "page",
             "in": "query",
             "required": false,
@@ -421,7 +439,9 @@
             "description": "Successful Response",
             "content": {
               "application/json": {
-                "schema": {}
+                "schema": {
+                  "$ref": "#/components/schemas/SearchResponse"
+                }
               }
             }
           },
@@ -1779,6 +1799,23 @@
             }
           },
           {
+            "name": "program_id",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string",
+                  "format": "uuid"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "Program Id"
+            }
+          },
+          {
             "name": "page",
             "in": "query",
             "required": false,
@@ -3089,6 +3126,56 @@
         ],
         "title": "Refresh"
       },
+      "SearchResponse": {
+        "properties": {
+          "items": {
+            "items": {
+              "$ref": "#/components/schemas/StudentSummary"
+            },
+            "type": "array",
+            "title": "Items"
+          },
+          "total": {
+            "type": "integer",
+            "title": "Total"
+          },
+          "page": {
+            "type": "integer",
+            "title": "Page"
+          },
+          "page_size": {
+            "type": "integer",
+            "title": "Page Size"
+          },
+          "took_ms": {
+            "type": "number",
+            "title": "Took Ms"
+          },
+          "cache": {
+            "type": "string",
+            "enum": [
+              "HIT",
+              "MISS"
+            ],
+            "title": "Cache"
+          },
+          "data_epoch": {
+            "type": "integer",
+            "title": "Data Epoch"
+          }
+        },
+        "type": "object",
+        "required": [
+          "items",
+          "total",
+          "page",
+          "page_size",
+          "took_ms",
+          "cache",
+          "data_epoch"
+        ],
+        "title": "SearchResponse"
+      },
       "SessionControls": {
         "properties": {
           "cache_enabled": {
@@ -3102,6 +3189,181 @@
           "cache_enabled"
         ],
         "title": "SessionControls"
+      },
+      "StudentSummary": {
+        "properties": {
+          "id": {
+            "type": "string",
+            "format": "uuid",
+            "title": "Id"
+          },
+          "full_name": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Full Name"
+          },
+          "apaar_id": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Apaar Id"
+          },
+          "institution_id": {
+            "type": "string",
+            "format": "uuid",
+            "title": "Institution Id"
+          },
+          "program": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Program"
+          },
+          "branch": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Branch"
+          },
+          "current_year": {
+            "anyOf": [
+              {
+                "type": "integer"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Current Year"
+          },
+          "data_quality_status": {
+            "type": "string",
+            "enum": [
+              "PASSED_LOCAL_CHECKS",
+              "FLAGGED_FOR_REVIEW",
+              "INCOMPLETE"
+            ],
+            "title": "Data Quality Status"
+          },
+          "external_status": {
+            "type": "string",
+            "enum": [
+              "EXTERNAL_VERIFICATION_PENDING",
+              "MOCK_MATCH",
+              "MOCK_NO_MATCH"
+            ],
+            "title": "External Status"
+          },
+          "version_no": {
+            "type": "integer",
+            "title": "Version No"
+          }
+        },
+        "type": "object",
+        "required": [
+          "id",
+          "full_name",
+          "apaar_id",
+          "institution_id",
+          "program",
+          "branch",
+          "current_year",
+          "data_quality_status",
+          "external_status",
+          "version_no"
+        ],
+        "title": "StudentSummary"
+      },
+      "UserResponse": {
+        "properties": {
+          "id": {
+            "type": "string",
+            "format": "uuid",
+            "title": "Id"
+          },
+          "email": {
+            "type": "string",
+            "title": "Email"
+          },
+          "full_name": {
+            "type": "string",
+            "title": "Full Name"
+          },
+          "role": {
+            "type": "string",
+            "enum": [
+              "OPERATOR",
+              "OFFICER",
+              "ADMIN",
+              "STUDENT"
+            ],
+            "title": "Role"
+          },
+          "institution_id": {
+            "anyOf": [
+              {
+                "type": "string",
+                "format": "uuid"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Institution Id"
+          },
+          "student_id": {
+            "anyOf": [
+              {
+                "type": "string",
+                "format": "uuid"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Student Id"
+          },
+          "assigned_institutions": {
+            "items": {
+              "type": "string",
+              "format": "uuid"
+            },
+            "type": "array",
+            "title": "Assigned Institutions"
+          }
+        },
+        "type": "object",
+        "required": [
+          "id",
+          "email",
+          "full_name",
+          "role",
+          "institution_id",
+          "student_id",
+          "assigned_institutions"
+        ],
+        "title": "UserResponse"
       },
       "ValidationError": {
         "properties": {

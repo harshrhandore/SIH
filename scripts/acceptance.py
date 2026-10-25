@@ -101,9 +101,11 @@ def run():
             ),
         )
     dashboard = call("GET", "/dashboard", operator)
+    profile = json.loads((ROOT / "fixtures/manifest.json").read_text())["dataset_students"]
+    base = {100000: 9000, 50000: 4500, 5000: 1000, 200: 80}[profile]
     assert tuple(dashboard[k] for k in ["total", "clean", "flagged", "incomplete", "pending_reviews"]) == (
-        10000,
-        9881,
+        base + 1000,
+        base + 881,
         109,
         10,
         119,
@@ -140,6 +142,9 @@ def run():
     chain = call("GET", "/audit/verify-chain?institution_id=" + institution, officer)
     assert chain["valid"]
     summary = dict(
+        environment_database=__import__("urllib.parse", fromlist=["urlparse"])
+        .urlparse(__import__("app.settings", fromlist=["settings"]).settings.database_url)
+        .path.lstrip("/"),
         import_report=report,
         dashboard=dashboard,
         search=dict(total=first["total"], miss_ms=first["took_ms"], hit_ms=second["took_ms"]),

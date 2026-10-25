@@ -12,6 +12,12 @@ ROOT = Path(__file__).resolve().parents[1]
 
 def database_url(url, name):
     parsed = urlparse(url)
+    if (
+        parsed.query
+        or parsed.fragment
+        or any(os.getenv(k) for k in ["PGHOSTADDR", "PGSERVICE", "PGSERVICEFILE", "PGOPTIONS"])
+    ):
+        raise RuntimeError("Connection overrides are not permitted for disposable databases.")
     if parsed.hostname not in {"127.0.0.1", "localhost", "db"} or name not in {
         "postgres",
         "shiksham_schema_check",
@@ -30,7 +36,7 @@ def snapshot(conn):
         "constraints": "SELECT cl.relname,c.conname,pg_get_constraintdef(c.oid) AS definition FROM pg_constraint c JOIN pg_class cl ON cl.oid=c.conrelid JOIN pg_namespace n ON n.oid=cl.relnamespace WHERE n.nspname='public' AND cl.relname<>'alembic_version' ORDER BY 1,2",
         "triggers": "SELECT c.relname,t.tgname,pg_get_triggerdef(t.oid) AS definition FROM pg_trigger t JOIN pg_class c ON c.oid=t.tgrelid JOIN pg_namespace n ON n.oid=c.relnamespace WHERE n.nspname='public' AND NOT t.tgisinternal ORDER BY 1,2",
         "indexes": "SELECT tablename,indexname,indexdef FROM pg_indexes WHERE schemaname='public' AND tablename<>'alembic_version' ORDER BY 1,2",
-        "functions": "SELECT p.proname,pg_get_function_identity_arguments(p.oid) AS arguments,p.prosecdef,p.proconfig,pg_get_functiondef(p.oid) AS definition FROM pg_proc p JOIN pg_namespace n ON n.oid=p.pronamespace WHERE n.nspname='public' AND p.proname IN ('append_audit','check_term_integrity','protect_history','refresh_demo_views','lock_audit_chain') ORDER BY 1,2",
+        "functions": "SELECT p.proname,pg_get_function_identity_arguments(p.oid) AS arguments,p.prosecdef,p.proconfig,pg_get_functiondef(p.oid) AS definition FROM pg_proc p JOIN pg_namespace n ON n.oid=p.pronamespace WHERE n.nspname='public' AND p.proname IN ('append_audit','check_term_integrity','protect_history','refresh_demo_views','lock_audit_chain','demo_sandbox_snapshot') ORDER BY 1,2",
         "table_grants": "SELECT table_name,grantee,privilege_type,is_grantable FROM information_schema.role_table_grants WHERE table_schema='public' AND grantee='shiksham_runtime' AND table_name<>'alembic_version' ORDER BY 1,2,3",
         "routine_grants": "SELECT routine_name,grantee,privilege_type,is_grantable FROM information_schema.role_routine_grants WHERE routine_schema='public' AND grantee='shiksham_runtime' ORDER BY 1,2,3",
         "sequence_grants": "SELECT object_name,grantee,privilege_type FROM information_schema.usage_privileges WHERE object_schema='public' AND grantee='shiksham_runtime' ORDER BY 1,2,3",

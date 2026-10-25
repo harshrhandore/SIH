@@ -9,14 +9,11 @@ from app.core.algorithms import academic_cgpas, normalized_name, synthetic_id
 from app.core.audit import append
 from app.core.security import password_hash
 from faker import Faker
+from unidecode import unidecode
 
 from db.seed.fixtures import generate, reference, uid
-
-
-def copy_rows(conn, table, columns, rows):
-    with conn.cursor().copy(f"COPY {table} ({columns}) FROM STDIN") as copy:
-        for row in rows:
-            copy.write_row(row)
+from db.seed.copy_load import copy_rows
+from db.seed.enrichment import allocate, performances, enrich
 
 
 def seed(conn, count, password):
@@ -51,6 +48,7 @@ def seed(conn, count, password):
     sizes = [a_count] + [remain // 11 + (1 if i < remain % 11 else 0) for i in range(11)]
     institutions = []
     programs = {}
+    program_slots = {}
     for i, n in enumerate(sizes):
         inst = uid("institution", i)
         institutions.append(inst)
@@ -79,7 +77,9 @@ def seed(conn, count, password):
                 ("PGDM:GENERAL", 5),
             ]
         )
-        allocated = 0
+        expected_allocations = allocate(expected, weights)
+        actual_allocations = allocate(n, weights)
+        program_slots[i] = [code for code, _ in weights for _ in range(actual_allocations[code])]
         for k, (code, w) in enumerate(weights):
             level, branch = code.split(":")
             pid = uid("program", f"{i}:{code}")
@@ -89,15 +89,25 @@ def seed(conn, count, password):
                     pid,
                     inst,
                     level,
-                    ("B.Tech " if level == "BTECH" else "PGDM ") + branch,
+                    (
+                        "B.Tech "
+                        + {
+                            "CSE": "Computer Science",
+                            "ECE": "Electronics and Communication",
+                            "ME": "Mechanical Engineering",
+                            "IT": "Information Technology",
+                            "AI&DS": "Artificial Intelligence and Data Science",
+                        }[branch]
+                    )
+                    if level == "BTECH"
+                    else "PGDM General Management",
                     branch,
                     4 if level == "BTECH" else 2,
                     "SEMESTER" if level == "BTECH" else "TRIMESTER",
                     8 if level == "BTECH" else 6,
                 ),
             )
-            exp = expected - allocated if k == len(weights) - 1 else expected * w // 100
-            allocated += exp
+            exp = expected_allocations[code]
             conn.execute("INSERT INTO program_expected_records VALUES (%s,%s)", (pid, exp))
             programs[(i, code)] = pid
         conn.execute(
@@ -130,26 +140,11 @@ def seed(conn, count, password):
                     name, dob, parent = ref["full_name"], ref["dob"], ref["parent_name"]
                 else:
                     name = fake.name()
-                    if normalized_name(name) == "riya sharma":
-                        name = "Synthetic " + name
+                    if "riya sharma" in normalized_name(name):
+                        name = f"Synthetic Reserved Learner {counter}"
                     dob = date(rng.randint(1999, 2007), rng.randint(1, 12), rng.randint(1, 28))
                     parent = None
-                weight = local % 100
-                code = (
-                    "PGDM:GENERAL"
-                    if i >= 10 or weight >= 95
-                    else "BTECH:CSE"
-                    if weight < 50
-                    else "BTECH:ECE"
-                    if weight < 65
-                    else "BTECH:ME"
-                    if weight < 75
-                    else "BTECH:IT"
-                    if weight < 85
-                    else "BTECH:AI&DS"
-                )
-                if counter <= 71:
-                    code = "BTECH:CSE"
+                code = program_slots[i][local]
                 duration = 2 if code.startswith("PGDM") else 4
                 admission = 2022 + local % 5
                 year = min(duration, 2026 - admission + 1)
@@ -164,7 +159,7 @@ def seed(conn, count, password):
                     f"SYN-{chr(65 + i)}-{counter:06d}",
                     name,
                     normalized_name(name),
-                    normalized_name(name),
+                    unidecode(normalized_name(name)),
                     parent,
                     dob,
                     "UNDISCLOSED",
@@ -197,12 +192,7 @@ def seed(conn, count, password):
     conn.execute(
         "INSERT INTO enrolments(student_id,program_id,academic_year,term_no,term_type) SELECT s.id,s.program_id,s.admission_year+(t-1)/CASE WHEN p.term_type='SEMESTER' THEN 2 ELSE 3 END,t,p.term_type FROM students s JOIN programs p ON p.id=s.program_id CROSS JOIN LATERAL generate_series(1,CASE WHEN s.status='GRADUATED' THEN p.total_terms ELSE greatest(0,least(p.total_terms-1,(s.current_year-1)*CASE WHEN p.term_type='SEMESTER' THEN 2 ELSE 3 END)) END) t"
     )
-    conn.execute(
-        "INSERT INTO academic_performance(student_id,enrolment_id,academic_year,term_no,term_type,credits,sgpa,cgpa) SELECT student_id,id,academic_year,term_no,term_type,22,round((5.0+(abs(hashtext(student_id::text||term_no::text)::bigint)%450)/100.0)::numeric,2),7 FROM enrolments"
-    )
-    conn.execute(
-        "WITH c AS (SELECT id,round(sum(sgpa*credits) OVER (PARTITION BY student_id ORDER BY term_no)/sum(credits) OVER (PARTITION BY student_id ORDER BY term_no),2) AS val FROM academic_performance) UPDATE academic_performance ap SET cgpa=c.val FROM c WHERE c.id=ap.id"
-    )
+    performances(conn)
     showcase = uid("student", 1)
     sgpas = ["8.20", "8.30", "8.40", "8.50", "8.10", "8.60", "8.70", "8.56"]
     cgpas = academic_cgpas([(v, 22) for v in sgpas])
@@ -212,8 +202,8 @@ def seed(conn, count, password):
             (Decimal(sgpa), cgpa, showcase, term),
         )
     conn.execute(
-        "INSERT INTO record_versions(student_id,version_no,snapshot,changed_fields,changed_by,reason) SELECT id,1,jsonb_build_object('id',id,'full_name',full_name,'apaar_id',apaar_id,'data_quality_status',data_quality_status),'{}'::jsonb,%s,'Initial synthetic seed snapshot.' FROM students",
-        (uid("user", "operator_a"),),
+        "INSERT INTO record_versions(student_id,version_no,snapshot,changed_fields,changed_by,reason) SELECT s.id,1,jsonb_build_object('id',s.id,'institution_id',s.institution_id,'program_id',s.program_id,'full_name',s.full_name,'apaar_id',s.apaar_id,'submitted_apaar_id',s.submitted_apaar_id,'enrollment_no',s.enrollment_no,'submitted_enrollment_no',s.submitted_enrollment_no,'dob',s.dob,'email',s.email,'admission_year',s.admission_year,'current_year',s.current_year,'source',s.source,'data_quality_status',s.data_quality_status,'external_status',s.external_status,'terms',coalesce((SELECT jsonb_agg(jsonb_build_object('term_no',ap.term_no,'term_type',ap.term_type,'sgpa',ap.sgpa,'cgpa',ap.cgpa,'credits',ap.credits) ORDER BY ap.term_no) FROM academic_performance ap WHERE ap.student_id=s.id),'[]'::jsonb)),'{}'::jsonb,%s,'Initial synthetic seed snapshot.' FROM students s",
+        (uid("user", "officer"),),
     )
     conn.execute(
         "INSERT INTO placements(student_id,company,role,package_lpa,placement_year,offer_status) SELECT s.id,'Synthetic Placement Co','Graduate Analyst',round((2.5+(abs(hashtext(s.id::text)::bigint)%2550)/100.0)::numeric,2),s.admission_year+p.duration_years,'OFFERED' FROM students s JOIN programs p ON p.id=s.program_id WHERE s.current_year=p.duration_years AND abs(hashtext(s.id::text)::bigint)%100<65"
@@ -254,6 +244,19 @@ def seed(conn, count, password):
         "INSERT INTO review_decisions(case_id,reviewer_id,action,reason,case_version) VALUES (%s,%s,'APPROVE','Rechecked the synthetic showcase source record.',1)",
         (case, uid("user", "officer")),
     )
+    manifest["enrichment"] = enrich(conn, count)
+    manifest["program_counts"] = [
+        dict(institution_id=str(row["institution_id"]), program_id=str(row["program_id"]), students=row["n"])
+        for row in conn.execute(
+            "SELECT institution_id,program_id,count(*) AS n FROM students GROUP BY institution_id,program_id ORDER BY institution_id,program_id"
+        ).fetchall()
+    ]
+    manifest["cohort_counts"] = [
+        dict(admission_year=row["admission_year"], students=row["n"])
+        for row in conn.execute(
+            "SELECT admission_year,count(*) AS n FROM students GROUP BY admission_year ORDER BY admission_year"
+        ).fetchall()
+    ]
     for i, inst in enumerate(institutions):
         append(
             conn,

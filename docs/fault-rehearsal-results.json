@@ -6,7 +6,7 @@
   "candidates": 50,
   "open_cases": 120,
   "report": {
-    "batch_id": "448c36cf-ecf7-45d7-8040-37cfb8a017fd",
+    "batch_id": "345df0e5-9b40-4e2c-b3ce-d973e546aba9",
     "clean": 880,
     "flagged": 110,
     "incomplete": 10,
@@ -46,5 +46,11 @@
     "processed_rows": 1000,
     "total_rows": 1000,
     "status": "COMPLETED"
+  },
+  "frozen_enrollment_race": {
+    "shells": 2,
+    "canonical_owners": 1,
+    "conflict_shells": 1,
+    "merged": false
   }
 }

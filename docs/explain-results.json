@@ -12,7 +12,7 @@
         "Plan Rows": 10,
         "Plan Width": 16,
         "Actual Startup Time": 0.009,
-        "Actual Total Time": 9.794,
+        "Actual Total Time": 10.271,
         "Actual Rows": 3,
         "Actual Loops": 1,
         "Filter": "(normalized_name ~~ '%riya sharma%'::text)",
@@ -32,7 +32,7 @@
         "Shared Hit Blocks": 8,
         "Shared Read Blocks": 1,
         "Shared Dirtied Blocks": 0,
-        "Shared Written Blocks": 0,
+        "Shared Written Blocks": 1,
         "Local Hit Blocks": 0,
         "Local Read Blocks": 0,
         "Local Dirtied Blocks": 0,
@@ -40,9 +40,9 @@
         "Temp Read Blocks": 0,
         "Temp Written Blocks": 0
       },
-      "Planning Time": 0.136,
+      "Planning Time": 0.116,
       "Triggers": [],
-      "Execution Time": 9.807
+      "Execution Time": 10.283
     }
   ],
   "explain_indexed": [
@@ -57,8 +57,8 @@
         "Total Cost": 119.38,
         "Plan Rows": 10,
         "Plan Width": 16,
-        "Actual Startup Time": 0.501,
-        "Actual Total Time": 0.504,
+        "Actual Startup Time": 0.449,
+        "Actual Total Time": 0.451,
         "Actual Rows": 3,
         "Actual Loops": 1,
         "Recheck Cond": "(normalized_name ~~ '%riya sharma%'::text)",
@@ -86,8 +86,8 @@
             "Total Cost": 82.32,
             "Plan Rows": 10,
             "Plan Width": 0,
-            "Actual Startup Time": 0.496,
-            "Actual Total Time": 0.496,
+            "Actual Startup Time": 0.445,
+            "Actual Total Time": 0.445,
             "Actual Rows": 3,
             "Actual Loops": 1,
             "Index Cond": "(normalized_name ~~ '%riya sharma%'::text)",
@@ -108,7 +108,7 @@
         "Shared Hit Blocks": 17,
         "Shared Read Blocks": 2,
         "Shared Dirtied Blocks": 0,
-        "Shared Written Blocks": 0,
+        "Shared Written Blocks": 2,
         "Local Hit Blocks": 0,
         "Local Read Blocks": 0,
         "Local Dirtied Blocks": 0,
@@ -116,9 +116,9 @@
         "Temp Read Blocks": 0,
         "Temp Written Blocks": 0
       },
-      "Planning Time": 1.143,
+      "Planning Time": 1.128,
       "Triggers": [],
-      "Execution Time": 0.559
+      "Execution Time": 0.503
     }
   ]
 }

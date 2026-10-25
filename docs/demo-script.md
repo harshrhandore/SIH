@@ -1,6 +1,12 @@
 # Judging rehearsal
 
-The active database is already in the post-correction state because the builder ran the real import and review rehearsal. Re-importing the file creates new review records; it does not reset identities or restore the original demonstration counts. The isolated reproduction command does not reset the active browser database. An owner-reviewed, guarded active reset remains unfinished; do not improvise a destructive reset.
+The active database is in the post-correction state because the builder ran the real import and review rehearsal. Re-importing the file creates new review records; it does not reset identities or restore the original demonstration counts. The isolated reproduction command does not reset the active browser database. To rehearse from the original baseline, intentionally run the guarded owner-only reset below before opening role contexts. It creates a backup, verifies the exact local target and synthetic institutions/accounts, replaces the fixed business schema and removes only contained institution storage prefixes. It never runs automatically.
+
+```powershell
+python -m app.cli reset --target shiksham --confirm RESET-SYNTHETIC-DEMO --students 100000
+```
+
+Keep the backup under ignored `storage/backups`. Never use a remote database for this command. Reset refusal tests pass; runtime reset execution is recorded separately in the audit evidence.
 
 Start the API and web using README, open http://localhost:3000/login, and run `scripts/demo.ps1 show-demo-password` locally. Use separate browser profiles/contexts for each role.
 

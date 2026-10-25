@@ -1,4 +1,5 @@
 from datetime import date
+from decimal import Decimal
 from psycopg.types.json import Jsonb
 from psycopg import sql
 from app.core.algorithms import clean, normalized_name, valid_id, academic_cgpas
@@ -56,6 +57,8 @@ def correct(conn, user, sid, body):
         merged[field] = clean(merged[field])
     for field in ["submitted_apaar_id", "submitted_enrollment_no"]:
         merged[field] = merged[field].upper() if merged[field] else None
+    if merged["submitted_enrollment_no"]:
+        merged["submitted_enrollment_no"] = " ".join(merged["submitted_enrollment_no"].split())
     if isinstance(merged["dob"], str):
         try:
             merged["dob"] = date.fromisoformat(merged["dob"])
@@ -202,6 +205,16 @@ def correct(conn, user, sid, body):
         )
     elif findings:
         conn.execute("INSERT INTO review_cases(student_id,opened_reason) VALUES (%s,%s)", (sid, findings[0]["code"]))
+
+    def audit_values(value):
+        if isinstance(value, (float, Decimal)):
+            return format(Decimal(str(value)), "f")
+        if isinstance(value, list):
+            return [audit_values(item) for item in value]
+        if isinstance(value, dict):
+            return {key: audit_values(item) for key, item in value.items()}
+        return value
+
     append(
         conn,
         student["institution_id"],
@@ -210,7 +223,7 @@ def correct(conn, user, sid, body):
         "student",
         sid,
         body.reason,
-        {"changes": diff, "student_version": student["version_no"]},
+        {"changes": audit_values(diff), "student_version": student["version_no"]},
         sid,
     )
     trust_for(conn, student)

@@ -573,6 +573,21 @@ BEGIN
 END $$;
 REVOKE ALL ON FUNCTION lock_audit_chain(uuid) FROM PUBLIC;
 
+CREATE FUNCTION demo_sandbox_snapshot(p_institution uuid) RETURNS jsonb
+LANGUAGE plpgsql SECURITY DEFINER SET search_path=public,pg_temp AS $$
+DECLARE result jsonb;
+BEGIN
+ IF to_regclass('demo_sandbox.audit_chains') IS NULL OR to_regclass('demo_sandbox.audit_events') IS NULL THEN
+   RETURN NULL;
+ END IF;
+ SELECT jsonb_build_object(
+  'chain',(SELECT to_jsonb(c) FROM demo_sandbox.audit_chains c WHERE c.institution_id=p_institution),
+  'events',(SELECT jsonb_agg(to_jsonb(e) ORDER BY e.sequence_no) FROM demo_sandbox.audit_events e WHERE e.institution_id=p_institution)
+ ) INTO result;
+ RETURN result;
+END $$;
+REVOKE ALL ON FUNCTION demo_sandbox_snapshot(uuid) FROM PUBLIC;
+
 CREATE MATERIALIZED VIEW mv_admissions AS
 SELECT s.institution_id,s.program_id,s.admission_year AS year,count(*)::integer AS admitted
 FROM students s
@@ -667,5 +682,6 @@ REVOKE UPDATE,DELETE,TRUNCATE ON record_versions,review_decisions FROM shiksham_
 GRANT SELECT,INSERT ON record_versions,review_decisions TO shiksham_runtime;
 GRANT EXECUTE ON FUNCTION append_audit(uuid,text) TO shiksham_runtime;
 GRANT EXECUTE ON FUNCTION lock_audit_chain(uuid) TO shiksham_runtime;
+GRANT EXECUTE ON FUNCTION demo_sandbox_snapshot(uuid) TO shiksham_runtime;
 GRANT EXECUTE ON FUNCTION refresh_demo_views() TO shiksham_runtime;
 

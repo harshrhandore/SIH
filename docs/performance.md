@@ -4,8 +4,8 @@ Measurements are synthetic local demonstrations, not a production SLA. API timer
 
 | Dataset | Seed total seconds | Database bytes | Application-cold p50/p95 ms | Cached p50/p95 ms |
 |---|---:|---:|---:|---:|
-| 50000 | 29.703 | 235848207 | 8.16/39.356 | 2.7355/3.189 |
-| 100000 | 57.688 | 448299535 | 11.975/83.391 | 2.968/3.286 |
+| 50000 | 30.982 | 240443919 | 9.3515/40.763 | 2.7375/3.216 |
+| 100000 | 57.463 | 457507343 | 12.6465/84.803 | 2.8745000000000003/3.196 |
 
 Hardware: Windows11,16logical CPUs,16,625,724KiB RAM, AMD64 Family25 Model80 Stepping0; local portable PostgreSQL16.15, shared_buffers256MB,max_connections40. Physical storage model and judging-laptop identity remain owner checks. See the raw benchmark JSON for every query and roundtrip sample.
 

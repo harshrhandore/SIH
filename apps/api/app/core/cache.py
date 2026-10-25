@@ -53,3 +53,4 @@ class MemoryCache:
 
 
 cache = MemoryCache()
+preferences = MemoryCache(ttl=604800, capacity=512)

@@ -1,8 +1,11 @@
 import csv
 import hashlib
 import json
+import re
+import zipfile
 from datetime import date, timedelta
 from io import BytesIO
+from pathlib import Path
 from uuid import UUID, uuid5
 
 import pypdfium2
@@ -62,8 +65,8 @@ def pdf_bytes(name="Riya Sharma", title="Data Science Foundations", credential="
     return output.getvalue()
 
 
-def generate():
-    target = ROOT / "fixtures"
+def generate(output_root=None):
+    target = Path(output_root) if output_root is not None else ROOT / "fixtures"
     (target / "certificates").mkdir(parents=True, exist_ok=True)
     for filename, data in [
         ("showcase-genuine.pdf", pdf_bytes()),
@@ -159,6 +162,29 @@ def generate():
     for row in rows:
         sheet.append([row[h] for h in headers])
     book.save(target / "demo-import-1000.xlsx")
+    # Openpyxl updates ZIP/core timestamps at save time; normalize both for repeatable fixture bytes.
+    original = (target / "demo-import-1000.xlsx").read_bytes()
+    stable = BytesIO()
+    with (
+        zipfile.ZipFile(BytesIO(original)) as source,
+        zipfile.ZipFile(stable, "w", compression=zipfile.ZIP_DEFLATED) as result,
+    ):
+        for name in sorted(source.namelist()):
+            data = source.read(name)
+            if name == "docProps/core.xml":
+                text = data.decode("utf-8")
+                text = re.sub(
+                    r"(<dcterms:(?:created|modified)[^>]*>)[^<]*(</dcterms:(?:created|modified)>)",
+                    r"\g<1>2026-06-20T00:00:00Z\g<2>",
+                    text,
+                )
+                data = text.encode("utf-8")
+            info = zipfile.ZipInfo(name, date_time=(2026, 6, 20, 0, 0, 0))
+            info.compress_type = zipfile.ZIP_DEFLATED
+            info.create_system = 3
+            info.external_attr = 0o600 << 16
+            result.writestr(info, data)
+    (target / "demo-import-1000.xlsx").write_bytes(stable.getvalue())
     expected_document = dict(
         schema_version=1,
         seed=2026263,

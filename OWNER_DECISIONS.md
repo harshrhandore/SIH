@@ -92,3 +92,6 @@ Reviewed by owner: [ ]
 | S4 | SHOULD | Cloud deployment remains unprovisioned. | V3 | Explicitly recorded unfinished scope. | Core local demo remains usable. |  | 1. Complete the referenced V item and rerun its checks. | Referenced V item passes its verification command. | OPEN |
 | S5 | SHOULD | Some screen controls and state details remain incomplete. | V7 | Explicitly recorded unfinished scope. | Core local demo remains usable. |  | 1. Complete the referenced V item and rerun its checks. | Referenced V item passes its verification command. | OPEN |
 
+## Superseding implementation notes
+
+Original register rows are retained. V4/S2: scoped HTTP benchmarks, result polling, read-only sandbox verification and program/state aggregate fixes are now delivered and regression-tested; remaining API contract coverage stays open. V5: bounded normal grades, credit-weighted CGPAs, cohort allocations, prescribed enrichment ownership, actual certificate subsets and persisted storage manifests are now implemented. A fresh 100k seed validates the principal counts and hashes; full sentence-by-sentence conformance remains open. V8 measurements are retained in performance.md. Seven browser flows now pass. See audit-passes.md for the distinction between automation attempts and complete audit cycles.

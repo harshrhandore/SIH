@@ -1,0 +1,24 @@
+[
+  {
+    "command": [
+      "C:\\Users\\Lenovo\\Desktop\\SIH_Project\\shiksham-apaar\\.venv\\Scripts\\python.exe",
+      "-m",
+      "app.cli",
+      "bootstrap",
+      "--students",
+      "100000"
+    ],
+    "exit_code": 0,
+    "stdout": "{\"dataset_students\": 100000, \"seed_seconds\": 68.197, \"total_seconds\": 77.82, \"database_bytes\": 457433615}\n",
+    "stderr": ""
+  },
+  {
+    "command": [
+      "C:\\Users\\Lenovo\\Desktop\\SIH_Project\\shiksham-apaar\\.venv\\Scripts\\python.exe",
+      "scripts/acceptance.py"
+    ],
+    "exit_code": 0,
+    "stdout": "{\n  \"environment_database\": \"shiksham_repro\",\n  \"import_report\": {\n    \"batch_id\": \"fc1994b2-e300-4f27-87f2-3781b3a35656\",\n    \"clean\": 880,\n    \"flagged\": 110,\n    \"incomplete\": 10,\n    \"affected_rows\": 120,\n    \"primary_findings\": [\n      {\n        \"code\": \"DUPLICATE_APAAR\",\n        \"count\": 20\n      },\n      {\n        \"code\": \"IMPOSSIBLE_ACADEMIC\",\n        \"count\": 10\n      },\n      {\n        \"code\": \"INVALID_APAAR\",\n        \"count\": 20\n      },\n      {\n        \"code\": \"MISSING_APAAR\",\n        \"count\": 30\n      },\n      {\n        \"code\": \"MISSING_MANDATORY\",\n        \"count\": 10\n      },\n      {\n        \"code\": \"NAME_INCONSISTENCY\",\n        \"count\": 20\n      },\n      {\n        \"code\": \"POSSIBLE_DUPLICATE\",\n        \"count\": 10\n      }\n    ],\n    \"all_findings\": 140,\n    \"secondary_findings\": 20,\n    \"processed_rows\": 1000,\n    \"total_rows\": 1000,\n    \"status\": \"COMPLETED\"\n  },\n  \"dashboard\": {\n    \"total\": 10000,\n    \"clean\": 9881,\n    \"flagged\": 109,\n    \"incomplete\": 10,\n    \"institution_name\": \"Synthetic Vidya Institute\",\n    \"submission_percent\": 90.91,\n    \"missing_records\": 1000,\n    \"pending_reviews\": 119,\n    \"pending_corrections\": 0,\n    \"recent_imports\": [\n      {\n        \"id\": \"fc1994b2-e300-4f27-87f2-3781b3a35656\",\n        \"filename\": \"demo-import-1000.csv\",\n        \"status\": \"COMPLETED\",\n        \"total_rows\": 1000,\n        \"clean_rows\": 880,\n        \"flagged_rows\": 110,\n        \"incomplete_rows\": 10,\n        \"created_at\": \"2026-10-26T00:52:32.703062+05:30\"\n      }\n    ],\n    \"data_epoch\": 7\n  },\n  \"search\": {\n    \"total\": 1,\n    \"miss_ms\": 36.437,\n    \"hit_ms\": 4.508\n  },\n  \"cgpa\": 8.42,\n  \"trust\": 91,\n  \"readiness\": 74,\n  \"genuine_confidence\": 95.0,\n  \"tampered_risk\": 83,\n  \"chain_valid\": true\n}\n",
+    "stderr": ""
+  }
+]

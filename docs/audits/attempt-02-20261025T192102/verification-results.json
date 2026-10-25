@@ -1,0 +1,176 @@
+[
+  {
+    "name": "placeholders/secrets",
+    "command": [
+      "C:\\Users\\Lenovo\\Desktop\\SIH_Project\\shiksham-apaar\\.venv\\Scripts\\python.exe",
+      "scripts/check_placeholders.py"
+    ],
+    "start": "2026-10-25T19:21:02.179940+00:00",
+    "end": "2026-10-25T19:21:03.714733+00:00",
+    "exit_code": 0,
+    "stdout": "Placeholder and secret scan passed; 11 registered external variables, 51 owner rows.\n",
+    "stderr": ""
+  },
+  {
+    "name": "schema",
+    "command": [
+      "C:\\Users\\Lenovo\\Desktop\\SIH_Project\\shiksham-apaar\\.venv\\Scripts\\python.exe",
+      "scripts/check_schema.py"
+    ],
+    "start": "2026-10-25T19:21:03.716599+00:00",
+    "end": "2026-10-25T19:21:07.212085+00:00",
+    "exit_code": 0,
+    "stdout": "Schema matches objects, columns, constraints, triggers, indexes, function bodies and runtime grants.\n",
+    "stderr": ""
+  },
+  {
+    "name": "fresh database",
+    "command": [
+      "C:\\Users\\Lenovo\\Desktop\\SIH_Project\\shiksham-apaar\\.venv\\Scripts\\python.exe",
+      "scripts/reproduce.py"
+    ],
+    "start": "2026-10-25T19:21:07.213333+00:00",
+    "end": "2026-10-25T19:22:42.969561+00:00",
+    "exit_code": 0,
+    "stdout": "{\"dataset_students\": 100000, \"seed_seconds\": 68.197, \"total_seconds\": 77.82, \"database_bytes\": 457433615}\n\n\n{\n  \"environment_database\": \"shiksham_repro\",\n  \"import_report\": {\n    \"batch_id\": \"fc1994b2-e300-4f27-87f2-3781b3a35656\",\n    \"clean\": 880,\n    \"flagged\": 110,\n    \"incomplete\": 10,\n    \"affected_rows\": 120,\n    \"primary_findings\": [\n      {\n        \"code\": \"DUPLICATE_APAAR\",\n        \"count\": 20\n      },\n      {\n        \"code\": \"IMPOSSIBLE_ACADEMIC\",\n        \"count\": 10\n      },\n      {\n        \"code\": \"INVALID_APAAR\",\n        \"count\": 20\n      },\n      {\n        \"code\": \"MISSING_APAAR\",\n        \"count\": 30\n      },\n      {\n        \"code\": \"MISSING_MANDATORY\",\n        \"count\": 10\n      },\n      {\n        \"code\": \"NAME_INCONSISTENCY\",\n        \"count\": 20\n      },\n      {\n        \"code\": \"POSSIBLE_DUPLICATE\",\n        \"count\": 10\n      }\n    ],\n    \"all_findings\": 140,\n    \"secondary_findings\": 20,\n    \"processed_rows\": 1000,\n    \"total_rows\": 1000,\n    \"status\": \"COMPLETED\"\n  },\n  \"dashboard\": {\n    \"total\": 10000,\n    \"clean\": 9881,\n    \"flagged\": 109,\n    \"incomplete\": 10,\n    \"institution_name\": \"Synthetic Vidya Institute\",\n    \"submission_percent\": 90.91,\n    \"missing_records\": 1000,\n    \"pending_reviews\": 119,\n    \"pending_corrections\": 0,\n    \"recent_imports\": [\n      {\n        \"id\": \"fc1994b2-e300-4f27-87f2-3781b3a35656\",\n        \"filename\": \"demo-import-1000.csv\",\n        \"status\": \"COMPLETED\",\n        \"total_rows\": 1000,\n        \"clean_rows\": 880,\n        \"flagged_rows\": 110,\n        \"incomplete_rows\": 10,\n        \"created_at\": \"2026-10-26T00:52:32.703062+05:30\"\n      }\n    ],\n    \"data_epoch\": 7\n  },\n  \"search\": {\n    \"total\": 1,\n    \"miss_ms\": 36.437,\n    \"hit_ms\": 4.508\n  },\n  \"cgpa\": 8.42,\n  \"trust\": 91,\n  \"readiness\": 74,\n  \"genuine_confidence\": 95.0,\n  \"tampered_risk\": 83,\n  \"chain_valid\": true\n}\n\n\n",
+    "stderr": ""
+  },
+  {
+    "name": "python lint",
+    "command": [
+      "C:\\Users\\Lenovo\\Desktop\\SIH_Project\\shiksham-apaar\\.venv\\Scripts\\python.exe",
+      "-m",
+      "ruff",
+      "check",
+      "--config",
+      "apps/api/pyproject.toml",
+      "apps/api/app"
+    ],
+    "start": "2026-10-25T19:22:42.970573+00:00",
+    "end": "2026-10-25T19:22:43.186308+00:00",
+    "exit_code": 0,
+    "stdout": "All checks passed!\n",
+    "stderr": ""
+  },
+  {
+    "name": "python types",
+    "command": [
+      "C:\\Users\\Lenovo\\Desktop\\SIH_Project\\shiksham-apaar\\.venv\\Scripts\\python.exe",
+      "-m",
+      "mypy",
+      "--config-file",
+      "apps/api/pyproject.toml",
+      "apps/api/app"
+    ],
+    "start": "2026-10-25T19:22:43.186816+00:00",
+    "end": "2026-10-25T19:22:45.315462+00:00",
+    "exit_code": 0,
+    "stdout": "Success: no issues found in 23 source files\n",
+    "stderr": ""
+  },
+  {
+    "name": "python tests",
+    "command": [
+      "C:\\Users\\Lenovo\\Desktop\\SIH_Project\\shiksham-apaar\\.venv\\Scripts\\python.exe",
+      "-m",
+      "pytest",
+      "apps/api/tests",
+      "-q"
+    ],
+    "start": "2026-10-25T19:22:45.316457+00:00",
+    "end": "2026-10-25T19:23:00.654240+00:00",
+    "exit_code": 0,
+    "stdout": "........................................                                 [100%]\n============================== warnings summary ===============================\n.venv\\Lib\\site-packages\\fastapi\\testclient.py:1\n  C:\\Users\\Lenovo\\Desktop\\SIH_Project\\shiksham-apaar\\.venv\\Lib\\site-packages\\fastapi\\testclient.py:1: StarletteDeprecationWarning: Using `httpx` with `starlette.testclient` is deprecated; install `httpx2` instead.\n    from starlette.testclient import TestClient as TestClient  # noqa\n\n-- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html\n40 passed, 1 warning in 13.15s\n",
+    "stderr": ""
+  },
+  {
+    "name": "web lint",
+    "command": [
+      "npm.cmd",
+      "run",
+      "lint"
+    ],
+    "start": "2026-10-25T19:23:00.654240+00:00",
+    "end": "2026-10-25T19:23:56.824463+00:00",
+    "exit_code": 0,
+    "stdout": "\n> shiksham-apaar@1.0.0 lint\n> npm run lint --workspace apps/web\n\n\n> @shiksham/web@1.0.0 lint\n> eslint .\n\n\nC:\\Users\\Lenovo\\Desktop\\SIH_Project\\shiksham-apaar\\apps\\web\\src\\components\\workspace.tsx\n   312:9   warning  Do not use `location.href` to navigate to internal Next.js pages. Use `redirect()` in the render phase, or `useRouter().push()` in Client Components' event handlers instead. See: https://nextjs.org/docs/messages/no-location-assign-relative-destination  @next/next/no-location-assign-relative-destination\n   435:19  warning  Do not use `location.href` to navigate to internal Next.js pages. Use `redirect()` in the render phase, or `useRouter().push()` in Client Components' event handlers instead. See: https://nextjs.org/docs/messages/no-location-assign-relative-destination  @next/next/no-location-assign-relative-destination\n   809:7   warning  Do not use `location.href` to navigate to internal Next.js pages. Use `redirect()` in the render phase, or `useRouter().push()` in Client Components' event handlers instead. See: https://nextjs.org/docs/messages/no-location-assign-relative-destination  @next/next/no-location-assign-relative-destination\n  1554:7   warning  Do not use `location.href` to navigate to internal Next.js pages. Use `redirect()` in the render phase, or `useRouter().push()` in Client Components' event handlers instead. See: https://nextjs.org/docs/messages/no-location-assign-relative-destination  @next/next/no-location-assign-relative-destination\n\nC:\\Users\\Lenovo\\Desktop\\SIH_Project\\shiksham-apaar\\apps\\web\\src\\lib\\api.ts\n  76:7  warning  Do not use `location.href` to navigate to internal Next.js pages. Use `redirect()` in the render phase, or `useRouter().push()` in Client Components' event handlers instead. See: https://nextjs.org/docs/messages/no-location-assign-relative-destination  @next/next/no-location-assign-relative-destination\n\n\u2716 5 problems (0 errors, 5 warnings)\n\n",
+    "stderr": ""
+  },
+  {
+    "name": "web types",
+    "command": [
+      "npm.cmd",
+      "run",
+      "typecheck"
+    ],
+    "start": "2026-10-25T19:23:56.825987+00:00",
+    "end": "2026-10-25T19:24:05.120455+00:00",
+    "exit_code": 0,
+    "stdout": "\n> shiksham-apaar@1.0.0 typecheck\n> npm run typecheck --workspace apps/web\n\n\n> @shiksham/web@1.0.0 typecheck\n> tsc --noEmit\n\n",
+    "stderr": ""
+  },
+  {
+    "name": "web build",
+    "command": [
+      "npm.cmd",
+      "run",
+      "build"
+    ],
+    "start": "2026-10-25T19:24:05.121496+00:00",
+    "end": "2026-10-25T19:24:34.311225+00:00",
+    "exit_code": 0,
+    "stdout": "\n> shiksham-apaar@1.0.0 build\n> npm run build --workspace apps/web\n\n\n> @shiksham/web@1.0.0 build\n> next build\n\n\u25b2 Next.js 16.4.3 (Turbopack)\n\u2713 Running next.config.ts took 167ms\n\n  Creating an optimized production build ...\n\u2713 Compiled successfully in 5.3s\n  Running TypeScript ...\n  Finished TypeScript in 5.2s ...\n  Collecting page data using 7 workers ...\n  Generating static pages using 7 workers (0/4) ...\n  Generating static pages using 7 workers (1/4) \n  Generating static pages using 7 workers (2/4) \n  Generating static pages using 7 workers (3/4) \n\u2713 Generating static pages using 7 workers (4/4) in 1426ms\n  Finalizing page optimization ...\n\nRoute (app)\n\u250c \u25cb /\n\u251c \u25cb /_not-found\n\u251c \u0192 /[...view]\n\u251c \u0192 /api/backend/[...path]\n\u2514 \u25cb /login\n\n\n\u25cb  (Static)   prerendered as static content\n\u0192  (Dynamic)  server-rendered on demand\n\n",
+    "stderr": ""
+  },
+  {
+    "name": "generated client",
+    "command": [
+      "C:\\Users\\Lenovo\\Desktop\\SIH_Project\\shiksham-apaar\\.venv\\Scripts\\python.exe",
+      "scripts/check_client.py"
+    ],
+    "start": "2026-10-25T19:24:34.313251+00:00",
+    "end": "2026-10-25T19:24:40.181162+00:00",
+    "exit_code": 0,
+    "stdout": "\n> shiksham-apaar@1.0.0 api:generate\n> python scripts/export_openapi.py && openapi-typescript packages/api-client/openapi.json -o apps/web/src/lib/generated/api.d.ts\n\nExported FastAPI OpenAPI schema.\n\u2728 openapi-typescript 7.10.1\n\ud83d\ude80 packages/api-client/openapi.json \u2192 apps/web/src/lib/generated/api.d.ts [135.3ms]\nGenerated OpenAPI and client are current.\n",
+    "stderr": ""
+  },
+  {
+    "name": "browser flows",
+    "command": [
+      "npm.cmd",
+      "run",
+      "e2e"
+    ],
+    "start": "2026-10-25T19:24:40.182160+00:00",
+    "end": "2026-10-25T19:25:01.305847+00:00",
+    "exit_code": 0,
+    "stdout": "\n> shiksham-apaar@1.0.0 e2e\n> npm run e2e --workspace apps/web\n\n\n> @shiksham/web@1.0.0 e2e\n> playwright test\n\n\nRunning 7 tests using 1 worker\n\n  ok 1 tests\\flows.spec.ts:24:5 \u203a operator ledger and real search MISS HIT (3.5s)\n  ok 2 tests\\flows.spec.ts:56:5 \u203a student passport and career evidence (2.0s)\n  ok 3 tests\\flows.spec.ts:78:5 \u203a passport and certificate trials use real backend (2.4s)\n  ok 4 tests\\flows.spec.ts:98:5 \u203a admin masking and aggregate oversight (1.5s)\n  ok 5 tests\\flows.spec.ts:112:5 \u203a 375px mobile and axe on passport (2.6s)\n  ok 6 tests\\flows.spec.ts:142:5 \u203a print passport artifact (1.8s)\n  ok 7 tests\\flows.spec.ts:157:5 \u203a concurrent expired requests use one refresh and strip caller authorization (1.5s)\n\n  7 passed (16.9s)\n",
+    "stderr": "(node:29460) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.\n(Use `node --trace-warnings ...` to show where the warning was created)\n"
+  },
+  {
+    "name": "artifacts",
+    "command": [
+      "C:\\Users\\Lenovo\\Desktop\\SIH_Project\\shiksham-apaar\\.venv\\Scripts\\python.exe",
+      "scripts/check_artifacts.py"
+    ],
+    "start": "2026-10-25T19:25:01.307859+00:00",
+    "end": "2026-10-25T19:25:01.503275+00:00",
+    "exit_code": 1,
+    "stdout": "Artifact check: 151 exact-tree paths absent; 0 fixture hash mismatches; font licenses present=True.\n",
+    "stderr": ""
+  },
+  {
+    "name": "benchmark",
+    "command": [
+      "C:\\Users\\Lenovo\\Desktop\\SIH_Project\\shiksham-apaar\\.venv\\Scripts\\python.exe",
+      "scripts/benchmark.py",
+      "--runs",
+      "20"
+    ],
+    "start": "2026-10-25T19:25:01.504282+00:00",
+    "end": "2026-10-25T19:25:06.534219+00:00",
+    "exit_code": 0,
+    "stdout": "{\"application_cold\": {\"min_ms\": 6.071, \"max_ms\": 132.668, \"p50_ms\": 11.9285, \"p95_ms\": 98.626}, \"cached\": {\"min_ms\": 4.253, \"max_ms\": 59.649, \"p50_ms\": 5.1505, \"p95_ms\": 6.246}, \"hardware\": \"Windows-11-10.0.26300-SP0; AMD64 Family 25 Model 80 Stepping 0, AuthenticAMD\"}\n",
+    "stderr": "C:\\Users\\Lenovo\\Desktop\\SIH_Project\\shiksham-apaar\\.venv\\Lib\\site-packages\\fastapi\\testclient.py:1: StarletteDeprecationWarning: Using `httpx` with `starlette.testclient` is deprecated; install `httpx2` instead.\n  from starlette.testclient import TestClient as TestClient  # noqa\n"
+  }
+]

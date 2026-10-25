@@ -25,7 +25,378 @@
     "certificates/showcase-python.pdf": "94be7000e7dd07c25cd811917a3e92003101570486ebd707e62124a969bc30d3",
     "certificates/showcase-tampered.pdf": "4998ae3da0ce89de735733fccb9df249528b10ac224977dfe0a6269874d68536",
     "demo-import-1000.csv": "354bfb69e1e0ba937044042e4ea9e913e1e840974d7a701505badd758fca701c",
-    "demo-import-1000.xlsx": "040f41d1d53f8fbc062e74ca9b355c6cb7c1902590c8f1cca3134cde2809a644",
+    "demo-import-1000.xlsx": "c05f6ded390da1b2ef6ae83f8bce8e40b473559905d55655115748696e8d7d7c",
     "expected_findings.json": "6f80cfade4bff04617808b3746052ead8340a49ecb5f893028451ba98a3db08e"
-  }
+  },
+  "enrichment": {
+    "project_owners": 10000,
+    "internship_owners": 5000,
+    "skill_owners": 30000,
+    "achievement_owners": 2000,
+    "scholarship_owners": 2000,
+    "other_certificate_files": 200,
+    "subject_sample_students": 101
+  },
+  "program_counts": [
+    {
+      "institution_id": "0a86830d-f686-5c78-9c62-602182f22070",
+      "program_id": "780bfbc0-8127-5660-a422-848d240b5f5f",
+      "students": 8272
+    },
+    {
+      "institution_id": "227cb62e-a0ca-5dd2-83b9-09560e34e648",
+      "program_id": "3a9ce318-4dd4-5c9f-8f75-e548dae160a0",
+      "students": 827
+    },
+    {
+      "institution_id": "227cb62e-a0ca-5dd2-83b9-09560e34e648",
+      "program_id": "634ac5ac-3881-5b5a-bc1e-76c134f762e2",
+      "students": 414
+    },
+    {
+      "institution_id": "227cb62e-a0ca-5dd2-83b9-09560e34e648",
+      "program_id": "808c1c5f-82fa-51b4-9d74-1f955e36ff53",
+      "students": 4137
+    },
+    {
+      "institution_id": "227cb62e-a0ca-5dd2-83b9-09560e34e648",
+      "program_id": "842a7a96-d7fe-5430-8dc8-9c2ac7e1cefd",
+      "students": 827
+    },
+    {
+      "institution_id": "227cb62e-a0ca-5dd2-83b9-09560e34e648",
+      "program_id": "c48617d1-acc3-5a1e-b289-2eb251a59587",
+      "students": 827
+    },
+    {
+      "institution_id": "227cb62e-a0ca-5dd2-83b9-09560e34e648",
+      "program_id": "f733e262-9839-5b55-9f83-1ebe70261771",
+      "students": 1241
+    },
+    {
+      "institution_id": "3d5bc271-10c6-5285-a8b1-2ebad1efe4aa",
+      "program_id": "650c3216-a6e4-5de4-9e3d-024f643259ab",
+      "students": 827
+    },
+    {
+      "institution_id": "3d5bc271-10c6-5285-a8b1-2ebad1efe4aa",
+      "program_id": "6fd308be-0f23-52b6-b79e-87d3a4977aaf",
+      "students": 827
+    },
+    {
+      "institution_id": "3d5bc271-10c6-5285-a8b1-2ebad1efe4aa",
+      "program_id": "a3a739aa-4ab7-544d-965b-9c491b6304a5",
+      "students": 1241
+    },
+    {
+      "institution_id": "3d5bc271-10c6-5285-a8b1-2ebad1efe4aa",
+      "program_id": "d7cf124e-5fcb-5f8e-9102-f449a51232fb",
+      "students": 827
+    },
+    {
+      "institution_id": "3d5bc271-10c6-5285-a8b1-2ebad1efe4aa",
+      "program_id": "f792321d-ec22-583f-8282-79ef1ef8f737",
+      "students": 414
+    },
+    {
+      "institution_id": "3d5bc271-10c6-5285-a8b1-2ebad1efe4aa",
+      "program_id": "fcefd5a4-739e-53db-9f1c-d542c237ee44",
+      "students": 4137
+    },
+    {
+      "institution_id": "4dcf735b-3001-575f-982c-b8c4e445a610",
+      "program_id": "0914e70f-9b4e-5445-88a8-b3c6cb415e61",
+      "students": 827
+    },
+    {
+      "institution_id": "4dcf735b-3001-575f-982c-b8c4e445a610",
+      "program_id": "36d13c52-7ebe-5cee-9352-ee909b5271e0",
+      "students": 1241
+    },
+    {
+      "institution_id": "4dcf735b-3001-575f-982c-b8c4e445a610",
+      "program_id": "6cd42a3a-f022-50d0-89ba-a3b41ef806d3",
+      "students": 414
+    },
+    {
+      "institution_id": "4dcf735b-3001-575f-982c-b8c4e445a610",
+      "program_id": "8cc3ef28-6545-5c24-8ef2-45dc470dbcef",
+      "students": 827
+    },
+    {
+      "institution_id": "4dcf735b-3001-575f-982c-b8c4e445a610",
+      "program_id": "c7a64818-c03b-5a76-aae1-603e461db293",
+      "students": 4137
+    },
+    {
+      "institution_id": "4dcf735b-3001-575f-982c-b8c4e445a610",
+      "program_id": "d5a8b4d5-cee6-58ac-a1e9-e950eb3a5944",
+      "students": 827
+    },
+    {
+      "institution_id": "5aa90f55-b6df-5652-bfed-823ee27276c5",
+      "program_id": "03f5c7ed-7727-5dab-a740-66df30ebf0e8",
+      "students": 827
+    },
+    {
+      "institution_id": "5aa90f55-b6df-5652-bfed-823ee27276c5",
+      "program_id": "238d2aff-9390-5273-8f14-b24af0db6998",
+      "students": 4137
+    },
+    {
+      "institution_id": "5aa90f55-b6df-5652-bfed-823ee27276c5",
+      "program_id": "2cd94cab-04e8-5ddc-824e-736d30868c37",
+      "students": 414
+    },
+    {
+      "institution_id": "5aa90f55-b6df-5652-bfed-823ee27276c5",
+      "program_id": "d311ac2d-3df3-5ce6-983f-249c94393985",
+      "students": 1241
+    },
+    {
+      "institution_id": "5aa90f55-b6df-5652-bfed-823ee27276c5",
+      "program_id": "d6ace5cc-a17a-54f6-92e9-474af5b2ebec",
+      "students": 827
+    },
+    {
+      "institution_id": "5aa90f55-b6df-5652-bfed-823ee27276c5",
+      "program_id": "e4004a2e-564b-5673-81bf-5b468ed689e3",
+      "students": 827
+    },
+    {
+      "institution_id": "5cf9552b-1f59-57b6-8f7a-197fa876e07c",
+      "program_id": "1ec74a66-e4f6-552d-8ac8-27f5714d84fd",
+      "students": 414
+    },
+    {
+      "institution_id": "5cf9552b-1f59-57b6-8f7a-197fa876e07c",
+      "program_id": "2a69eb0f-1c90-555a-a8e8-1905a202f589",
+      "students": 827
+    },
+    {
+      "institution_id": "5cf9552b-1f59-57b6-8f7a-197fa876e07c",
+      "program_id": "8cb3e0ef-b7dd-5312-beab-39aee1c5b771",
+      "students": 1241
+    },
+    {
+      "institution_id": "5cf9552b-1f59-57b6-8f7a-197fa876e07c",
+      "program_id": "d5d5a4ea-3e31-5aea-be8b-2d7fce12d964",
+      "students": 827
+    },
+    {
+      "institution_id": "5cf9552b-1f59-57b6-8f7a-197fa876e07c",
+      "program_id": "e65ccac3-d0a5-5f03-8ada-05e5e3a90623",
+      "students": 4137
+    },
+    {
+      "institution_id": "5cf9552b-1f59-57b6-8f7a-197fa876e07c",
+      "program_id": "fa868611-7edf-5cc9-bdd2-52c604095e12",
+      "students": 827
+    },
+    {
+      "institution_id": "72caa991-8df4-5958-bb0f-8b7d8f9b23a9",
+      "program_id": "0b1508a2-a228-50f7-bff4-34f25fa4c444",
+      "students": 1241
+    },
+    {
+      "institution_id": "72caa991-8df4-5958-bb0f-8b7d8f9b23a9",
+      "program_id": "86e84076-a4c6-5c11-a0eb-d4517c05df65",
+      "students": 827
+    },
+    {
+      "institution_id": "72caa991-8df4-5958-bb0f-8b7d8f9b23a9",
+      "program_id": "b0d169b3-a643-5a3a-b111-fca636a56cb6",
+      "students": 827
+    },
+    {
+      "institution_id": "72caa991-8df4-5958-bb0f-8b7d8f9b23a9",
+      "program_id": "bc3912c9-06ff-5e28-866a-69a9d6c49272",
+      "students": 4137
+    },
+    {
+      "institution_id": "72caa991-8df4-5958-bb0f-8b7d8f9b23a9",
+      "program_id": "e67a9a9b-c3e6-5d79-8ba6-358d415c1a63",
+      "students": 827
+    },
+    {
+      "institution_id": "72caa991-8df4-5958-bb0f-8b7d8f9b23a9",
+      "program_id": "fe74447c-850a-5a6e-8d12-8d0630f1cead",
+      "students": 414
+    },
+    {
+      "institution_id": "8371aee0-881d-5d09-8e93-9a1c5e96ff61",
+      "program_id": "5806f3d8-c2ff-5439-bd23-41dbeb3ecacc",
+      "students": 8272
+    },
+    {
+      "institution_id": "bca5b097-7b6c-522e-a787-be2018ac6f68",
+      "program_id": "4700e0e6-b0a4-5304-b072-bedc66d5df08",
+      "students": 827
+    },
+    {
+      "institution_id": "bca5b097-7b6c-522e-a787-be2018ac6f68",
+      "program_id": "637287a8-a817-5ed1-ab35-6416bbee434d",
+      "students": 827
+    },
+    {
+      "institution_id": "bca5b097-7b6c-522e-a787-be2018ac6f68",
+      "program_id": "6daaebe2-622b-5f20-ba94-80b710cf806a",
+      "students": 414
+    },
+    {
+      "institution_id": "bca5b097-7b6c-522e-a787-be2018ac6f68",
+      "program_id": "8ba071c4-567e-55ac-92e2-4820467d5484",
+      "students": 1241
+    },
+    {
+      "institution_id": "bca5b097-7b6c-522e-a787-be2018ac6f68",
+      "program_id": "f6b831af-97cf-5e2a-87e0-2c2995814ecb",
+      "students": 827
+    },
+    {
+      "institution_id": "bca5b097-7b6c-522e-a787-be2018ac6f68",
+      "program_id": "fadd7617-0c5b-56da-bb5c-22000b202310",
+      "students": 4137
+    },
+    {
+      "institution_id": "c5b027be-a391-57dd-9f87-1be789467c1c",
+      "program_id": "0ac80b94-78d0-5587-a90f-853345ee22ba",
+      "students": 1241
+    },
+    {
+      "institution_id": "c5b027be-a391-57dd-9f87-1be789467c1c",
+      "program_id": "195e0c34-3c1c-5928-9f94-fdb80c97143c",
+      "students": 827
+    },
+    {
+      "institution_id": "c5b027be-a391-57dd-9f87-1be789467c1c",
+      "program_id": "387de9a4-a995-5823-8d9e-921fc7ba834d",
+      "students": 414
+    },
+    {
+      "institution_id": "c5b027be-a391-57dd-9f87-1be789467c1c",
+      "program_id": "9e6e6320-4483-55be-b1f6-788a95a4a8bb",
+      "students": 827
+    },
+    {
+      "institution_id": "c5b027be-a391-57dd-9f87-1be789467c1c",
+      "program_id": "d384e290-086c-555b-bcca-56409d3f0bf7",
+      "students": 4136
+    },
+    {
+      "institution_id": "c5b027be-a391-57dd-9f87-1be789467c1c",
+      "program_id": "f5b81ee3-fb29-510c-b3cc-26f646565b63",
+      "students": 827
+    },
+    {
+      "institution_id": "cf8bbf15-095d-521b-822a-30a89404691d",
+      "program_id": "43f7cf24-de28-5c82-af81-064f9ed2044a",
+      "students": 450
+    },
+    {
+      "institution_id": "cf8bbf15-095d-521b-822a-30a89404691d",
+      "program_id": "7fe6a58d-b403-578d-8636-38c6e46abe39",
+      "students": 900
+    },
+    {
+      "institution_id": "cf8bbf15-095d-521b-822a-30a89404691d",
+      "program_id": "a3b2fb8c-3f3d-5325-a6e9-b477b17516be",
+      "students": 900
+    },
+    {
+      "institution_id": "cf8bbf15-095d-521b-822a-30a89404691d",
+      "program_id": "e7cc823a-437d-5b10-90d4-4fd082254923",
+      "students": 900
+    },
+    {
+      "institution_id": "cf8bbf15-095d-521b-822a-30a89404691d",
+      "program_id": "f77285a5-481d-530a-89fa-0eed617e5f12",
+      "students": 1350
+    },
+    {
+      "institution_id": "cf8bbf15-095d-521b-822a-30a89404691d",
+      "program_id": "fd24e3c9-a8fe-5f29-9854-a50bc0898f89",
+      "students": 4500
+    },
+    {
+      "institution_id": "f830fe63-7331-523a-bf2f-c7d28185e44b",
+      "program_id": "0405d68c-7ea6-5e36-9bb8-ff79443f8365",
+      "students": 4137
+    },
+    {
+      "institution_id": "f830fe63-7331-523a-bf2f-c7d28185e44b",
+      "program_id": "0c5d9adc-9a10-57d6-8426-62e5b29f1562",
+      "students": 1241
+    },
+    {
+      "institution_id": "f830fe63-7331-523a-bf2f-c7d28185e44b",
+      "program_id": "4d1cff9c-854b-576d-97ca-1d4926dbe5bb",
+      "students": 414
+    },
+    {
+      "institution_id": "f830fe63-7331-523a-bf2f-c7d28185e44b",
+      "program_id": "8e9d7681-2930-57fd-a48d-7e760cb8d537",
+      "students": 827
+    },
+    {
+      "institution_id": "f830fe63-7331-523a-bf2f-c7d28185e44b",
+      "program_id": "da2c3f2b-d780-55c1-ba75-d1bf683a1391",
+      "students": 827
+    },
+    {
+      "institution_id": "f830fe63-7331-523a-bf2f-c7d28185e44b",
+      "program_id": "f463c227-8f11-5fc2-8a15-49bc7a2a844b",
+      "students": 827
+    }
+  ],
+  "cohort_counts": [
+    {
+      "admission_year": 2022,
+      "students": 20005
+    },
+    {
+      "admission_year": 2023,
+      "students": 20005
+    },
+    {
+      "admission_year": 2024,
+      "students": 20002
+    },
+    {
+      "admission_year": 2025,
+      "students": 19994
+    },
+    {
+      "admission_year": 2026,
+      "students": 19994
+    }
+  ],
+  "dataset_students": 100000,
+  "institution_counts": [
+    9000,
+    8273,
+    8273,
+    8273,
+    8273,
+    8273,
+    8273,
+    8273,
+    8273,
+    8272,
+    8272,
+    8272
+  ],
+  "seed_seconds": 68.775,
+  "seed_validation": {
+    "completed_term_students": 80006,
+    "certificate_files": 202,
+    "certificate_storage_bytes": 336004,
+    "projects_owners": 10000,
+    "internships_owners": 5000,
+    "student_skills_owners": 30000,
+    "achievements_owners": 2000,
+    "scholarships_owners": 2000
+  },
+  "database_bytes": 457466383,
+  "total_seconds": 78.665
 }

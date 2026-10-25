@@ -71,6 +71,10 @@ def parse(data, filename):
             book = load_workbook(BytesIO(data), read_only=True, data_only=False, keep_links=False)
             nonempty = []
             for sheet in book:
+                if sheet.max_column and sheet.max_column > 100:
+                    fail("INVALID_HEADERS")
+                if sheet.max_row and sheet.max_row > 1001:
+                    fail("TOO_MANY_ROWS")
                 rows = list(sheet.iter_rows())
                 if any(any(c.value is not None for c in row) for row in rows):
                     nonempty.append(rows)

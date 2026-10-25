@@ -1,6 +1,7 @@
 """Version-one deterministic algorithms for synthetic records only."""
 
 import re
+import json
 import unicodedata
 from typing import Any
 from datetime import date
@@ -8,6 +9,7 @@ from decimal import Decimal, ROUND_HALF_UP
 from rapidfuzz import fuzz
 from unidecode import unidecode
 from app.core.weights import load_weights
+from app.settings import ROOT
 
 MISSING = {"", "na", "n/a", "null", "none", "-"}
 
@@ -85,18 +87,7 @@ def possible_match(a, b):
     return score, n >= 90 and guard and score >= 87 and (same_dob or p >= 90)
 
 
-CATALOGUE = {
-    "DATA_SCIENTIST": dict(
-        PYTHON=18, SQL=16, STATISTICS=14, PANDAS=14, DATA_VISUALIZATION=12, MACHINE_LEARNING=16, MODEL_DEPLOYMENT=10
-    ),
-    "FULL_STACK_DEVELOPER": dict(
-        HTML_CSS=12, JAVASCRIPT=18, TYPESCRIPT=12, REACT=18, API_DESIGN=16, SQL=14, TESTING=10
-    ),
-    "ML_ENGINEER": dict(
-        PYTHON=18, MACHINE_LEARNING=20, STATISTICS=12, DATA_PIPELINES=15, MODEL_DEPLOYMENT=20, TESTING=15
-    ),
-    "CLOUD_ENGINEER": dict(LINUX=18, NETWORKING=18, CLOUD_FUNDAMENTALS=20, CONTAINERS=16, IAC=16, OBSERVABILITY=12),
-}
+CATALOGUE: dict[str, dict[str, int]] = json.loads((ROOT / "db/seed/catalogue.json").read_text(encoding="utf-8"))
 
 
 def career(role, skills):
@@ -196,7 +187,10 @@ def trust(inputs):
 def certificate_confidence(extracted, student, as_of):
     n, guard = name_match(extracted.get("name"), student.get("full_name"))
     issuer = normalized_name(extracted.get("issuer"))
-    providers = {"shiksham demo academy": r"SDA-[0-9]{8}", "synthetic cloud institute": r"SCI-[A-Z]{3}-[0-9]{5}"}
+    providers = {
+        normalized_name(name): entry["pattern"]
+        for name, entry in json.loads((ROOT / "db/seed/certificate_providers.json").read_text(encoding="utf-8")).items()
+    }
     i = Decimal(1) if issuer in providers else Decimal(".5") if issuer else Decimal(0)
     d = Decimal(0)
     try:

@@ -1,6 +1,7 @@
 {
+  "environment_database": "shiksham_repro",
   "import_report": {
-    "batch_id": "dea24564-292b-4010-95d6-3da2e928de8c",
+    "batch_id": "530b4783-1e33-47bf-8acb-bad6a2c60a52",
     "clean": 880,
     "flagged": 110,
     "incomplete": 10,
@@ -53,22 +54,22 @@
     "pending_corrections": 0,
     "recent_imports": [
       {
-        "id": "dea24564-292b-4010-95d6-3da2e928de8c",
+        "id": "530b4783-1e33-47bf-8acb-bad6a2c60a52",
         "filename": "demo-import-1000.csv",
         "status": "COMPLETED",
         "total_rows": 1000,
         "clean_rows": 880,
         "flagged_rows": 110,
         "incomplete_rows": 10,
-        "created_at": "2026-10-25T22:22:39.829997+05:30"
+        "created_at": "2026-10-26T00:59:06.287015+05:30"
       }
     ],
     "data_epoch": 7
   },
   "search": {
     "total": 1,
-    "miss_ms": 16.053,
-    "hit_ms": 3.346
+    "miss_ms": 35.573,
+    "hit_ms": 4.474
   },
   "cgpa": 8.42,
   "trust": 91,

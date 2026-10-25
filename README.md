@@ -47,6 +47,6 @@ python scripts/verify_all.py
 python scripts/verify_all.py --full
 ```
 
-The native reproduction uses an allowlisted scratch database, `shiksham_repro`, preserving the active demo. This verifies fresh migrations/bootstrap/API behavior; it does not prove the specification's exact clean-checkout, deleted-environment Docker workflow. Scripts never print local secrets during verification.
+The verification sweep always reproduces an allowlisted scratch database, `shiksham_repro`, preserving the active demo. This verifies fresh migrations/bootstrap/API behavior; it does not prove the specification's exact clean-checkout, deleted-environment Docker workflow. Scripts never print local secrets during verification. For an intentional active-demo reset, see the guarded backup-and-reset command in the demo script.
 
 Read the [architecture](docs/architecture.md), [algorithms](docs/algorithms.md), [security boundaries](docs/security.md), [deployment guide](docs/deployment.md), [demo script](docs/demo-script.md), and [verification report](docs/verification-report.md). Raw evidence is in `docs/acceptance-results.json`, `benchmark-results.json`, `schema-check.json`, `reproduction-results.json` and `playwright-results.json`.

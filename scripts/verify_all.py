@@ -31,6 +31,8 @@ def run(full=False):
     ]
     steps.insert(2, ("fresh database", [sys.executable, "scripts/reproduce.py"]))
     results = []
+    archive = ROOT / "docs/audits" / datetime.now(timezone.utc).strftime("%Y%m%dT%H%M%S%fZ")
+    archive.mkdir(parents=True, exist_ok=False)
     for name, command in steps:
         start = datetime.now(timezone.utc).isoformat()
         r = subprocess.run(
@@ -48,7 +50,19 @@ def run(full=False):
             )
         )
         print(f"{name}: " + ("PASS" if r.returncode == 0 else "FAIL"), flush=True)
-        (ROOT / "docs/verification-results.json").write_text(json.dumps(results, indent=2))
+        output = json.dumps(results, indent=2)
+        (ROOT / "docs/verification-results.json").write_text(output, encoding="utf-8")
+        (archive / "automation.json").write_text(output, encoding="utf-8")
+    for artifact in [
+        "reproduction-results.json",
+        "schema-check.json",
+        "artifact-check.json",
+        "playwright-results.json",
+        "benchmark-results.json",
+    ]:
+        path = ROOT / "docs" / artifact
+        if path.exists():
+            (archive / artifact).write_bytes(path.read_bytes())
     return int(any(r["exit_code"] for r in results))
 
 

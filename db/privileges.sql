@@ -8,4 +8,5 @@ REVOKE UPDATE,DELETE,TRUNCATE ON record_versions,review_decisions FROM shiksham_
 GRANT SELECT,INSERT ON record_versions,review_decisions TO shiksham_runtime;
 GRANT EXECUTE ON FUNCTION append_audit(uuid,text) TO shiksham_runtime;
 GRANT EXECUTE ON FUNCTION lock_audit_chain(uuid) TO shiksham_runtime;
+GRANT EXECUTE ON FUNCTION demo_sandbox_snapshot(uuid) TO shiksham_runtime;
 GRANT EXECUTE ON FUNCTION refresh_demo_views() TO shiksham_runtime;

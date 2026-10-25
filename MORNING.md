@@ -1,10 +1,10 @@
-[OWNER_DECISIONS.md](OWNER_DECISIONS.md) — open MUST 5, SHOULD 36, COULD 8.
+[OWNER_DECISIONS.md](OWNER_DECISIONS.md) â€” open MUST 5, SHOULD 36, COULD 8.
 
 1. Core synthetic local API demo has run end to end.
 2. Native PostgreSQL16 contains the100k baseline plus imported demonstration records.
 3. Exact import and correction counts are measured in docs/acceptance-results.json.
 4. PDF confidence95, tampered risk83, trust91 and readiness74 are computed.
-5. Six browser flows passed, including375px layout and axe.
+5. Seven browser flows passed, including375px layout and axe.
 6. Fresh100k database reproduction and schema comparison passed.
 7. Risk1: exact module tree and full response typing remain incomplete.
 8. Risk2: broader screen, seed, API and adversarial requirements remain incomplete.
@@ -24,7 +24,7 @@ This is not a full conformance sign-off. See V2, V4, V5, V7 and V9. Do not descr
 - [ ] Enable reduced motion and inspect focus/contrast.
 - [ ] Rehearse the judging script on the owner laptop.
 
-## M1 — Docker Desktop
+## M1 â€” Docker Desktop
 
 Status: READY. Owner row A1.
 
@@ -36,7 +36,7 @@ Verify: docker compose version; prints a Compose version.
 
 Fallback: Native PostgreSQL 16 is running.
 
-## M2 — Local secrets
+## M2 â€” Local secrets
 
 Status: VERIFIED-BY-BUILDER. Owner row A2.
 
@@ -48,7 +48,7 @@ Verify: python -m app.cli preflight; database=true and seed_ready=true.
 
 Fallback: init-env ran and local login was verified.
 
-## M3 — Optional Gemini account
+## M3 â€” Optional Gemini account
 
 Status: READY. Owner row A3.
 
@@ -60,7 +60,7 @@ Verify: python -m app.cli preflight; llm_enabled=true and llm_configured=true, t
 
 Fallback: RULE_BASED extraction and career guidance pass without a key.
 
-## M4 — Neon project
+## M4 â€” Neon project
 
 Status: READY. Owner row A4.
 
@@ -72,7 +72,7 @@ Verify: python -m app.cli preflight; database=true, seed_ready=true.
 
 Fallback: Local database only.
 
-## M5 — Render service
+## M5 â€” Render service
 
 Status: BLOCKED. Owner row A5.
 
@@ -84,7 +84,7 @@ Verify: Open backend /api/v1/health/ready; HTTP200 ready.
 
 Fallback: Local API works.
 
-## M6 — Vercel project
+## M6 â€” Vercel project
 
 Status: READY. Owner row A6.
 
@@ -96,7 +96,7 @@ Verify: Open frontend /login and sign in; dashboard loads through same-origin pr
 
 Fallback: Local Next web app works.
 
-## M7 — Private GitHub repository
+## M7 â€” Private GitHub repository
 
 Status: READY. Owner row A7.
 
@@ -108,7 +108,7 @@ Verify: git remote -v; shows the owner-selected repository without credentials.
 
 Fallback: Local commits only; no remote is added.
 
-## M8 — Optional tunnel
+## M8 â€” Optional tunnel
 
 Status: READY. Owner row A8.
 
@@ -120,7 +120,7 @@ Verify: Open tunnel /login; same-origin sign-in and CSRF mutation succeed.
 
 Fallback: Loopback-only demo works.
 
-## M9 — Manual walkthrough
+## M9 â€” Manual walkthrough
 
 Status: READY. Owner row A9.
 
@@ -132,7 +132,7 @@ Verify: Complete every manual tick box in MORNING.md; no clipping or inaccessibl
 
 Fallback: Six scripted browser flows, mobile overflow and axe checks passed.
 
-## M10 — Laptop benchmark
+## M10 â€” Laptop benchmark
 
 Status: READY. Owner row A10.
 
@@ -144,7 +144,7 @@ Verify: python scripts/benchmark.py --runs 20; real p50/p95 output with cache eq
 
 Fallback: Builder measurements are recorded in docs/benchmark-results.json.
 
-## M11 — Real PNG OCR
+## M11 â€” Real PNG OCR
 
 Status: READY. Owner row A11.
 
@@ -156,7 +156,7 @@ Verify: python -m app.cli preflight --include-documents; TESSERACT appears, then
 
 Fallback: Text-bearing PDF fixtures verify through PDF_TEXT; images return UNREADABLE when no engine exists.
 
-## M12 — Organizer checklist
+## M12 â€” Organizer checklist
 
 Status: READY. Owner row A12.
 

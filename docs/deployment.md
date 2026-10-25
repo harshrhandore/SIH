@@ -14,7 +14,7 @@ Neon documents a free storage allowance of1GB/project and scale-to-zero after5mi
 
 1. Create an empty PostgreSQL16 Neon project. Do not put real student data in it.
 2. Create separate migrator and runtime credentials. Store the direct migrator URL locally as `DATABASE_OWNER_URL`, the runtime pooled SSL URL as `DATABASE_URL`, and the runtime password as `RUNTIME_DB_PASSWORD` in a private environment. No owner URL goes into Render.
-3. The current bootstrap refuses nonempty targets and can accept `--students 5000`, but an explicitly named, budget-guarded cloud-bootstrap command remains unfinished. Implement and verify that gate before using an external database. Never substitute a reset command on a remote host.
+3. From the owner's private environment, run `python -m app.cli cloud-bootstrap --students 5000 --confirm EMPTY-SYNTHETIC-CLOUD`. It requires a Neon SSL URL, exactly5000students, demo mode and an empty public schema, then measures database bytes against400MB. The command is prepared but has not been run against an owner account. Never substitute a reset command on a remote host.
 4. Apply migrations, seed5000, refresh views, check the chain and measure `SELECT pg_database_size(current_database())`. Retain measured headroom.
 5. Create the Render free Docker service from `render.yaml`. Configure `DATABASE_URL`, `JWT_SECRET`, `MASK_SECRET`, `GRANT_SECRET`, `WEB_ORIGIN`; use generated local values or rotate them privately. Leave model integration off. Health path is `/api/v1/health/ready`.
 6. Confirm Render's current cold-start and filesystem behavior in [its free-service documentation](https://render.com/docs/free). That page was unavailable to the builder's web fetch, so provider-specific behavior remains an owner verification item.

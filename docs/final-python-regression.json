@@ -1,0 +1,47 @@
+[
+  {
+    "command": [
+      "C:\\Users\\Lenovo\\Desktop\\SIH_Project\\shiksham-apaar\\.venv\\Scripts\\python.exe",
+      "-m",
+      "ruff",
+      "check",
+      "--config",
+      "apps/api/pyproject.toml",
+      "apps/api/app"
+    ],
+    "start": "2026-10-25T19:30:57.493280+00:00",
+    "end": "2026-10-25T19:30:57.660326+00:00",
+    "exit_code": 0,
+    "stdout": "All checks passed!\n",
+    "stderr": ""
+  },
+  {
+    "command": [
+      "C:\\Users\\Lenovo\\Desktop\\SIH_Project\\shiksham-apaar\\.venv\\Scripts\\python.exe",
+      "-m",
+      "mypy",
+      "--config-file",
+      "apps/api/pyproject.toml",
+      "apps/api/app"
+    ],
+    "start": "2026-10-25T19:30:57.660326+00:00",
+    "end": "2026-10-25T19:30:59.434963+00:00",
+    "exit_code": 0,
+    "stdout": "Success: no issues found in 23 source files\n",
+    "stderr": ""
+  },
+  {
+    "command": [
+      "C:\\Users\\Lenovo\\Desktop\\SIH_Project\\shiksham-apaar\\.venv\\Scripts\\python.exe",
+      "-m",
+      "pytest",
+      "apps/api/tests",
+      "-q"
+    ],
+    "start": "2026-10-25T19:30:59.434963+00:00",
+    "end": "2026-10-25T19:31:12.864926+00:00",
+    "exit_code": 0,
+    "stdout": "...............................................                          [100%]\n============================== warnings summary ===============================\n.venv\\Lib\\site-packages\\fastapi\\testclient.py:1\n  C:\\Users\\Lenovo\\Desktop\\SIH_Project\\shiksham-apaar\\.venv\\Lib\\site-packages\\fastapi\\testclient.py:1: StarletteDeprecationWarning: Using `httpx` with `starlette.testclient` is deprecated; install `httpx2` instead.\n    from starlette.testclient import TestClient as TestClient  # noqa\n\n-- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html\n47 passed, 1 warning in 11.47s\n",
+    "stderr": ""
+  }
+]

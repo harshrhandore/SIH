@@ -1554,6 +1554,7 @@ export interface operations {
                 program_id?: string | null;
                 branch?: string | null;
                 current_year?: number | null;
+                quality?: string | null;
                 page?: number;
                 page_size?: number;
                 sort?: string;

@@ -13,6 +13,7 @@ from fastapi.responses import JSONResponse, FileResponse, Response
 from fastapi.exceptions import RequestValidationError
 from pydantic import BaseModel, Field, ConfigDict
 from psycopg.types.json import Jsonb
+from unidecode import unidecode
 from app.settings import settings, ROOT
 from app.db.session import connect, one, many
 from app.core.errors import fail
@@ -29,7 +30,7 @@ from app.core.security import (
     reason,
 )
 from app.core.rate_limit import limit
-from app.core.cache import cache
+from app.core.cache import cache, preferences
 from app.core.files import store, read, contained, root_path
 from app.core.algorithms import normalized_name, valid_id, career, CATALOGUE
 from app.core.audit import append, verify
@@ -359,6 +360,7 @@ def search(
     program_id: UUID | None = None,
     branch: str | None = None,
     current_year: int | None = None,
+    quality: str | None = None,
     page: int = 1,
     page_size: int = 25,
     sort: str = "name",
@@ -373,6 +375,18 @@ def search(
         fail("UNKNOWN_SORT")
     q = q.strip()
     branch = branch or None
+    quality_aliases = {
+        "total": None,
+        "clean": "PASSED_LOCAL_CHECKS",
+        "flagged": "FLAGGED_FOR_REVIEW",
+        "incomplete": "INCOMPLETE",
+        "PASSED_LOCAL_CHECKS": "PASSED_LOCAL_CHECKS",
+        "FLAGGED_FOR_REVIEW": "FLAGGED_FOR_REVIEW",
+        "INCOMPLETE": "INCOMPLETE",
+    }
+    if quality is not None and quality not in quality_aliases:
+        fail("UNKNOWN_QUALITY_FILTER")
+    quality = quality_aliases.get(quality) if quality else None
     with connect() as conn:
         data_epoch = one(
             conn,
@@ -391,24 +405,24 @@ def search(
             page,
             page_size,
             sort,
+            quality,
         )
         result = (
             None
             if settings.demo_controls_enabled
-            and (
-                request.headers.get("x-demo-cache") == "bypass"
-                or cache.get(("session-controls", str(user["sid"]))) is False
-            )
+            and (request.headers.get("x-demo-cache") == "bypass" or preferences.get(str(user["sid"])) is False)
             else cache.get(key)
         )
         hit = bool(result)
         if result is None:
-            escaped = normalized_name(q).replace("\\", "\\\\").replace("%", "\\%").replace("_", "\\_")
-            predicate = "s.institution_id=ANY(%s::uuid[]) AND (%s='' OR s.normalized_name LIKE %s OR s.apaar_id=%s OR s.submitted_enrollment_no=%s) AND (%s::uuid IS NULL OR s.program_id=%s) AND (%s::text IS NULL OR p.branch=%s) AND (%s::int IS NULL OR s.current_year=%s)"
-            params = (
+            escaped = (normalized_name(q) or q.casefold()).replace("\\", "\\\\").replace("%", "\\%").replace("_", "\\_")
+            transliterated = unidecode(escaped)
+            predicate = "s.institution_id=ANY(%s::uuid[]) AND (%s='' OR s.normalized_name LIKE %s OR s.transliterated_name LIKE %s OR s.apaar_id=%s OR s.submitted_enrollment_no=%s) AND (%s::uuid IS NULL OR s.program_id=%s) AND (%s::text IS NULL OR p.branch=%s) AND (%s::int IS NULL OR s.current_year=%s)"
+            params: tuple = (
                 ids,
                 q,
                 "%" + escaped + "%",
+                "%" + transliterated + "%",
                 q.upper(),
                 q.upper(),
                 program_id,
@@ -418,6 +432,8 @@ def search(
                 current_year,
                 current_year,
             )
+            predicate += " AND (%s::text IS NULL OR s.data_quality_status=%s)"
+            params += (quality, quality)
             total = one(
                 conn,
                 "SELECT count(*)::int AS n FROM students s LEFT JOIN programs p ON p.id=s.program_id WHERE "
@@ -1384,8 +1400,8 @@ def demo_config(user=Depends(authenticated)):
             synthetic=True,
             demo_as_of=settings.demo_as_of,
             controls_enabled=settings.demo_controls_enabled,
-            cache_enabled_for_session=True,
-            llm_enabled=False,
+            cache_enabled_for_session=preferences.get(str(user["sid"])) is not False,
+            llm_enabled=bool(settings.llm_enabled and settings.gemini_api_key and settings.gemini_model),
             ocr_engines=["PDF_TEXT"],
             dataset_students=one(conn, "SELECT count(*) AS n FROM students")["n"],
             natural_language_search_enabled=False,
@@ -1457,12 +1473,12 @@ def sandbox_status(institution_id: UUID, user=Depends(authenticated)):
     institution_scope(user, institution_id, admin=True)
     if not settings.demo_controls_enabled:
         fail("NOT_FOUND", 404)
-    # Runtime has no sandbox privileges. This boundary needs a separate read-only broker.
-    fail(
-        "SANDBOX_CLI_REQUIRED",
-        409,
-        "Use python -m app.cli audit-sandbox create or tamper locally; runtime cannot read the owner-only schema.",
-    )
+    with connect() as conn:
+        conn.execute("SET TRANSACTION ISOLATION LEVEL REPEATABLE READ READ ONLY")
+        result = verify(conn, institution_id, sandbox=True)
+        if not result["exists"]:
+            fail("SANDBOX_NOT_INITIALIZED", 404, "Create the isolated copy with the owner-only CLI first.")
+        return result
 
 
 @router.post("/verify")
@@ -1502,8 +1518,15 @@ def external_check(student_id: UUID, body: Reason, request: Request, user=Depend
             fail("LOCAL_CHECKS_REQUIRED", 409)
 
         def work(key):
-            status = "MOCK_NO_MATCH" if int(student["apaar_id"][4:-1]) % 10 == 0 else "MOCK_MATCH"
-            evidence = dict(label="MOCK, not official", reasons=["Deterministic synthetic identifier lookup."])
+            from app.integrations.mock_apaar import MockApaarAdapter
+
+            external_result = MockApaarAdapter().verify(student)
+            status = external_result["status"]
+            evidence = dict(
+                label=external_result["label"],
+                reasons=external_result["reasons"],
+                reference=external_result["reference"],
+            )
             conn.execute(
                 "INSERT INTO external_verifications(student_id,requested_by,adapter,status,evidence) VALUES (%s,%s,'MockApaarAdapter',%s,%s)",
                 (student_id, user["id"], status, Jsonb(evidence)),
@@ -1618,7 +1641,7 @@ def session_controls(body: SessionControls, user=Depends(authenticated)):
     if not settings.demo_controls_enabled:
         fail("NOT_FOUND", 404)
     # Preference is bound to the active refresh family, never a global switch.
-    cache.put(("session-controls", str(user["sid"])), body.cache_enabled)
+    preferences.put(str(user["sid"]), body.cache_enabled)
     return dict(
         cache_enabled=body.cache_enabled,
         scope="current_session",
@@ -1654,24 +1677,87 @@ class BenchmarkRequest(Strict):
 @router.post("/demo/benchmarks", status_code=202)
 def web_benchmark(body: BenchmarkRequest, request: Request, tasks: BackgroundTasks, user=Depends(authenticated)):
     allow(user, "ADMIN", "OFFICER")
-    if not settings.local_benchmark_enabled or not settings.demo_controls_enabled:
+    if not settings.demo_mode or not settings.local_benchmark_enabled or not settings.demo_controls_enabled:
         fail("NOT_FOUND", 404)
-    # The command line benchmark owns its synthetic credentials; HTTP never reads local secrets.
-    fail("LOCAL_BENCHMARK_CLI_REQUIRED", 409, "Run python scripts/benchmark.py --runs 20 in the local terminal.")
+    if body.dataset != "current" or body.cache_mode != "BOTH":
+        fail("INVALID_BENCHMARK_OPTIONS")
+    from app.core.lifecycle import local_connection
+
+    try:
+        local_connection(settings.database_url)
+    except RuntimeError:
+        fail("NOT_FOUND", 404)
+    created = False
+    with connect() as conn:
+
+        def work(key):
+            nonlocal created
+            conn.execute("SELECT pg_advisory_xact_lock(26263,77)")
+            if one(
+                conn, "SELECT 1 FROM benchmark_runs WHERE status='RUNNING' AND created_at>now()-interval '5 minutes'"
+            ):
+                fail("BENCHMARK_RUNNING", 409)
+            limit(("benchmark", str(user["id"])), 1, 60)
+            run = uuid4()
+            conn.execute(
+                "INSERT INTO benchmark_runs(id,requested_by,status) VALUES (%s,%s,'RUNNING')", (run, user["id"])
+            )
+            created = True
+            return dict(run_id=run, status="RUNNING", poll_url=f"/api/v1/demo/benchmarks/{run}")
+
+        result = idem(conn, user, request, body.model_dump(), work)
+
+    def execute_benchmark(run_id):
+        from scripts.benchmark import benchmark
+
+        try:
+            measured = benchmark(body.runs, requester_id=user["id"])
+            with connect() as conn:
+                measured["query_samples"] = measured.pop("samples")
+                measured["samples"] = body.runs
+                measured.update(
+                    samples_count=body.runs,
+                    measured_at=str(datetime.now(timezone.utc)),
+                )
+                conn.execute(
+                    "UPDATE benchmark_runs SET status='COMPLETED',result=%s,finished_at=now() WHERE id=%s",
+                    (Jsonb(measured), run_id),
+                )
+        except Exception:
+            with connect() as conn:
+                conn.execute(
+                    "UPDATE benchmark_runs SET status='FAILED',result=%s,finished_at=now() WHERE id=%s",
+                    (Jsonb({"error": "BENCHMARK_FAILED"}), run_id),
+                )
+
+    if created:
+        tasks.add_task(execute_benchmark, result["run_id"])
+    return result
 
 
 @router.get("/demo/benchmarks/{run_id}")
 def benchmark_result(run_id: UUID, user=Depends(authenticated)):
     allow(user, "ADMIN", "OFFICER")
-    if not settings.local_benchmark_enabled:
+    if not settings.demo_mode or not settings.local_benchmark_enabled or not settings.demo_controls_enabled:
+        fail("NOT_FOUND", 404)
+    from app.core.lifecycle import local_connection
+
+    try:
+        local_connection(settings.database_url)
+    except RuntimeError:
         fail("NOT_FOUND", 404)
     with connect() as conn:
         row = one(
-            conn, "SELECT id AS run_id,status,result,created_at,finished_at FROM benchmark_runs WHERE id=%s", (run_id,)
+            conn,
+            "SELECT id AS run_id,status,result,created_at,finished_at,requested_by FROM benchmark_runs WHERE id=%s",
+            (run_id,),
         )
         if not row:
             fail("NOT_FOUND", 404)
-        return row
+        if user["role_code"] == "OFFICER" and row["requested_by"] != user["id"]:
+            fail("NOT_FOUND", 404)
+        row.pop("requested_by")
+        return {**row, **(row.get("result") or {})}
 
 
 app.include_router(router)

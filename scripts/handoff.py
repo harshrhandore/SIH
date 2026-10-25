@@ -393,7 +393,7 @@ def render():
             if row["id"] in old and old[row["id"]]["status"] != "OPEN":
                 row["status"] = old[row["id"]]["status"]
         rows.extend(r for r in previous if r["id"] not in {n["id"] for n in rows})
-    register.write_text(json.dumps(rows, indent=2))
+    register.write_text(json.dumps(rows, indent=2), encoding="utf-8")
     counts = Counter(r["priority"] for r in rows if r["status"] == "OPEN")
     header = f"# Owner decisions\n\nRun start: 2026-10-25T21:23:28+05:30\nRun end: in progress\nEnvironment path: native Windows, PostgreSQL16.15, Python3.12, Node25.\nCounts by type: {dict(Counter(r['id'][0] for r in rows))}\nCounts by status: {dict(Counter(r['status'] for r in rows))}\nOpen priorities: MUST {counts['MUST']}; SHOULD {counts['SHOULD']}; COULD {counts['COULD']}.\nReviewed by owner: [ ]\n\n## START HERE\n\n1. Use README native launch commands to open the existing local demo.\n2. Retrieve the local demo password with scripts/demo.ps1 show-demo-password.\n3. Review the mandatory incomplete items V2, V4, V5, V7 and V9 before treating this as specification-complete.\n4. Follow the manual walkthrough M9.\n5. Install Docker only if reproducing the container path.\n\n"
     columns = ["id", "priority", "what", "where", "why", "fallback", "options", "resolve", "verify", "status"]
@@ -412,16 +412,17 @@ def render():
         for row in selected:
             header += "| " + " | ".join(str(row[c]).replace("|", "/").replace("\n", " ") for c in columns) + " |\n"
         header += "\n"
-    (ROOT / "OWNER_DECISIONS.md").write_text(header)
+    header += "## Superseding implementation notes\n\nOriginal register rows are retained. V4/S2: scoped HTTP benchmarks, result polling, read-only sandbox verification and program/state aggregate fixes are now delivered and regression-tested; remaining API contract coverage stays open. V5: bounded normal grades, credit-weighted CGPAs, cohort allocations, prescribed enrichment ownership, actual certificate subsets and persisted storage manifests are now implemented. A fresh 100k seed validates the principal counts and hashes; full sentence-by-sentence conformance remains open. V8 measurements are retained in performance.md. Seven browser flows now pass. See audit-passes.md for the distinction between automation attempts and complete audit cycles.\n"
+    (ROOT / "OWNER_DECISIONS.md").write_text(header, encoding="utf-8")
     checklist = "# Morning checklist\n\nEvery action is also in OWNER_DECISIONS.md. READY means local preparation or documentation is available; it does not claim external verification.\n\n"
     for i, action in enumerate(actions, 1):
         name, why, fallback, steps, verify, status = action
         checklist += f"## M{i} — {name}\n\nStatus: {status}. Owner row A{i}.\n\nWhy human: {why}\n\nSteps: {steps}\n\nVerify: {verify}.\n\nFallback: {fallback}\n\n"
-    (ROOT / "docs/morning-checklist.md").write_text(checklist)
+    (ROOT / "docs/morning-checklist.md").write_text(checklist, encoding="utf-8")
     summary = f"[OWNER_DECISIONS.md](OWNER_DECISIONS.md) — open MUST {counts['MUST']}, SHOULD {counts['SHOULD']}, COULD {counts['COULD']}.\n\n"
-    summary += "1. Core synthetic local API demo has run end to end.\n2. Native PostgreSQL16 contains the100k baseline plus imported demonstration records.\n3. Exact import and correction counts are measured in docs/acceptance-results.json.\n4. PDF confidence95, tampered risk83, trust91 and readiness74 are computed.\n5. Six browser flows passed, including375px layout and axe.\n6. Fresh100k database reproduction and schema comparison passed.\n7. Risk1: exact module tree and full response typing remain incomplete.\n8. Risk2: broader screen, seed, API and adversarial requirements remain incomplete.\n9. Risk3: Docker, cloud provisioning, live Gemini and real image OCR remain unverified.\n10. First action: read the incomplete MUST rows, then use README native launch commands.\n\n"
+    summary += "1. Core synthetic local API demo has run end to end.\n2. Native PostgreSQL16 contains the100k baseline plus imported demonstration records.\n3. Exact import and correction counts are measured in docs/acceptance-results.json.\n4. PDF confidence95, tampered risk83, trust91 and readiness74 are computed.\n5. Seven browser flows passed, including375px layout and axe.\n6. Fresh100k database reproduction and schema comparison passed.\n7. Risk1: exact module tree and full response typing remain incomplete.\n8. Risk2: broader screen, seed, API and adversarial requirements remain incomplete.\n9. Risk3: Docker, cloud provisioning, live Gemini and real image OCR remain unverified.\n10. First action: read the incomplete MUST rows, then use README native launch commands.\n\n"
     summary += "## Remaining mandatory work\n\nThis is not a full conformance sign-off. See V2, V4, V5, V7 and V9. Do not describe incomplete or unverified gates as passed.\n\n## Manual walkthrough\n\n- [ ] Use separate Operator, Officer, Admin and Student browser contexts.\n- [ ] Inspect A4 passport print preview for clipping.\n- [ ] Check375px layout and scrollable matrices.\n- [ ] Complete keyboard-only navigation.\n- [ ] Enable reduced motion and inspect focus/contrast.\n- [ ] Rehearse the judging script on the owner laptop.\n\n"
-    (ROOT / "MORNING.md").write_text(summary + checklist.split("\n\n", 2)[2])
+    (ROOT / "MORNING.md").write_text(summary + checklist.split("\n\n", 2)[2], encoding="utf-8")
     print(dict(counts))
 
 

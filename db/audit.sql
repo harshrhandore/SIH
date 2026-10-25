@@ -73,3 +73,18 @@ BEGIN
  RETURN QUERY SELECT * FROM audit_chains WHERE institution_id IS NOT DISTINCT FROM p_institution FOR UPDATE;
 END $$;
 REVOKE ALL ON FUNCTION lock_audit_chain(uuid) FROM PUBLIC;
+
+CREATE FUNCTION demo_sandbox_snapshot(p_institution uuid) RETURNS jsonb
+LANGUAGE plpgsql SECURITY DEFINER SET search_path=public,pg_temp AS $$
+DECLARE result jsonb;
+BEGIN
+ IF to_regclass('demo_sandbox.audit_chains') IS NULL OR to_regclass('demo_sandbox.audit_events') IS NULL THEN
+   RETURN NULL;
+ END IF;
+ SELECT jsonb_build_object(
+  'chain',(SELECT to_jsonb(c) FROM demo_sandbox.audit_chains c WHERE c.institution_id=p_institution),
+  'events',(SELECT jsonb_agg(to_jsonb(e) ORDER BY e.sequence_no) FROM demo_sandbox.audit_events e WHERE e.institution_id=p_institution)
+ ) INTO result;
+ RETURN result;
+END $$;
+REVOKE ALL ON FUNCTION demo_sandbox_snapshot(uuid) FROM PUBLIC;

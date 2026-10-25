@@ -8,12 +8,15 @@ import statistics
 import sys
 from pathlib import Path
 from time import perf_counter
+from urllib.parse import quote
 
 ROOT = Path(__file__).resolve().parents[1]
 sys.path[:0] = [str(ROOT), str(ROOT / "apps/api")]
-from dotenv import dotenv_values
 from fastapi.testclient import TestClient
 from app.main import app
+from app.core.security import issue, hash_token
+from app.db.session import connect, one
+from app.core.algorithms import synthetic_id
 
 
 def percentiles(values):
@@ -26,19 +29,38 @@ def percentiles(values):
     )
 
 
-def benchmark(runs=20):
+def benchmark(runs=20, requester_id=None):
     client = TestClient(app)
-    password = dotenv_values(ROOT / ".env")["DEMO_PASSWORD"]
-    tokens = client.post("/api/v1/auth/login", json=dict(email="officer@example.test", password=password)).json()
+    with connect() as conn:
+        requester = one(conn, "SELECT * FROM users WHERE id=%s AND active", (requester_id,)) if requester_id else None
+        if requester_id and (not requester or requester["role_code"] not in {"OFFICER", "ADMIN"}):
+            raise RuntimeError("Benchmark requester is no longer authorized.")
+        officer = (
+            requester
+            if requester and requester["role_code"] == "OFFICER"
+            else one(conn, "SELECT * FROM users WHERE email='officer@example.test' AND role_code='OFFICER' AND active")
+        )
+        if not officer:
+            raise RuntimeError("Synthetic benchmark officer is unavailable.")
+        tokens = issue(conn, officer)
+        scope = [
+            r["institution_id"]
+            for r in conn.execute(
+                "SELECT institution_id FROM user_institutions WHERE user_id=%s", (officer["id"],)
+            ).fetchall()
+        ]
+        student_count = one(conn, "SELECT count(*) AS n FROM students WHERE institution_id=ANY(%s::uuid[])", (scope,))[
+            "n"
+        ]
     headers = {"Authorization": "Bearer " + tokens["access_token"]}
     queries = [
         "q=Riya",
         "q=Sharma",
         "q=Riya%20Sharma",
-        "q=Aarav",
+        "q=" + quote("Śhármá"),
         "q=NoSuchSyntheticName",
         "q=SYN-0000000000018",
-        "q=SYN-9999999999999",
+        "q=" + synthetic_id(999999999999),
         "q=SYN-A-000002",
         "q=SYN-A-000003",
         "branch=CSE",
@@ -49,7 +71,7 @@ def benchmark(runs=20):
         "page=1",
         "page=10",
         "branch=IT&current_year=2",
-        "q=Kumar",
+        "q=" + synthetic_id(1001),
         "q=An",
         "current_year=1",
     ]
@@ -72,7 +94,13 @@ def benchmark(runs=20):
         cold.append(a["took_ms"])
         hot.append(b["took_ms"])
         samples.append(dict(query=query, total=a["total"], cold_ms=a["took_ms"], cached_ms=b["took_ms"]))
+    with connect() as conn:
+        conn.execute(
+            "UPDATE refresh_sessions SET revoked_at=now() WHERE token_hash=%s", (hash_token(tokens["refresh_token"]),)
+        )
     return dict(
+        student_count=student_count,
+        institution_scope=[str(sid) for sid in scope],
         application_cold=percentiles(cold),
         cached=percentiles(hot),
         testclient_roundtrip_cold=percentiles(roundtrip_cold),

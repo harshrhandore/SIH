@@ -53,10 +53,24 @@ def verify(conn, institution, sandbox=False):
     # Fixed identifiers only. Never accept a schema from an HTTP caller.
     chains = "demo_sandbox.audit_chains" if sandbox else "public.audit_chains"
     events = "demo_sandbox.audit_events" if sandbox else "public.audit_events"
-    chain = one(conn, f"SELECT * FROM {chains} WHERE institution_id=%s", (institution,))
+    snapshot = (
+        one(conn, "SELECT demo_sandbox_snapshot(%s) AS snapshot", (institution,))["snapshot"] if sandbox else None
+    )
+    chain = (
+        (snapshot or {}).get("chain")
+        if sandbox
+        else one(conn, f"SELECT * FROM {chains} WHERE institution_id=%s", (institution,))
+    )
     if not chain:
         return dict(valid=False, exists=False, first_broken_link=None, checked_at=stamp())
-    rows = many(conn, f"SELECT * FROM {events} WHERE chain_id=%s ORDER BY sequence_no", (chain["id"],))
+    rows = (
+        ((snapshot or {}).get("events") or [])
+        if sandbox
+        else many(conn, f"SELECT * FROM {events} WHERE chain_id=%s ORDER BY sequence_no", (chain["id"],))
+    )
+    if sandbox:
+        for row in rows:
+            row["occurred_at"] = datetime.fromisoformat(row["occurred_at"].replace("Z", "+00:00"))
     previous = "0" * 64
     failure = None
     checked = 0

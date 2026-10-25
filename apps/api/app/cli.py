@@ -22,6 +22,8 @@ def migrate():
 
 
 def bootstrap(students):
+    if students not in {200, 5000, 50000, 100000}:
+        raise RuntimeError("Unsupported synthetic seed profile.")
     start = perf_counter()
     migrate()
     values = {**dotenv_values(ROOT / ".env"), **os.environ}
@@ -45,6 +47,9 @@ def bootstrap(students):
         from app.modules.certificates.service import seed_certificates
 
         seed_certificates(conn)
+        from db.seed.validate import validate_seed
+
+        manifest["seed_validation"] = validate_seed(conn, students)
         conn.execute("SELECT refresh_demo_views()")
         conn.execute("ANALYZE")
         actual = one(conn, "SELECT count(*) AS n FROM students")["n"]
@@ -57,6 +62,11 @@ def bootstrap(students):
         manifest["database_bytes"] = one(conn, "SELECT pg_database_size(current_database()) AS bytes")["bytes"]
         manifest["total_seconds"] = round(perf_counter() - start, 3)
     (ROOT / "fixtures/manifest.json").write_text(json.dumps(manifest, indent=2))
+    from app.core.files import root_path, contained
+
+    storage_manifest = contained(root_path(settings.storage_root), "manifest.json")
+    storage_manifest.parent.mkdir(parents=True, exist_ok=True)
+    storage_manifest.write_text(json.dumps(manifest, indent=2), encoding="utf-8")
     print(json.dumps({k: manifest[k] for k in ["dataset_students", "seed_seconds", "total_seconds", "database_bytes"]}))
 
 
@@ -67,6 +77,7 @@ def sandbox(action):
 
     inst = uid("institution", 0)
     with connect(owner_url()) as conn:
+        conn.execute("SET TRANSACTION ISOLATION LEVEL REPEATABLE READ")
         if action in {"create", "restore"}:
             conn.execute("CREATE SCHEMA IF NOT EXISTS demo_sandbox")
             conn.execute("DROP TABLE IF EXISTS demo_sandbox.audit_events,demo_sandbox.audit_chains")
@@ -98,13 +109,25 @@ def sandbox(action):
 
 def main():
     parser = argparse.ArgumentParser()
-    parser.add_argument("command", choices=["bootstrap", "migrate", "preflight", "audit-sandbox"])
+    parser.add_argument(
+        "command", choices=["bootstrap", "migrate", "preflight", "audit-sandbox", "reset", "cloud-bootstrap"]
+    )
     parser.add_argument("action", nargs="?", choices=["create", "restore", "tamper"])
-    parser.add_argument("--students", type=int, default=100000)
+    parser.add_argument("--students", type=int, choices=[200, 5000, 50000, 100000], default=100000)
     parser.add_argument("--institution-key", choices=["institution_a"], default="institution_a")
     parser.add_argument("--include-documents", action="store_true")
+    parser.add_argument("--target")
+    parser.add_argument("--confirm")
     args = parser.parse_args()
-    if args.command == "bootstrap":
+    if args.command == "reset":
+        from app.core.lifecycle import reset
+
+        reset(owner_url(), args.target, args.confirm, args.students)
+    elif args.command == "cloud-bootstrap":
+        from app.core.lifecycle import cloud_bootstrap
+
+        cloud_bootstrap(owner_url(), args.students, args.confirm)
+    elif args.command == "bootstrap":
         bootstrap(args.students)
     elif args.command == "migrate":
         migrate()

@@ -4,6 +4,7 @@ from uuid import UUID
 from psycopg.types.json import Jsonb
 from app.db.session import one, many
 from app.core.algorithms import trust, valid_id
+from app.core.weights import load_weights
 
 
 def jsonable(value):
@@ -27,6 +28,7 @@ def epoch(conn, institution):
 
 
 def trust_for(conn, student):
+    fraud_config = load_weights("fraud")
     sid = student["id"]
     terms = many(conn, "SELECT term_no FROM academic_performance WHERE student_id=%s", (sid,))
     skills = evidenced_skills(conn, sid)
@@ -47,8 +49,8 @@ def trust_for(conn, student):
         if (
             c["acceptance_status"] != "ACCEPTED"
             or c["verdict"] != "VERIFIED_LOCAL"
-            or c["confidence"] < 85
-            or c["risk_score"] >= 30
+            or c["confidence"] < fraud_config["minimum_confidence"]
+            or c["risk_score"] >= fraud_config["thresholds"]["medium"]
         ):
             continue
         credential = ((c.get("issuer") or "").strip().casefold(), (c.get("credential_id") or "").strip().casefold())

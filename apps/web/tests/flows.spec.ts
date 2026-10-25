@@ -26,7 +26,18 @@ test("operator ledger and real search MISS HIT", async ({ page }) => {
   await expect(
     page.getByRole("heading", { name: "Institution ledger", exact: true }),
   ).toBeVisible();
-  await expect(page.getByText("9,881", { exact: true })).toBeVisible();
+  const initialA: Record<number, number> = {
+    100000: 9000,
+    50000: 4500,
+    5000: 1000,
+    200: 80,
+  };
+  await expect(
+    page.getByText(
+      (initialA[manifest.dataset_students] + 881).toLocaleString("en-IN"),
+      { exact: true },
+    ),
+  ).toBeVisible();
   await page.goto("/students");
   await page
     .getByRole("textbox", { name: "Search student records" })
@@ -141,4 +152,40 @@ test("print passport artifact", async ({ page }) => {
     preferCSSPageSize: true,
     printBackground: true,
   });
+});
+
+test("concurrent expired requests use one refresh and strip caller authorization", async ({
+  page,
+  context,
+}) => {
+  await login(page, "operator.b@example.test");
+  await context.addCookies([
+    {
+      name: "shiksham_access",
+      value: "invalid-expired-test-token",
+      domain: "localhost",
+      path: "/",
+      httpOnly: true,
+      sameSite: "Lax",
+    },
+  ]);
+  let refreshes = 0;
+  page.on("request", (request) => {
+    if (new URL(request.url()).pathname === "/api/backend/auth/refresh")
+      refreshes++;
+  });
+  await page.goto("/students");
+  await expect(
+    page.getByRole("heading", { name: "Student search", exact: true }),
+  ).toBeVisible();
+  await expect(page.locator(".user-menu")).toContainText("Demo Operator B");
+  expect(refreshes).toBe(1);
+  const identity = await page.evaluate(async () => {
+    const response = await fetch("/api/backend/auth/me", {
+      headers: { Authorization: "Bearer malicious-caller-header" },
+    });
+    return { status: response.status, data: await response.json() };
+  });
+  expect(identity.status).toBe(200);
+  expect(identity.data.email).toBe("operator.b@example.test");
 });

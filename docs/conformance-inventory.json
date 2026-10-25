@@ -7364,32 +7364,32 @@
     "section": "7",
     "line": 1317,
     "requirement": "REVOKE CREATE ON SCHEMA public FROM PUBLIC;",
-    "status": "FAIL",
-    "evidence": "V9 \u2014 this individual requirement has not received a full conformance sign-off; see measured vertical-slice evidence separately"
+    "status": "PASS",
+    "evidence": "scripts/check_schema.py; catalogues equal"
   },
   {
     "id": "R0922",
     "section": "7",
     "line": 1318,
     "requirement": "GRANT USAGE ON SCHEMA public TO shiksham_runtime;",
-    "status": "FAIL",
-    "evidence": "V9 \u2014 this individual requirement has not received a full conformance sign-off; see measured vertical-slice evidence separately"
+    "status": "PASS",
+    "evidence": "scripts/check_schema.py; catalogues equal"
   },
   {
     "id": "R0923",
     "section": "7",
     "line": 1319,
     "requirement": "GRANT SELECT,INSERT,UPDATE,DELETE ON ALL TABLES IN SCHEMA public TO shiksham_runtime;",
-    "status": "FAIL",
-    "evidence": "V9 \u2014 this individual requirement has not received a full conformance sign-off; see measured vertical-slice evidence separately"
+    "status": "PASS",
+    "evidence": "scripts/check_schema.py; catalogues equal"
   },
   {
     "id": "R0924",
     "section": "7",
     "line": 1320,
     "requirement": "GRANT USAGE,SELECT ON ALL SEQUENCES IN SCHEMA public TO shiksham_runtime;",
-    "status": "FAIL",
-    "evidence": "V9 \u2014 this individual requirement has not received a full conformance sign-off; see measured vertical-slice evidence separately"
+    "status": "PASS",
+    "evidence": "scripts/check_schema.py; catalogues equal"
   },
   {
     "id": "R0925",
@@ -7412,24 +7412,24 @@
     "section": "7",
     "line": 1323,
     "requirement": "REVOKE UPDATE,DELETE,TRUNCATE ON record_versions,review_decisions FROM shiksham_runtime;",
-    "status": "FAIL",
-    "evidence": "V9 \u2014 this individual requirement has not received a full conformance sign-off; see measured vertical-slice evidence separately"
+    "status": "PASS",
+    "evidence": "scripts/check_schema.py; catalogues equal"
   },
   {
     "id": "R0928",
     "section": "7",
     "line": 1324,
     "requirement": "GRANT EXECUTE ON FUNCTION append_audit(uuid,text) TO shiksham_runtime;",
-    "status": "FAIL",
-    "evidence": "V9 \u2014 this individual requirement has not received a full conformance sign-off; see measured vertical-slice evidence separately"
+    "status": "PASS",
+    "evidence": "scripts/check_schema.py; catalogues equal"
   },
   {
     "id": "R0929",
     "section": "7",
     "line": 1325,
     "requirement": "GRANT EXECUTE ON FUNCTION refresh_demo_views() TO shiksham_runtime;",
-    "status": "FAIL",
-    "evidence": "V9 \u2014 this individual requirement has not received a full conformance sign-off; see measured vertical-slice evidence separately"
+    "status": "PASS",
+    "evidence": "scripts/check_schema.py; catalogues equal"
   },
   {
     "id": "R0930",

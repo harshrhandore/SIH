@@ -85,5 +85,48 @@ result = dict(
     open_cases=120,
     report=report,
 )
+import csv
+from io import StringIO
+from app.core.algorithms import synthetic_id
+
+jobs = []
+for counter, name in [(900001, "Synthetic Race Alpha"), (900002, "Synthetic Race Beta")]:
+    values = {
+        "APAAR ID": synthetic_id(counter),
+        "Enrollment No": "SYN-RACE-ENROLLMENT",
+        "Student Name": name,
+        "DOB": "01/01/2004",
+        "Parent Name": "",
+        "Program": "BTECH:CSE",
+        "Admission Year": "2022",
+        "Year": "4",
+        "Semester": "1",
+        "SGPA": "8",
+        "Credits": "22",
+        "Email": f"race.{counter}@example.test",
+        "Gender": "UNDISCLOSED",
+    }
+    buffer = StringIO()
+    writer = csv.DictWriter(buffer, fieldnames=list(values))
+    writer.writeheader()
+    writer.writerow(values)
+    with connect() as c:
+        uploaded = service.upload(c, user, buffer.getvalue().encode(), "race.csv", uuid4())
+        c.execute(
+            "UPDATE import_batches SET status='MAPPED',column_mapping=%s WHERE id=%s",
+            (Jsonb(dict(mapping=service.ALIASES, date_format="DD/MM/YYYY")), uploaded["batch_id"]),
+        )
+        jobs.append(service.start(c, one(c, "SELECT * FROM import_batches WHERE id=%s", (uploaded["batch_id"],))))
+# Both snapshots were frozen before either new enrollment was promoted.
+for job_id in jobs:
+    service.process(job_id)
+with connect() as c:
+    rows = c.execute(
+        "SELECT enrollment_no,data_quality_status FROM students WHERE submitted_enrollment_no='SYN-RACE-ENROLLMENT'"
+    ).fetchall()
+    assert len(rows) == 2 and sum(r["enrollment_no"] is not None for r in rows) == 1
+    assert sum(r["data_quality_status"] == "FLAGGED_FOR_REVIEW" for r in rows) == 1
+    assert verify(c, uid("institution", 0))["valid"]
+result["frozen_enrollment_race"] = {"shells": 2, "canonical_owners": 1, "conflict_shells": 1, "merged": False}
 (ROOT / "docs/fault-rehearsal-results.json").write_text(json.dumps(result, indent=2, default=str))
 print(json.dumps(result, default=str))

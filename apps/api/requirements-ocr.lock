@@ -1,0 +1,2 @@
+# Tesseract Python adapter; install the actual English OCR engine through the documented OS/container path.
+pytesseract==0.3.13
