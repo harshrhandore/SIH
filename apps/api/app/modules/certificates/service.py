@@ -147,9 +147,10 @@ def evaluate(data, mime, student, reuse=None):
     text, engine, metadata, warnings = extract_text(data, mime)
     extracted = fields_from_text(text)
     from app.integrations.gemini import extract
-    llm_fields=extract(text) if text else None
+
+    llm_fields = extract(text) if text else None
     if llm_fields:
-        extracted=llm_fields
+        extracted = llm_fields
     confidence, matches, guard = certificate_confidence(extracted, student, settings.demo_as_of)
     reasons = []
     weights = load_weights("fraud")

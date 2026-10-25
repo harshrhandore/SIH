@@ -475,7 +475,7 @@ def process(job_id, fail_after=None):
                     if data.get("dob"):
                         indexes[2][str(data["dob"])].append(data)
                 end = chunk[-1]["row_no"]
-                if end < current['next_row']:
+                if end < current["next_row"]:
                     continue
                 counts = one(
                     conn,
