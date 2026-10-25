@@ -2,6 +2,8 @@
 
 This is a partial implementation and measured local verification report, not completion of the full prompt. Native Windows/PostgreSQL16 is the execution path. The exact audit stopping rule and full specification remain incomplete (V9). Docker is UNVERIFIED-ENV (V1); cloud preview is UNVERIFIED-HUMAN (V3); live Gemini/PNG OCR are UNVERIFIED-ENV (V10); hosted CI is UNVERIFIED-HUMAN (V11).
 
+Source checkpoint: `4487f737b85d5e6179028e03d2682d75c92b5956`. Report generated 2026-10-25T20:03:12.900137+00:00. Raw sweep timestamps below identify the tested working state.
+
 ## Vertical slices
 
 | Phase | Measured behavior | Remaining gates |
