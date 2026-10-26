@@ -17,7 +17,7 @@ export function CertificateUpload() {
   async function verify() {
     if (!file) return;
     setBusy(true);
-    setMessage("Saving file and computing local consistencyâ€¦");
+    setMessage("Saving file and computing local consistency…");
     try {
       const form = new FormData();
       form.set("file", file);
@@ -27,7 +27,7 @@ export function CertificateUpload() {
         "/students/" + user.student_id + "/certificates",
         { method: "POST", body: form },
       );
-      setMessage("Reading text and comparing with the synthetic recordâ€¦");
+      setMessage("Reading text and comparing with the synthetic record…");
       const report = await api<Row>(
         "/certificates/" + uploaded.certificate_id + "/verify",
         { method: "POST", body: "{}" },
@@ -65,10 +65,10 @@ export function CertificateUpload() {
           Purpose
           <select value={purpose} onChange={(e) => setPurpose(e.target.value)}>
             <option value="TRIAL">
-              Trial â€” excluded from accepted passport and Trust Score
+              Trial — excluded from accepted passport and Trust Score
             </option>
             <option value="PASSPORT">
-              Passport â€” requires staff acceptance
+              Passport — requires staff acceptance
             </option>
           </select>
         </label>
@@ -82,10 +82,10 @@ export function CertificateUpload() {
           />
         </label>
         <p className="note">
-          10 MiB maximum Â· 10 PDF pages Â· encrypted or active PDFs rejected
+          10 MiB maximum · 10 PDF pages · encrypted or active PDFs rejected
         </p>
         <button className="primary" disabled={!file || busy} onClick={verify}>
-          {busy ? "Verifyingâ€¦" : "Verify local consistency"}
+          {busy ? "Verifying…" : "Verify local consistency"}
           <ShieldCheck size={16} />
         </button>
         <p role="status">{message}</p>

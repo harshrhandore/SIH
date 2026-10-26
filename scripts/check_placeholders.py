@@ -34,13 +34,18 @@ def check():
     }
     secrets = [v for k, v in dotenv_values(ROOT / ".env").items() if k in generated and v and len(v) >= 16]
     for path in tracked():
+        relative = path.relative_to(ROOT).as_posix()
+        ui_source = relative.startswith("apps/web/src/") and path.suffix in {".ts", ".tsx", ".css"}
         if path.suffix.lower() in {".pdf", ".png", ".xlsx", ".woff2", ".woff", ".zip"}:
             continue
         try:
             text = path.read_text(encoding="utf-8-sig")
         except (UnicodeDecodeError, ValueError):
+            if ui_source:
+                errors.append(f"{relative}: UI source is not valid UTF-8")
             continue
-        relative = path.relative_to(ROOT).as_posix()
+        if ui_source and any(bad in text for bad in ["\u00c2\u00b7", "\u00e2\u20ac", "\u00c3\u201a", "\ufffd"]):
+            errors.append(f"{relative}: corrupted UI text encoding")
         tokens = set(re.findall(re.escape(marker) + r"([A-Z0-9_]+)>>", text))
         found |= tokens
         if relative in {".env.example", ".env.production.example"}:

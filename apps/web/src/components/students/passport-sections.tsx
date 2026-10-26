@@ -33,7 +33,7 @@ export function PassportScreen({
       <Title
         eyebrow="ACADEMIC PASSPORT"
         title={profile ? text(profile.full_name) : "Academic passport"}
-        description="Synthetic academic history Ã‚Â· Local consistency, never official verification"
+        description="Synthetic academic history · Local consistency, never official verification"
       >
         {printable ? (
           <Link className="button" href={"/students/" + id + "/print"}>

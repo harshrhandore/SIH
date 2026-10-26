@@ -125,7 +125,7 @@ export function ImportWizard() {
         {!batch ? (
           <>
             <h2>Choose a source file</h2>
-            <p>CSV or XLSX Â· up to 1,000 rows Â· 20 MiB maximum</p>
+            <p>CSV or XLSX · up to 1,000 rows · 20 MiB maximum</p>
             <a href="/api/backend/demo/fixtures/import_csv" download>
               Download the 1,000-row synthetic fixture
             </a>
@@ -151,7 +151,7 @@ export function ImportWizard() {
               disabled={!file || !confirmed || busy}
               onClick={upload}
             >
-              {busy ? "Saving sourceâ€¦" : "Continue to mapping"}
+              {busy ? "Saving source…" : "Continue to mapping"}
               <ArrowRight size={16} />
             </button>
           </>
@@ -181,7 +181,7 @@ export function ImportWizard() {
               ))}
             </div>
             <button className="primary" disabled={busy} onClick={map}>
-              {busy ? "Checking mappingâ€¦" : "Preview 20 rows"}
+              {busy ? "Checking mapping…" : "Preview 20 rows"}
             </button>
           </>
         ) : (
@@ -206,7 +206,7 @@ export function ImportWizard() {
             />
             <button className="primary" disabled={busy} onClick={validate}>
               {busy
-                ? "Starting validationâ€¦"
+                ? "Starting validation…"
                 : "Validate " + number(batch.total_rows) + " records"}
             </button>
           </>
