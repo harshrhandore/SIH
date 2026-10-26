@@ -2,6 +2,16 @@ import { test, expect } from "@playwright/test";
 import AxeBuilder from "@axe-core/playwright";
 import { login } from "./helpers";
 
+test("retired developer pages are unavailable", async ({ page }) => {
+  for (const route of ["/architecture", "/settings/demo"]) {
+    const response = await page.goto(route);
+    expect(response?.status()).toBe(404);
+    await expect(
+      page.getByRole("heading", { name: "Record unavailable", exact: true }),
+    ).toBeVisible();
+  }
+});
+
 test("login keeps demo account shortcuts optional", async ({ page }) => {
   let accountRequests = 0;
   page.on("request", (request) => {

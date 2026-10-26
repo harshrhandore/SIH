@@ -41,7 +41,6 @@ export function CertificateUpload() {
   return (
     <>
       <Title
-        eyebrow="EXPLAINABLE EVIDENCE"
         title="Certificates"
         description="Check document consistency against your synthetic academic record."
       />
@@ -50,17 +49,20 @@ export function CertificateUpload() {
           Local consistency checks are not issuer authentication or official
           verification.
         </div>
-        <div className="fixture-links">
-          <a href="/api/backend/demo/fixtures/genuine_pdf" download>
-            Genuine PDF fixture
-          </a>
-          <a href="/api/backend/demo/fixtures/tampered_pdf" download>
-            Tampered PDF fixture
-          </a>
-          <a href="/api/backend/demo/fixtures/genuine_png" download>
-            PNG OCR fixture
-          </a>
-        </div>
+        <details className="sample-files">
+          <summary>Sample documents</summary>
+          <div className="fixture-links">
+            <a href="/api/backend/demo/fixtures/genuine_pdf" download>
+              Sample certificate (PDF)
+            </a>
+            <a href="/api/backend/demo/fixtures/tampered_pdf" download>
+              Altered certificate (PDF)
+            </a>
+            <a href="/api/backend/demo/fixtures/genuine_png" download>
+              Image sample (requires OCR)
+            </a>
+          </div>
+        </details>
         <label>
           Purpose
           <select value={purpose} onChange={(e) => setPurpose(e.target.value)}>

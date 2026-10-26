@@ -1,7 +1,7 @@
 "use client";
 import { useId } from "react";
 
-export type Point = { label: string; value: number };
+export type Point = { label: string; value: number; color?: string };
 
 export function SeriesChart({
   title,
@@ -66,7 +66,7 @@ export function SeriesChart({
               .map((point, i) => `${i ? "L" : "M"}${x(i)},${y(point.value)}`)
               .join(" ")}
             fill="none"
-            stroke="var(--teal, #0a6467)"
+            stroke="var(--primary)"
             strokeWidth="3"
           />
         ) : null}
@@ -76,7 +76,12 @@ export function SeriesChart({
               {point.label}: {format(point.value)}
             </title>
             {mode === "line" ? (
-              <circle cx={x(index)} cy={y(point.value)} r="4" fill="#0a6467" />
+              <circle
+                cx={x(index)}
+                cy={y(point.value)}
+                r="4"
+                fill="var(--primary)"
+              />
             ) : (
               <rect
                 x={x(index) - Math.min(56, slot * 0.6) / 2}
@@ -84,7 +89,7 @@ export function SeriesChart({
                 width={Math.min(56, slot * 0.6)}
                 height={210 - y(point.value)}
                 rx="3"
-                fill={index % 2 ? "#9c7835" : "#0a6467"}
+                fill={point.color || "var(--primary)"}
               />
             )}
             <text

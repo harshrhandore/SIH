@@ -1,6 +1,6 @@
 "use client";
 import { useEffect, useState } from "react";
-import { BookOpen, ArrowRight, ShieldCheck } from "lucide-react";
+import { BookOpen, ArrowRight } from "lucide-react";
 import { api } from "@/lib/api";
 type Account = { key: string; label: string; email: string; role: string };
 export default function Login() {
@@ -52,38 +52,23 @@ export default function Login() {
     }
   }
   return (
-    <main className="login">
+    <main id="main-content" className="login" tabIndex={-1}>
       <section className="login-story">
         <div className="wordmark">
-          <BookOpen size={30} /> SHIKSHAM <span>APAAR</span>
+          <BookOpen size={27} aria-hidden="true" /> Shiksham <span>APAAR</span>
         </div>
-        <div className="eyebrow">A SYNTHETIC ACADEMIC RECORD SYSTEM</div>
-        <h1>
-          Every record.
-          <br />A clearer story.
-        </h1>
-        <p>
-          Bring academic records together. Resolve discrepancies with human
-          review. Carry the evidence forward.
-        </p>
-        <div className="rule" />
-        <p className="small">
-          <ShieldCheck size={18} /> Local consistency checks · Accountable
-          decisions · Explainable evidence
-        </p>
-        <div className="folio">
-          PROTOTYPE / SIH 26263 <span>01 — ACCESS</span>
-        </div>
+        <p>Academic records</p>
       </section>
       <section className="login-form">
-        <div className="eyebrow">WELCOME TO THE LEDGER</div>
-        <h2>Sign in to your workspace</h2>
+        <h1>Sign in</h1>
         <p className="muted">Enter your email and password to continue.</p>
         <form onSubmit={submit}>
           <label>
             Email
             <input
               type="email"
+              name="email"
+              spellCheck={false}
               required
               value={email}
               onChange={(e) => setEmail(e.target.value)}
@@ -94,6 +79,7 @@ export default function Login() {
             Password
             <input
               type="password"
+              name="password"
               required
               value={password}
               onChange={(e) => setPassword(e.target.value)}
@@ -145,10 +131,6 @@ export default function Login() {
             <p role="status">Loading demo accounts…</p>
           )}
         </details>
-        <p className="note">
-          Synthetic data only. Local and mock checks do not establish official
-          APAAR or issuer verification.
-        </p>
       </section>
     </main>
   );

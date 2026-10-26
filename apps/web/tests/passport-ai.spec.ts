@@ -52,7 +52,13 @@ test("unfinished terms show missing grades without invented zeroes", async ({
     page.getByRole("link", { name: "Print passport", exact: true }),
   ).toBeVisible();
   await expect(rows.first()).toContainText("Not completed");
-  await expect(rows.first().getByRole("cell").nth(2)).toHaveText("—");
-  await expect(rows.first().getByRole("cell").nth(3)).toHaveText("—");
-  await expect(rows.first().getByRole("cell").nth(4)).toHaveText("—");
+  await expect(
+    rows.first().getByRole("cell").nth(2).locator(".cell-value"),
+  ).toHaveText("—");
+  await expect(
+    rows.first().getByRole("cell").nth(3).locator(".cell-value"),
+  ).toHaveText("—");
+  await expect(
+    rows.first().getByRole("cell").nth(4).locator(".cell-value"),
+  ).toHaveText("—");
 });

@@ -32,5 +32,5 @@ export const NAVIGATION = [
     ["OPERATOR", "OFFICER", "ADMIN"],
   ],
   ["/certificates", "Certificates", FileText, ["STUDENT"]],
-  ["/career", "Career Copilot", GraduationCap, ["STUDENT"]],
+  ["/career", "Career guidance", GraduationCap, ["STUDENT"]],
 ] as const;

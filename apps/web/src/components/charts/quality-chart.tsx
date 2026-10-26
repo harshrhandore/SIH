@@ -10,11 +10,12 @@ export function QualityChart({ rows, trend }: { rows: Row[]; trend: Row[] }) {
         points={
           rows.length
             ? [
-                ["clean", "Clean"],
-                ["flagged", "Flagged"],
-                ["incomplete", "Incomplete"],
-              ].map(([key, label]) => ({
+                ["clean", "Clean", "#5e8654"],
+                ["flagged", "Flagged", "#b18232"],
+                ["incomplete", "Incomplete", "#83939f"],
+              ].map(([key, label, color]) => ({
                 label,
+                color,
                 value: rows.reduce((sum, row) => sum + Number(row[key]), 0),
               }))
             : []

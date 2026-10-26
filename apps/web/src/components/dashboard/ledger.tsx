@@ -22,7 +22,6 @@ export function Dashboard() {
   return (
     <>
       <Title
-        eyebrow="RECORDS & ACCOUNTABILITY"
         title="Institution ledger"
         description={
           d
@@ -39,11 +38,11 @@ export function Dashboard() {
           <>
             <div className="metrics">
               {[
-                ["total", "Total records", "All submitted student records"],
-                ["clean", "Passed local checks", "Ready for the next step"],
-                ["flagged", "Flagged for review", "Human attention required"],
-                ["incomplete", "Incomplete", "Mandatory information missing"],
-              ].map(([key, label, detail], i) => (
+                ["total", "Total records"],
+                ["clean", "Passed local checks"],
+                ["flagged", "Flagged for review"],
+                ["incomplete", "Incomplete"],
+              ].map(([key, label], i) => (
                 <Link
                   href={"/students?quality=" + key}
                   className={"metric metric-" + i}
@@ -54,7 +53,6 @@ export function Dashboard() {
                     <ArrowUpRight size={16} />
                   </div>
                   <strong>{number(d[key])}</strong>
-                  <small>{detail}</small>
                 </Link>
               ))}
             </div>
@@ -80,11 +78,9 @@ export function Dashboard() {
                 </p>
               </section>
               <section className="panel review-card">
-                <div className="eyebrow">THE REVIEW DESK</div>
                 <h2>{number(d.pending_reviews)} records need attention</h2>
                 <p className="muted">
                   {number(d.pending_corrections)} pending operator corrections.
-                  Every correction retains its source and history.
                 </p>
                 <Link href="/cases">
                   Open review queue <ArrowRight size={16} />
@@ -94,7 +90,6 @@ export function Dashboard() {
             <section className="panel">
               <div className="panel-heading">
                 <div>
-                  <div className="eyebrow">IMPORT REGISTER</div>
                   <h2>Recent submissions</h2>
                 </div>
                 <Link href="/imports">
@@ -113,10 +108,6 @@ export function Dashboard() {
                 href={(r) => "/imports/" + r.id}
               />
             </section>
-            <p className="note">
-              Live counters · refresh every 5 seconds · source epoch{" "}
-              {text(d.data_epoch)}
-            </p>
           </>
         ) : null}
       </State>

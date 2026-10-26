@@ -1,0 +1,56 @@
+[
+  {
+    "name": "import-report",
+    "width": 375,
+    "page": false,
+    "scrollers": 0
+  },
+  {
+    "name": "import-report",
+    "width": 768,
+    "page": false,
+    "scrollers": 0
+  },
+  {
+    "name": "import-report",
+    "width": 1440,
+    "page": false,
+    "scrollers": 0
+  },
+  {
+    "name": "case-detail",
+    "width": 375,
+    "page": false,
+    "scrollers": 0
+  },
+  {
+    "name": "case-detail",
+    "width": 768,
+    "page": false,
+    "scrollers": 0
+  },
+  {
+    "name": "case-detail",
+    "width": 1440,
+    "page": false,
+    "scrollers": 0
+  },
+  {
+    "name": "certificate-report",
+    "width": 375,
+    "page": false,
+    "scrollers": 0
+  },
+  {
+    "name": "certificate-report",
+    "width": 768,
+    "page": false,
+    "scrollers": 0
+  },
+  {
+    "name": "certificate-report",
+    "width": 1440,
+    "page": false,
+    "scrollers": 0
+  }
+]

@@ -1,4 +1,3 @@
-import Image from "next/image";
 import { Badge } from "@/components/shared/status-badge";
 import { text } from "@/lib/format";
 import type { Row } from "@/lib/schemas";
@@ -15,14 +14,8 @@ export function ProfileHeader({
   return (
     <section className="passport-header panel padded">
       <div className="passport-identity">
-        <Image
-          src="/seal.svg"
-          alt="Synthetic academic ledger seal"
-          width={60}
-          height={60}
-        />
         <div>
-          <div className="eyebrow">{text(profile.institution_name)}</div>
+          <p className="institution-name">{text(profile.institution_name)}</p>
           <h2>{text(profile.program)}</h2>
           <p className="mono">{text(profile.apaar_id)}</p>
           <Badge value={profile.external_status} />
@@ -33,9 +26,10 @@ export function ProfileHeader({
         <strong>{text(cgpa)}</strong>
         <small>Credit-weighted · / 10</small>
       </div>
-      <div className="trust-ring">
+      <div className="passport-number">
+        <span>Trust score</span>
         <strong>{text(trust.score)}</strong>
-        <span>Trust / 100</span>
+        <small>Heuristic score / 100</small>
       </div>
     </section>
   );

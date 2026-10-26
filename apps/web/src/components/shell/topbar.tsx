@@ -1,7 +1,7 @@
 "use client";
 
 import { LogOut, Menu } from "lucide-react";
-import { useRouter, useSearchParams } from "next/navigation";
+import { useRouter } from "next/navigation";
 import { useQueryClient } from "@tanstack/react-query";
 import { useState } from "react";
 import { homeFor, signOut } from "@/lib/auth";
@@ -25,7 +25,6 @@ export function Topbar({
   const router = useRouter();
   const client = useQueryClient();
   const [leaving, setLeaving] = useState(false);
-  const params = useSearchParams();
   const institutions = useData<Envelope>(
     user.role === "STUDENT" ? null : "/institutions",
   );
@@ -52,31 +51,9 @@ export function Topbar({
       <Breadcrumb path={path} home={homeFor(user)} />
       <div className="user-menu">
         <GlobalSearch user={user} />
-        {user.role === "ADMIN" ? (
-          <select
-            aria-label="Aggregate institution"
-            className="scope-switcher"
-            value={params.get("institution_id") || ""}
-            onChange={(event) =>
-              router.push(
-                event.target.value
-                  ? "/oversight?institution_id=" +
-                      encodeURIComponent(event.target.value)
-                  : "/oversight",
-              )
-            }
-          >
-            <option value="">All institutions</option>
-            {institutions.data?.items.map((row) => (
-              <option key={text(row.id)} value={text(row.id)}>
-                {text(row.name)}
-              </option>
-            ))}
-          </select>
-        ) : null}
         <span>
           {user.full_name}
-          <small>{user.role.replaceAll("_", " ")}</small>
+          <small className="user-role">{user.role.toLowerCase()}</small>
           <small className="institution-context">
             {institutionName
               ? text(institutionName)

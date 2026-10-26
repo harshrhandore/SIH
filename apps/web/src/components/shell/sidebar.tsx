@@ -77,10 +77,9 @@ export function Sidebar({
       <Link className="wordmark" href={homeFor(user)} onClick={onNavigate}>
         <BookOpen size={27} />
         <span>
-          SHIKSHAM<small>APAAR · SYNTHETIC LEDGER</small>
+          Shiksham<small>Academic records</small>
         </span>
       </Link>
-      <div className="sidebar-section">WORKSPACE</div>
       <nav aria-label="Workspace navigation">
         {user.role === "STUDENT" ? (
           <Link
@@ -118,12 +117,6 @@ export function Sidebar({
           </Link>
         ))}
       </nav>
-      <div className="sidebar-bottom">
-        <span className="synthetic-seal">S</span>
-        <div>
-          SYNTHETIC DATA ONLY<p>No official verification</p>
-        </div>
-      </div>
     </aside>
   );
 }

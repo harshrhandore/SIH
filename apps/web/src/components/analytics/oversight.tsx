@@ -17,8 +17,8 @@ export function Oversight() {
   const state = params.get("state") || "",
     inst = params.get("institution_id") || "",
     program = params.get("program_id") || "";
-  const page = Math.max(1, Number(params.get("page")) || 1),
-    size = params.get("page_size") === "50" ? 50 : 25;
+  const page = Math.max(1, Number(params.get("page")) || 1);
+  const size = 25;
   const filters = new URLSearchParams({
     ...(state ? { state } : {}),
     ...(inst ? { institution_id: inst } : {}),
@@ -60,7 +60,6 @@ export function Oversight() {
   return (
     <>
       <Title
-        eyebrow="AGGREGATE GOVERNANCE"
         title="Institution oversight"
         description="Submission coverage and discrepancies. No raw student records in this view."
       />
@@ -116,16 +115,6 @@ export function Oversight() {
               ))}
             </select>
           </label>
-          <label>
-            Rows per page
-            <select
-              value={size}
-              onChange={(event) => change("page_size", event.target.value)}
-            >
-              <option value="25">25</option>
-              <option value="50">50</option>
-            </select>
-          </label>
           <button onClick={() => router.replace("/oversight")}>
             Clear filters
           </button>
@@ -156,7 +145,7 @@ export function Oversight() {
               ["pending_reviews", "Pending review"],
             ]}
           />
-          {query.data ? (
+          {query.data && query.data.total > size ? (
             <div className="pagination">
               <button
                 disabled={page === 1}

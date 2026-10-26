@@ -10,43 +10,28 @@ import { State } from "@/components/shared/view-state";
 import { Title } from "@/components/shared/page-heading";
 
 export function Timeline({ id }: { id: string }) {
-  const [page, setPage] = useState(1),
-    [size, setSize] = useState(25);
+  const [page, setPage] = useState(1);
+  const size = 25;
   const query = useData<Envelope>(
     "/students/" + id + "/timeline?page=" + page + "&page_size=" + size,
   );
   return (
     <>
       <Title
-        eyebrow="ACCOUNTABLE HISTORY"
         title="Audit timeline"
-        description="Ticks require verification of the full institution chain containing each event."
+        description="Changes to this record, who made them and why."
       >
         <button onClick={query.reload}>
           <RefreshCw size={16} /> Verify chain
         </button>
       </Title>
-      <label>
-        Events per page
-        <select
-          value={size}
-          onChange={(event) => {
-            setSize(Number(event.target.value));
-            setPage(1);
-          }}
-        >
-          <option value={25}>25</option>
-          <option value={50}>50</option>
-        </select>
-      </label>
       <State {...query} retry={query.reload}>
         {query.data ? (
           <section className="panel padded">
             <p className="notice">
               {query.data.verified
                 ? "Full chain verified"
-                : "Chain verification failed or unavailable"}{" "}
-              · checked head {text(query.data.checked_head_seq)}
+                : "Chain verification failed or unavailable"}
             </p>
             <div className="timeline">
               {query.data.items.map((row) => (
@@ -66,7 +51,10 @@ export function Timeline({ id }: { id: string }) {
                   <p>{text(row.reason)}</p>
                   <p className="muted">{text(row.actor_name)}</p>
                   {Object.keys((row.changes as Row) || {}).length ? (
-                    <pre>{JSON.stringify(row.changes, null, 2)}</pre>
+                    <details>
+                      <summary>View changes</summary>
+                      <pre>{JSON.stringify(row.changes, null, 2)}</pre>
+                    </details>
                   ) : null}
                   <details>
                     <summary>Stored row hash</summary>
@@ -81,20 +69,22 @@ export function Timeline({ id }: { id: string }) {
                 <Link href={"/students/" + id}>Return to passport</Link>
               </div>
             ) : null}
-            <div className="pagination">
-              <button disabled={page === 1} onClick={() => setPage(page - 1)}>
-                Previous events
-              </button>
-              <span>
-                Page {page} · {query.data.total} events
-              </span>
-              <button
-                disabled={page * size >= query.data.total}
-                onClick={() => setPage(page + 1)}
-              >
-                Next events
-              </button>
-            </div>
+            {query.data.total > size ? (
+              <div className="pagination">
+                <button disabled={page === 1} onClick={() => setPage(page - 1)}>
+                  Previous events
+                </button>
+                <span>
+                  Page {page} · {query.data.total} events
+                </span>
+                <button
+                  disabled={page * size >= query.data.total}
+                  onClick={() => setPage(page + 1)}
+                >
+                  Next events
+                </button>
+              </div>
+            ) : null}
           </section>
         ) : null}
       </State>

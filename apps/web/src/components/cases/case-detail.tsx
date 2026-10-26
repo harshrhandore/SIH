@@ -69,7 +69,6 @@ export function CaseDetail({ id }: { id: string }) {
   return (
     <>
       <Title
-        eyebrow="CASE FILE"
         title={profile ? text(profile.full_name) : "Verification case"}
         description={"Case " + id}
       />
@@ -174,7 +173,7 @@ export function CaseDetail({ id }: { id: string }) {
                             <input
                               value={correction}
                               onChange={(e) => setCorrection(e.target.value)}
-                              placeholder="Value from fixtures/manifest.json"
+                              placeholder="Enter the corrected identifier…"
                             />
                           </label>
                           <button

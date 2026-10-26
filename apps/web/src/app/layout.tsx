@@ -2,12 +2,6 @@ import type { Metadata } from "next";
 import localFont from "next/font/local";
 import "./globals.css";
 import { GlobalBanner } from "@/components/shared/scope-banner";
-const heading = localFont({
-  src: "../../public/fonts/fraunces/latin-600.woff2",
-  variable: "--font-heading",
-  weight: "600",
-  display: "swap",
-});
 const body = localFont({
   src: [
     {
@@ -33,7 +27,7 @@ const mono = localFont({
   display: "swap",
 });
 export const metadata: Metadata = {
-  title: "Shiksham · Synthetic academic ledger",
+  title: "Shiksham · Academic records",
   description:
     "Synthetic student records, explainable local checks and accountable human review.",
 };
@@ -43,11 +37,11 @@ export default function RootLayout({
   children: React.ReactNode;
 }) {
   return (
-    <html
-      lang="en"
-      className={`${heading.variable} ${body.variable} ${mono.variable}`}
-    >
+    <html lang="en" className={`${body.variable} ${mono.variable}`}>
       <body>
+        <a className="skip-link" href="#main-content">
+          Skip to content
+        </a>
         <GlobalBanner />
         {children}
       </body>

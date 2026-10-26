@@ -5,8 +5,10 @@ import { useData } from "@/hooks/use-data";
 import { State } from "@/components/shared/view-state";
 import { Title } from "@/components/shared/page-heading";
 import { Table } from "@/components/shared/data-table";
+import { useRequiredUser } from "@/hooks/use-current-user";
 
 export function Cases() {
+  const user = useRequiredUser();
   const [status, setStatus] = useState("OPEN"),
     [q, setQ] = useState("");
   const query = useData<Envelope>(
@@ -15,9 +17,8 @@ export function Cases() {
   return (
     <>
       <Title
-        eyebrow="HUMAN REVIEW"
         title="Verification cases"
-        description="Inspect the evidence. Record the reason. Keep every decision traceable."
+        description="Review flagged records and record your decision."
       />
       <section className="panel">
         <div className="filters">
@@ -32,7 +33,7 @@ export function Cases() {
                 "",
               ].map((v) => (
                 <option key={v} value={v}>
-                  {v || "All statuses"}
+                  {v ? v.toLowerCase().replaceAll("_", " ") : "All statuses"}
                 </option>
               ))}
             </select>
@@ -50,8 +51,7 @@ export function Cases() {
           <Table
             rows={query.data?.items || []}
             columns={[
-              ["full_name", "Student"],
-              ["masked_name", "Masked name"],
+              [user.role === "ADMIN" ? "masked_name" : "full_name", "Student"],
               ["submitted_enrollment_no", "Enrollment"],
               ["opened_reason", "Primary rule"],
               ["status", "Status"],

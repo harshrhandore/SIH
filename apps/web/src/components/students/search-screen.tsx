@@ -4,7 +4,6 @@ import { useSearchParams } from "next/navigation";
 import { useState, useEffect } from "react";
 import { Search } from "lucide-react";
 import { Envelope } from "@/lib/schemas";
-import { text } from "@/lib/format";
 import { number } from "@/lib/format";
 import { useData } from "@/hooks/use-data";
 import { State } from "@/components/shared/view-state";
@@ -38,9 +37,8 @@ export function SearchScreen() {
   return (
     <>
       <Title
-        eyebrow="THE STUDENT REGISTER"
         title="Student search"
-        description="Search within your authorized institutions. Every count comes from the ledger."
+        description="Find students by name, enrollment number or synthetic identifier."
       />
       <section className="panel">
         <div className="filters">
@@ -53,6 +51,8 @@ export function SearchScreen() {
           <label className="search-field">
             <Search size={18} />
             <input
+              name="student-search"
+              autoComplete="off"
               aria-label="Search student records"
               placeholder="Name, synthetic ID or enrollment number"
               value={input}
@@ -76,7 +76,13 @@ export function SearchScreen() {
           </label>
           <label>
             Year
-            <select value={year} onChange={(e) => setYear(e.target.value)}>
+            <select
+              value={year}
+              onChange={(e) => {
+                setYear(e.target.value);
+                setPage(1);
+              }}
+            >
               <option value="">All years</option>
               {[1, 2, 3, 4].map((y) => (
                 <option key={y}>{y}</option>
@@ -88,6 +94,7 @@ export function SearchScreen() {
               setInput("");
               setBranch("");
               setYear("");
+              setPage(1);
             }}
           >
             Clear
@@ -96,12 +103,9 @@ export function SearchScreen() {
         <State {...query} retry={query.reload}>
           {query.data ? (
             <>
-              <div className="search-summary">
+              <div className="search-summary" role="status">
                 Found <b>{number(query.data.total)}</b>{" "}
-                {query.data.total === 1 ? "record" : "records"} in{" "}
-                <span className="mono">{text(query.data.took_ms)} ms</span>
-                <span className="cache">{text(query.data.cache)}</span>
-                <small>API time</small>
+                {query.data.total === 1 ? "record" : "records"}
               </div>
               <Table
                 rows={query.data.items}
@@ -114,20 +118,25 @@ export function SearchScreen() {
                 ]}
                 href={(r) => "/students/" + r.id}
               />
-              <div className="pagination">
-                <button disabled={page === 1} onClick={() => setPage(page - 1)}>
-                  Previous
-                </button>
-                <span>
-                  Page {page} · {number(query.data.total)} records
-                </span>
-                <button
-                  disabled={page * 25 >= query.data.total}
-                  onClick={() => setPage(page + 1)}
-                >
-                  Next
-                </button>
-              </div>
+              {query.data.total > 25 ? (
+                <div className="pagination">
+                  <button
+                    disabled={page === 1}
+                    onClick={() => setPage(page - 1)}
+                  >
+                    Previous
+                  </button>
+                  <span>
+                    Page {page} · {number(query.data.total)} records
+                  </span>
+                  <button
+                    disabled={page * 25 >= query.data.total}
+                    onClick={() => setPage(page + 1)}
+                  >
+                    Next
+                  </button>
+                </div>
+              ) : null}
             </>
           ) : null}
         </State>

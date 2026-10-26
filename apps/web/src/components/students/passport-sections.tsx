@@ -31,11 +31,14 @@ export function PassportScreen({
   return (
     <>
       <Title
-        eyebrow="ACADEMIC PASSPORT"
         title={profile ? text(profile.full_name) : "Academic passport"}
-        description="Synthetic academic history · Local consistency, never official verification"
+        description="Academic passport"
       >
-        {printable ? (
+        {print ? (
+          <button disabled={!printable} onClick={() => window.print()}>
+            <Printer size={16} /> Print passport
+          </button>
+        ) : printable ? (
           <Link className="button" href={"/students/" + id + "/print"}>
             <Printer size={16} /> Print passport
           </Link>
@@ -45,11 +48,6 @@ export function PassportScreen({
             Print passport
           </button>
         )}
-        {print ? (
-          <button disabled={!printable} onClick={() => window.print()}>
-            Open print preview
-          </button>
-        ) : null}
       </Title>
       <State {...query} retry={query.reload}>
         {data && profile && trust ? (
@@ -64,7 +62,6 @@ export function PassportScreen({
             <section className="panel" id="performance">
               <div className="panel-heading">
                 <div>
-                  <div className="eyebrow">ACADEMIC LEDGER</div>
                   <h2>Performance by term</h2>
                 </div>
                 <Badge value={profile.data_quality_status} />

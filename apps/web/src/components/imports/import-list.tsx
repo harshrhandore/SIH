@@ -12,9 +12,8 @@ export function ImportList() {
   return (
     <>
       <Title
-        eyebrow="SOURCE REGISTER"
         title="Imports"
-        description="Synthetic submissions and their validation history."
+        description="Uploaded files and their validation results."
       >
         <Link className="primary" href="/imports/new">
           <Upload size={17} /> Import records

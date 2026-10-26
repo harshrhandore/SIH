@@ -43,14 +43,19 @@ test("analytics charts summarize scoped rows and preserve filter meaning", async
     page.getByRole("img", { name: /CGPA distribution/ }),
   ).toBeVisible();
   await expect(
-    page.locator(".table-scroll tbody tr").first().getByRole("cell").first(),
+    page
+      .locator(".record-table tbody tr")
+      .first()
+      .getByRole("cell")
+      .first()
+      .locator(".cell-value"),
   ).toHaveText("2023");
   await page
     .getByRole("combobox", { name: "View", exact: true })
     .selectOption("data-quality");
   await expect(
     page.getByRole("combobox", { name: "Year", exact: true }),
-  ).toBeDisabled();
+  ).toHaveCount(0);
   await expect(page.getByRole("img", { name: /Record quality/ })).toBeVisible();
   await page.getByRole("button", { name: "Refresh now", exact: true }).click();
   await expect(

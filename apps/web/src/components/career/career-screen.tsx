@@ -20,7 +20,11 @@ export function CareerScreen() {
   const [result, setResult] = useState<Advice | null>(null);
   const [savedAt, setSavedAt] = useState<string | null>(null);
   const [historyPage, setHistoryPage] = useState(1);
-  const [historySize, setHistorySize] = useState(25);
+  const historySize = 5;
+  const historyBatchSize = 25;
+  const historyBatchPage =
+    Math.floor(((historyPage - 1) * historySize) / historyBatchSize) + 1;
+  const historyOffset = ((historyPage - 1) * historySize) % historyBatchSize;
   const [busy, setBusy] = useState(false);
   const [error, setError] = useState<ApiError | null>(null);
   const roles = useData<components["schemas"]["RolesResponse"]>(
@@ -31,9 +35,9 @@ export function CareerScreen() {
       ? "/students/" +
           user.student_id +
           "/career/history?page=" +
-          historyPage +
+          historyBatchPage +
           "&page_size=" +
-          historySize
+          historyBatchSize
       : null,
   );
   async function send() {
@@ -70,9 +74,8 @@ export function CareerScreen() {
   return (
     <>
       <Title
-        eyebrow="EVIDENCE-BASED NEXT STEPS"
-        title="Career Copilot"
-        description="A deterministic readiness score. Practical steps based on the evidence you have."
+        title="Career guidance"
+        description="Compare your recorded skills with a career and plan what to learn next."
       />
       <div className="two-columns career-layout">
         <section className="panel padded">
@@ -97,8 +100,7 @@ export function CareerScreen() {
               <div className="notice" role="status">
                 {savedAt
                   ? "Saved advice from " + kolkataDateTime(savedAt)
-                  : "Deterministic score"}{" "}
-                &middot; {result.phrasing_source}
+                  : "Guidance based on your recorded evidence"}
               </div>
               <p>{result.explanation}</p>
               <StepsList steps={result.recommended_steps} />
@@ -114,42 +116,31 @@ export function CareerScreen() {
       </div>
       <section className="panel padded" id="saved-advice" tabIndex={-1}>
         <h2>Saved advice</h2>
-        <label>
-          Advice per page
-          <select
-            value={historySize}
-            onChange={(event) => {
-              setHistorySize(Number(event.target.value));
-              setHistoryPage(1);
-            }}
-          >
-            <option value={25}>25</option>
-            <option value={50}>50</option>
-          </select>
-        </label>
         <State {...history} retry={history.reload}>
           {history.data?.items.length ? (
             <ul className="advice-history">
-              {history.data.items.map((item) => (
-                <li key={item.session_id}>
-                  <button
-                    type="button"
-                    onClick={() => {
-                      setQuestion(item.question);
-                      setRole(item.role_code);
-                      setSavedAt(item.created_at);
-                      setResult({
-                        ...item.response,
-                        session_id: item.session_id,
-                      });
-                      setError(null);
-                    }}
-                  >
-                    {item.question} &middot; {item.readiness_percent}%{" "}
-                    <small>{kolkataDateTime(item.created_at)}</small>
-                  </button>
-                </li>
-              ))}
+              {history.data.items
+                .slice(historyOffset, historyOffset + historySize)
+                .map((item) => (
+                  <li key={item.session_id}>
+                    <button
+                      type="button"
+                      onClick={() => {
+                        setQuestion(item.question);
+                        setRole(item.role_code);
+                        setSavedAt(item.created_at);
+                        setResult({
+                          ...item.response,
+                          session_id: item.session_id,
+                        });
+                        setError(null);
+                      }}
+                    >
+                      {item.question} &middot; {item.readiness_percent}%{" "}
+                      <small>{kolkataDateTime(item.created_at)}</small>
+                    </button>
+                  </li>
+                ))}
             </ul>
           ) : (
             <p className="muted">
@@ -157,7 +148,7 @@ export function CareerScreen() {
             </p>
           )}
         </State>
-        {history.data ? (
+        {history.data && history.data.total > historySize ? (
           <div className="pagination">
             <button
               disabled={historyPage === 1}

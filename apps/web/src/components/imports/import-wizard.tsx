@@ -101,9 +101,8 @@ export function ImportWizard() {
   return (
     <>
       <Title
-        eyebrow="NEW SUBMISSION"
         title="Import synthetic records"
-        description="Keep the source. Check every row. Resolve discrepancies with a person."
+        description="Upload a file, check its columns and validate the records."
       />
       <ol className="steps">
         {["Upload", "Map", "Preview", "Validate", "Report"].map((s, i) => (
@@ -126,9 +125,12 @@ export function ImportWizard() {
           <>
             <h2>Choose a source file</h2>
             <p>CSV or XLSX · up to 1,000 rows · 20 MiB maximum</p>
-            <a href="/api/backend/demo/fixtures/import_csv" download>
-              Download the 1,000-row synthetic fixture
-            </a>
+            <details className="sample-files">
+              <summary>Need a sample file?</summary>
+              <a href="/api/backend/demo/fixtures/import_csv" download>
+                Download 1,000 sample records (CSV)
+              </a>
+            </details>
             <label className="dropzone">
               <Upload size={32} />
               <span>{file?.name || "Choose a CSV or XLSX file"}</span>

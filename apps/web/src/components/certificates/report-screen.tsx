@@ -14,10 +14,7 @@ export function CertificateReport({ id }: { id: string }) {
     risk = d?.risk as Row | undefined;
   return (
     <>
-      <Title
-        eyebrow="SYNTHETIC · NOT OFFICIAL VERIFICATION"
-        title="Local certificate consistency report"
-      />
+      <Title title="Local certificate consistency report" />
       <State {...query} retry={query.reload}>
         {d && risk ? (
           <>
@@ -26,7 +23,7 @@ export function CertificateReport({ id }: { id: string }) {
                 ? "Verification trial — excluded from accepted passport and Trust Score"
                 : "Passport evidence — staff acceptance is required"}
             </div>
-            <div className="metrics">
+            <div className="metrics report-metrics">
               <div className="metric">
                 <span>Local match confidence</span>
                 <strong>
@@ -48,11 +45,6 @@ export function CertificateReport({ id }: { id: string }) {
                       : risk.level
                   }
                 />
-              </div>
-              <div className="metric">
-                <span>Text engine</span>
-                <h2>{text(d.ocr_engine)}</h2>
-                <p>{text(d.extraction_source)}</p>
               </div>
             </div>
             <section className="panel">
@@ -76,6 +68,13 @@ export function CertificateReport({ id }: { id: string }) {
                   ["value", "Observed in document"],
                 ]}
               />
+              <details className="processing-details padded">
+                <summary>Processing details</summary>
+                <p>
+                  Text engine: <span>{text(d.ocr_engine)}</span>
+                </p>
+                <p>Extraction method: {text(d.extraction_source)}</p>
+              </details>
             </section>
             <section className="panel">
               <div className="panel-heading">

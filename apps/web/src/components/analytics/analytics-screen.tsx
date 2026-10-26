@@ -107,7 +107,7 @@ export function Analytics() {
   const columns: Record<string, [string, string][]> = {
     admissions: [
       ["year", "Cohort"],
-      ["program_id", "Program"],
+      ...(inst ? [["program_name", "Program"] as [string, string]] : []),
       ["admitted", "Admitted"],
     ],
     placements: [
@@ -133,12 +133,30 @@ export function Analytics() {
       ["submission_percent", "Submission %"],
     ],
   };
+  const tableRows =
+    kind === "admissions"
+      ? inst
+        ? (query.data?.items || []).map((row) => ({
+            ...row,
+            program_name:
+              programs.data?.items.find(
+                (program) => program.id === row.program_id,
+              )?.name || "Program name unavailable",
+          }))
+        : Array.from(
+            (query.data?.items || []).reduce((years, row) => {
+              const year = String(row.year);
+              years.set(year, (years.get(year) || 0) + Number(row.admitted));
+              return years;
+            }, new Map<string, number>()),
+            ([year, admitted]) => ({ year, admitted }),
+          ).sort((a, b) => a.year.localeCompare(b.year))
+      : query.data?.items || [];
   return (
     <>
       <Title
-        eyebrow="MEASURED INSTITUTIONAL DATA"
         title="Analytics"
-        description="Materialized views with explicit denominators and refresh timestamps."
+        description="Admissions, academic performance and record quality across your institutions."
       >
         <button
           disabled={refreshing || Boolean(query.data?.refreshing)}
@@ -217,29 +235,37 @@ export function Analytics() {
               ))}
             </select>
           </label>
-          <label>
-            Year
-            <select
-              value={kind === "data-quality" ? "" : year}
-              disabled={kind === "data-quality"}
-              onChange={(event) => setYear(event.target.value)}
-            >
-              <option value="">
-                {kind === "data-quality" ? "Not applicable" : "All years"}
-              </option>
-              {Array.from({ length: 9 }, (_, index) => 2022 + index).map(
-                (value) => (
-                  <option key={value}>{value}</option>
-                ),
-              )}
-            </select>
-          </label>
+          {kind !== "data-quality" ? (
+            <label>
+              Year
+              <select
+                value={year}
+                onChange={(event) => setYear(event.target.value)}
+              >
+                <option value="">All years</option>
+                {Array.from({ length: 9 }, (_, index) => 2022 + index).map(
+                  (value) => (
+                    <option key={value}>{value}</option>
+                  ),
+                )}
+              </select>
+            </label>
+          ) : null}
           <label>
             View
             <select value={kind} onChange={(e) => setKind(e.target.value)}>
               {["admissions", "placements", "performance", "data-quality"].map(
                 (k) => (
-                  <option key={k}>{k}</option>
+                  <option key={k} value={k}>
+                    {
+                      {
+                        admissions: "Admissions",
+                        placements: "Placements",
+                        performance: "Academic performance",
+                        "data-quality": "Record quality",
+                      }[k]
+                    }
+                  </option>
                 ),
               )}
             </select>
@@ -262,11 +288,8 @@ export function Analytics() {
           {query.data ? (
             <>
               <p className="note padded">
-                Data as of {text(query.data.data_as_of)} · View query{" "}
-                {text(query.data.took_ms)} ms ·{" "}
-                {query.data.stale
-                  ? "Stale — refresh pending"
-                  : "Current source epoch"}
+                Updated {kolkataDateTime(text(query.data.data_as_of))}
+                {query.data.stale ? " · An update is pending" : ""}
               </p>
               {kind === "admissions" ? (
                 <AdmissionsChart rows={query.data.items} />
@@ -280,7 +303,7 @@ export function Analytics() {
                   trend={(query.data.trend as Row[] | undefined) || []}
                 />
               )}
-              <Table rows={query.data.items} columns={columns[kind]} />
+              <Table rows={tableRows} columns={columns[kind]} />
             </>
           ) : null}
         </State>

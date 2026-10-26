@@ -19,9 +19,8 @@ export function ImportDetail({ id }: { id: string }) {
   return (
     <>
       <Title
-        eyebrow="VALIDATION REPORT"
         title={d ? text(d.filename) : "Import report"}
-        description="Checkpointed validation with original source rows retained."
+        description="Validation results and records that need review."
       />
       <State {...query} retry={query.reload}>
         {d && report ? (

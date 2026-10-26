@@ -8,12 +8,12 @@ export function ReadinessPanel({
 }) {
   return (
     <section className="panel padded">
-      <div className="eyebrow">ROLE READINESS</div>
+      <h2>Skills match</h2>
       <div className="readiness">
         {result?.readiness_percent ?? "—"}
         <small>%</small>
       </div>
-      <p>Matched catalogue weights, out of 100.</p>
+      <p>Match against required skills, out of 100.</p>
       {result ? (
         <>
           <h3>Matched skills</h3>
@@ -53,7 +53,7 @@ export function ReadinessPanel({
         </>
       ) : null}
       <p className="note">
-        Self-reported skills add no points. Optional AI cannot change the score.
+        Only skills supported by recorded evidence contribute to this score.
       </p>
     </section>
   );

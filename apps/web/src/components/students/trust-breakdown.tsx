@@ -7,10 +7,9 @@ export function TrustBreakdown({ trust }: { trust: Row }) {
     <section className="panel" id="trust">
       <div className="panel-heading">
         <div>
-          <div className="eyebrow">HEURISTIC, NOT VALIDATED</div>
           <h2>Trust Score · {text(trust.score)} / 100</h2>
         </div>
-        <span>Formula version {text(trust.formula_version)}</span>
+        <span className="note">Heuristic, not validated</span>
       </div>
       <Table
         rows={trust.components as Row[]}
@@ -22,9 +21,8 @@ export function TrustBreakdown({ trust }: { trust: Row }) {
         ]}
       />
       <p className="note padded">
-        Mock verification adds zero official points. Trial certificates are
-        excluded. Scores are computed from synthetic fixtures calibrated for
-        this demonstration.
+        Based on the recorded evidence below. Trial certificates and mock
+        verification add no official verification credit.
       </p>
     </section>
   );

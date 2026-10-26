@@ -30,13 +30,12 @@ test("operator ledger and real search MISS HIT", async ({ page }) => {
   await expect(
     page.getByRole("link", { name: "Riya Sharma", exact: true }),
   ).toBeVisible();
-  const roomy = await page.locator("tbody tr").first().boundingBox();
-  await page.getByRole("button", { name: "Comfortable · 44 px" }).click();
-  const compactToggle = page.getByRole("button", { name: "Compact · 32 px" });
-  await expect(compactToggle).toHaveAttribute("aria-pressed", "true");
-  const compact = await page.locator("tbody tr").first().boundingBox();
-  expect(compact!.height).toBeLessThan(roomy!.height);
-  await compactToggle.click();
+  await expect(
+    page.getByRole("group", { name: "Table row density" }),
+  ).toHaveCount(0);
+  await expect(
+    page.getByRole("link", { name: "Riya Sharma", exact: true }),
+  ).toHaveCount(1);
   await page.screenshot({
     path: path.join(root, "docs/search-desktop.png"),
     fullPage: true,
@@ -51,6 +50,17 @@ test("student passport and career evidence", async ({ page }) => {
   await expect(
     page.getByRole("heading", { name: "Trust Score · 91 / 100" }),
   ).toBeVisible();
+  await page
+    .getByRole("navigation", { name: "Workspace navigation" })
+    .getByRole("link", { name: "My Timeline", exact: true })
+    .click();
+  await expect(
+    page.getByRole("heading", { name: "Audit timeline", exact: true }),
+  ).toBeVisible();
+  await expect(
+    page.getByText("Full chain verified", { exact: false }),
+  ).toBeVisible();
+  await expect(page.locator(".timeline article").first()).toBeVisible();
   await page.goto("/career");
   await page.getByRole("button", { name: "Send question" }).click();
   await expect(
@@ -82,6 +92,7 @@ test("passport and certificate trials use real backend", async ({ page }) => {
     page.getByRole("heading", { name: "Local certificate consistency report" }),
   ).toBeVisible();
   await expect(page.getByText("95.00", { exact: false })).toBeVisible();
+  await page.getByText("Processing details", { exact: true }).click();
   await expect(page.getByText("PDF_TEXT", { exact: true })).toBeVisible();
   await expect(
     page.getByText(
@@ -100,11 +111,11 @@ test("admin masking and aggregate oversight", async ({ page }) => {
   await page
     .getByRole("combobox", { name: "Institution", exact: true })
     .selectOption(manifest.institution_a_id);
-  await expect(page.locator(".table-scroll tbody tr")).toHaveCount(1);
+  await expect(page.locator(".record-table tbody tr")).toHaveCount(1);
   await page
     .getByRole("combobox", { name: "Program", exact: true })
     .selectOption({ label: "B.Tech Computer Science" });
-  await expect(page.locator(".table-scroll tbody tr")).toHaveCount(1);
+  await expect(page.locator(".record-table tbody tr")).toHaveCount(1);
   await expect(
     page.getByText(
       "Historical quality snapshots are not recorded separately by program.",
@@ -112,8 +123,8 @@ test("admin masking and aggregate oversight", async ({ page }) => {
     ),
   ).toBeVisible();
   await page
-    .getByRole("combobox", { name: "Aggregate institution", exact: true })
-    .selectOption("");
+    .getByRole("button", { name: "Clear filters", exact: true })
+    .click();
   await expect(
     page.getByRole("combobox", { name: "State", exact: true }),
   ).toHaveValue("");
@@ -145,7 +156,7 @@ test("375px mobile and axe on passport", async ({ page }) => {
   ).toBeTruthy();
   await page.getByRole("button", { name: "Toggle navigation" }).click();
   await expect(
-    page.getByRole("link", { name: "Career Copilot" }),
+    page.getByRole("link", { name: "Career guidance" }),
   ).toBeVisible();
   await page.getByRole("button", { name: "Close navigation" }).click();
   const result = await new AxeBuilder({ page })
