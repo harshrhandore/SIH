@@ -6,3 +6,14 @@ export const text = (v: unknown) =>
       : String(v);
 
 export const number = (v: unknown) => Number(v || 0).toLocaleString("en-IN");
+
+export function kolkataDateTime(value: string) {
+  const date = new Date(value);
+  return Number.isNaN(date.getTime())
+    ? "—"
+    : new Intl.DateTimeFormat("en-IN", {
+        timeZone: "Asia/Kolkata",
+        dateStyle: "medium",
+        timeStyle: "short",
+      }).format(date) + " IST";
+}

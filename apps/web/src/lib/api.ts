@@ -48,6 +48,7 @@ export async function api<T = Record<string, unknown>>(
           await generatedClient.GET("/api/v1/auth/me", {
             headers,
             cache: "no-store",
+            signal: init.signal,
             parseAs: "stream",
           })
         ).response

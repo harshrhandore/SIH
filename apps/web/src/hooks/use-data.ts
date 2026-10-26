@@ -1,67 +1,38 @@
 "use client";
-import { useState, useEffect, useCallback } from "react";
+import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { api, ApiError } from "@/lib/api";
+import { queryKeys } from "@/lib/query-keys";
+import { useCurrentUser } from "@/hooks/use-current-user";
 
 export function useData<T>(path: string | null, interval = 0, grant = "") {
-  const [dataGrant, setDataGrant] = useState(grant);
-  const [data, setData] = useState<T | null>(null),
-    [error, setError] = useState<ApiError | null>(null),
-    [loading, setLoading] = useState(true);
-  const reload = useCallback(async () => {
-    if (!path) {
-      setLoading(false);
-      return;
-    }
-    try {
-      const result = await api<T>(path, {
-        headers: grant ? { "X-Case-Access": grant } : {},
-      });
-      setData(result);
-      setDataGrant(grant);
-      setError(null);
-    } catch (e) {
-      if ([401, 403, 404].includes((e as ApiError).status || 0)) setData(null);
-      setError(e as ApiError);
-    } finally {
-      setLoading(false);
-    }
-  }, [path, grant]);
-  useEffect(() => {
-    let active = true;
-    async function fetchData() {
-      if (!path) {
-        setLoading(false);
-        return;
-      }
+  const session = useCurrentUser();
+  const client = useQueryClient();
+  const key = queryKeys.data(session.data, path, grant);
+  const query = useQuery<T | null, ApiError>({
+    queryKey: key,
+    enabled: Boolean(path && session.data),
+    queryFn: async ({ signal }) => {
+      if (!path) return null;
       try {
-        const result = await api<T>(path, {
+        return await api<T>(path, {
+          signal,
           headers: grant ? { "X-Case-Access": grant } : {},
         });
-        if (active) {
-          setData(result);
-          setDataGrant(grant);
-          setError(null);
-        }
-      } catch (e) {
-        if (active) {
-          if ([401, 403, 404].includes((e as ApiError).status || 0))
-            setData(null);
-          setError(e as ApiError);
-        }
-      } finally {
-        if (active) setLoading(false);
+      } catch (error) {
+        if ([401, 403, 404].includes((error as ApiError).status || 0))
+          client.setQueryData(key, null);
+        throw error;
       }
-    }
-    fetchData();
-    const id = interval
-      ? setInterval(() => {
-          if (!document.hidden) fetchData();
-        }, interval)
-      : undefined;
-    return () => {
-      active = false;
-      if (id) clearInterval(id);
-    };
-  }, [path, interval, grant]);
-  return { data: dataGrant === grant ? data : null, error, loading, reload };
+    },
+    gcTime: grant ? 0 : 300000,
+    refetchInterval: interval || (grant ? 30000 : false),
+    refetchIntervalInBackground: false,
+  });
+  const forbidden = [401, 403, 404].includes(query.error?.status || 0);
+  return {
+    data: forbidden ? null : (query.data ?? null),
+    error: query.error,
+    loading: Boolean(path) && query.isPending,
+    reload: () => query.refetch(),
+  };
 }

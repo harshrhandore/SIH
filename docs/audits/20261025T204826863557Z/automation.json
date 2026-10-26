@@ -1,0 +1,176 @@
+[
+  {
+    "name": "placeholders/secrets",
+    "command": [
+      "C:\\Users\\Lenovo\\Desktop\\SIH_Project\\shiksham-apaar\\.venv\\Scripts\\python.exe",
+      "scripts/check_placeholders.py"
+    ],
+    "start": "2026-10-25T20:48:26.863557+00:00",
+    "end": "2026-10-25T20:48:27.380541+00:00",
+    "exit_code": 0,
+    "stdout": "Placeholder and secret scan passed; 11 registered external variables, 51 owner rows.\n",
+    "stderr": ""
+  },
+  {
+    "name": "schema",
+    "command": [
+      "C:\\Users\\Lenovo\\Desktop\\SIH_Project\\shiksham-apaar\\.venv\\Scripts\\python.exe",
+      "scripts/check_schema.py"
+    ],
+    "start": "2026-10-25T20:48:27.382542+00:00",
+    "end": "2026-10-25T20:48:30.632296+00:00",
+    "exit_code": 0,
+    "stdout": "Schema matches objects, columns, constraints, triggers, indexes, function bodies and runtime grants.\n",
+    "stderr": ""
+  },
+  {
+    "name": "fresh database",
+    "command": [
+      "C:\\Users\\Lenovo\\Desktop\\SIH_Project\\shiksham-apaar\\.venv\\Scripts\\python.exe",
+      "scripts/reproduce.py"
+    ],
+    "start": "2026-10-25T20:48:30.633748+00:00",
+    "end": "2026-10-25T20:50:08.479653+00:00",
+    "exit_code": 0,
+    "stdout": "{\"dataset_students\": 100000, \"seed_seconds\": 68.879, \"total_seconds\": 78.796, \"database_bytes\": 457490959}\n\n\n{\n  \"environment_database\": \"shiksham_repro\",\n  \"import_report\": {\n    \"batch_id\": \"1d62b60f-ecd2-4dc4-898d-3d6aed446210\",\n    \"clean\": 880,\n    \"flagged\": 110,\n    \"incomplete\": 10,\n    \"affected_rows\": 120,\n    \"primary_findings\": [\n      {\n        \"code\": \"DUPLICATE_APAAR\",\n        \"count\": 20\n      },\n      {\n        \"code\": \"IMPOSSIBLE_ACADEMIC\",\n        \"count\": 10\n      },\n      {\n        \"code\": \"INVALID_APAAR\",\n        \"count\": 20\n      },\n      {\n        \"code\": \"MISSING_APAAR\",\n        \"count\": 30\n      },\n      {\n        \"code\": \"MISSING_MANDATORY\",\n        \"count\": 10\n      },\n      {\n        \"code\": \"NAME_INCONSISTENCY\",\n        \"count\": 20\n      },\n      {\n        \"code\": \"POSSIBLE_DUPLICATE\",\n        \"count\": 10\n      }\n    ],\n    \"all_findings\": 140,\n    \"secondary_findings\": 20,\n    \"processed_rows\": 1000,\n    \"total_rows\": 1000,\n    \"status\": \"COMPLETED\"\n  },\n  \"dashboard\": {\n    \"total\": 10000,\n    \"clean\": 9881,\n    \"flagged\": 109,\n    \"incomplete\": 10,\n    \"institution_name\": \"Synthetic Vidya Institute\",\n    \"submission_percent\": 90.91,\n    \"missing_records\": 1000,\n    \"pending_reviews\": 119,\n    \"pending_corrections\": 0,\n    \"recent_imports\": [\n      {\n        \"id\": \"1d62b60f-ecd2-4dc4-898d-3d6aed446210\",\n        \"filename\": \"demo-import-1000.csv\",\n        \"status\": \"COMPLETED\",\n        \"total_rows\": 1000,\n        \"clean_rows\": 880,\n        \"flagged_rows\": 110,\n        \"incomplete_rows\": 10,\n        \"created_at\": \"2026-10-26T02:19:57.742218+05:30\"\n      }\n    ],\n    \"data_epoch\": 7\n  },\n  \"search\": {\n    \"total\": 1,\n    \"miss_ms\": 33.655,\n    \"hit_ms\": 4.317\n  },\n  \"cgpa\": 8.42,\n  \"trust\": 91,\n  \"readiness\": 74,\n  \"genuine_confidence\": 95.0,\n  \"tampered_risk\": 83,\n  \"chain_valid\": true\n}\n\n\n",
+    "stderr": ""
+  },
+  {
+    "name": "python lint",
+    "command": [
+      "C:\\Users\\Lenovo\\Desktop\\SIH_Project\\shiksham-apaar\\.venv\\Scripts\\python.exe",
+      "-m",
+      "ruff",
+      "check",
+      "--config",
+      "apps/api/pyproject.toml",
+      "apps/api/app"
+    ],
+    "start": "2026-10-25T20:50:08.481663+00:00",
+    "end": "2026-10-25T20:50:08.735448+00:00",
+    "exit_code": 0,
+    "stdout": "All checks passed!\n",
+    "stderr": ""
+  },
+  {
+    "name": "python types",
+    "command": [
+      "C:\\Users\\Lenovo\\Desktop\\SIH_Project\\shiksham-apaar\\.venv\\Scripts\\python.exe",
+      "-m",
+      "mypy",
+      "--config-file",
+      "apps/api/pyproject.toml",
+      "apps/api/app"
+    ],
+    "start": "2026-10-25T20:50:08.737103+00:00",
+    "end": "2026-10-25T20:50:10.999593+00:00",
+    "exit_code": 0,
+    "stdout": "Success: no issues found in 69 source files\n",
+    "stderr": ""
+  },
+  {
+    "name": "python tests",
+    "command": [
+      "C:\\Users\\Lenovo\\Desktop\\SIH_Project\\shiksham-apaar\\.venv\\Scripts\\python.exe",
+      "-m",
+      "pytest",
+      "apps/api/tests",
+      "-q"
+    ],
+    "start": "2026-10-25T20:50:11.002166+00:00",
+    "end": "2026-10-25T20:50:30.453827+00:00",
+    "exit_code": 0,
+    "stdout": ".................................................................        [100%]\n============================== warnings summary ===============================\n.venv\\Lib\\site-packages\\fastapi\\testclient.py:1\n  C:\\Users\\Lenovo\\Desktop\\SIH_Project\\shiksham-apaar\\.venv\\Lib\\site-packages\\fastapi\\testclient.py:1: StarletteDeprecationWarning: Using `httpx` with `starlette.testclient` is deprecated; install `httpx2` instead.\n    from starlette.testclient import TestClient as TestClient  # noqa\n\n-- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html\n65 passed, 1 warning in 16.87s\n",
+    "stderr": ""
+  },
+  {
+    "name": "web lint",
+    "command": [
+      "npm.cmd",
+      "run",
+      "lint"
+    ],
+    "start": "2026-10-25T20:50:30.454837+00:00",
+    "end": "2026-10-25T20:50:43.959535+00:00",
+    "exit_code": 0,
+    "stdout": "\n> shiksham-apaar@1.0.0 lint\n> npm run lint --workspace apps/web\n\n\n> @shiksham/web@1.0.0 lint\n> eslint .\n\n\nC:\\Users\\Lenovo\\Desktop\\SIH_Project\\shiksham-apaar\\apps\\web\\src\\lib\\api.ts\n  77:7  warning  Do not use `location.href` to navigate to internal Next.js pages. Use `redirect()` in the render phase, or `useRouter().push()` in Client Components' event handlers instead. See: https://nextjs.org/docs/messages/no-location-assign-relative-destination  @next/next/no-location-assign-relative-destination\n\n\u2716 1 problem (0 errors, 1 warning)\n\n",
+    "stderr": ""
+  },
+  {
+    "name": "web types",
+    "command": [
+      "npm.cmd",
+      "run",
+      "typecheck"
+    ],
+    "start": "2026-10-25T20:50:43.961673+00:00",
+    "end": "2026-10-25T20:50:50.257941+00:00",
+    "exit_code": 0,
+    "stdout": "\n> shiksham-apaar@1.0.0 typecheck\n> npm run typecheck --workspace apps/web\n\n\n> @shiksham/web@1.0.0 typecheck\n> tsc --noEmit\n\n",
+    "stderr": ""
+  },
+  {
+    "name": "web build",
+    "command": [
+      "npm.cmd",
+      "run",
+      "build"
+    ],
+    "start": "2026-10-25T20:50:50.259941+00:00",
+    "end": "2026-10-25T20:51:06.709661+00:00",
+    "exit_code": 0,
+    "stdout": "\n> shiksham-apaar@1.0.0 build\n> npm run build --workspace apps/web\n\n\n> @shiksham/web@1.0.0 build\n> next build\n\n\u25b2 Next.js 16.4.3 (Turbopack)\n\u2713 Running next.config.ts took 68ms\n\n  Creating an optimized production build ...\n\u2713 Compiled successfully in 1673ms\n  Running TypeScript ...\n  Finished TypeScript in 4.7s ...\n  Collecting page data using 15 workers ...\n  Generating static pages using 15 workers (0/15) ...\n  Generating static pages using 15 workers (3/15) \n  Generating static pages using 15 workers (7/15) \n  Generating static pages using 15 workers (11/15) \n\u2713 Generating static pages using 15 workers (15/15) in 870ms\n  Finalizing page optimization ...\n\nRoute (app)\n\u250c \u25cb /\n\u251c \u25cb /_not-found\n\u251c \u25cb /analytics\n\u251c \u0192 /api/backend/[...path]\n\u251c \u25cb /architecture\n\u251c \u25cb /career\n\u251c \u25cb /cases\n\u251c \u0192 /cases/[caseId]\n\u251c \u25cb /certificates\n\u251c \u0192 /certificates/[verificationId]\n\u251c \u25cb /dashboard\n\u251c \u0192 /fraud/[verificationId]\n\u251c \u25cb /imports\n\u251c \u0192 /imports/[batchId]\n\u251c \u25cb /imports/new\n\u251c \u25cb /login\n\u251c \u25cb /oversight\n\u251c \u25cb /settings/demo\n\u251c \u25cb /students\n\u251c \u0192 /students/[studentId]\n\u251c \u0192 /students/[studentId]/print\n\u2514 \u0192 /students/[studentId]/timeline\n\n\n\u25cb  (Static)   prerendered as static content\n\u0192  (Dynamic)  server-rendered on demand\n\n",
+    "stderr": ""
+  },
+  {
+    "name": "generated client",
+    "command": [
+      "C:\\Users\\Lenovo\\Desktop\\SIH_Project\\shiksham-apaar\\.venv\\Scripts\\python.exe",
+      "scripts/check_client.py"
+    ],
+    "start": "2026-10-25T20:51:06.712378+00:00",
+    "end": "2026-10-25T20:51:12.956151+00:00",
+    "exit_code": 0,
+    "stdout": "\n> shiksham-apaar@1.0.0 api:generate\n> python scripts/export_openapi.py && openapi-typescript packages/api-client/openapi.json -o apps/web/src/lib/generated/api.d.ts\n\nExported FastAPI OpenAPI schema.\n\u2728 openapi-typescript 7.10.1\n\ud83d\ude80 packages/api-client/openapi.json \u2192 apps/web/src/lib/generated/api.d.ts [184.5ms]\nGenerated OpenAPI and client are current.\n",
+    "stderr": ""
+  },
+  {
+    "name": "browser flows",
+    "command": [
+      "npm.cmd",
+      "run",
+      "e2e"
+    ],
+    "start": "2026-10-25T20:51:12.957564+00:00",
+    "end": "2026-10-25T20:51:49.791271+00:00",
+    "exit_code": 1,
+    "stdout": "\n> shiksham-apaar@1.0.0 e2e\n> npm run e2e --workspace apps/web\n\n\n> @shiksham/web@1.0.0 e2e\n> playwright test\n\n\nRunning 14 tests using 1 worker\n\n  ok  1 tests\\analytics.spec.ts:5:5 \u203a analytics charts summarize scoped rows and preserve filter meaning (5.0s)\n  x   2 tests\\auth.spec.ts:5:5 \u203a shared layout persists and palette supports keyboard navigation (3.6s)\n  ok  3 tests\\auth.spec.ts:73:5 \u203a sign out clears authentication cookies and leaves workspace (1.6s)\n  ok  4 tests\\auth.spec.ts:91:5 \u203a unknown URLs return 404 instead of demo controls (470ms)\n  ok  5 tests\\flows.spec.ts:6:5 \u203a operator ledger and real search MISS HIT (2.2s)\n  ok  6 tests\\flows.spec.ts:45:5 \u203a student passport and career evidence (2.3s)\n  ok  7 tests\\flows.spec.ts:72:5 \u203a passport and certificate trials use real backend (2.0s)\n  ok  8 tests\\flows.spec.ts:92:5 \u203a admin masking and aggregate oversight (2.3s)\n  ok  9 tests\\flows.spec.ts:129:5 \u203a 375px mobile and axe on passport (2.6s)\n  ok 10 tests\\flows.spec.ts:164:5 \u203a print passport artifact (2.0s)\n  ok 11 tests\\flows.spec.ts:179:5 \u203a concurrent expired requests use one refresh and strip caller authorization (1.5s)\n  ok 12 tests\\passport-ai.spec.ts:4:5 \u203a unfinished terms show missing grades without invented zeroes (1.9s)\n  ok 13 tests\\privacy.spec.ts:5:5 \u203a student palette exposes navigation without general record searches (2.1s)\n  ok 14 tests\\privacy.spec.ts:29:5 \u203a changing a query hides previous records while its request is pending (2.1s)\n\n\n  1) tests\\auth.spec.ts:5:5 \u203a shared layout persists and palette supports keyboard navigation \u2500\u2500\u2500\u2500\u2500\u2500\n\n    Error: expect(received).toEqual(expected) // deep equality\n\n    - Expected  -  1\n    + Received  + 58\n\n    - Array []\n    + Array [\n    +   Object {\n    +     \"description\": \"Ensure the contrast between foreground and background colors meets WCAG 2 AA minimum contrast ratio thresholds\",\n    +     \"help\": \"Elements must meet minimum color contrast ratio thresholds\",\n    +     \"helpUrl\": \"https://dequeuniversity.com/rules/axe/4.14/color-contrast?application=playwright\",\n    +     \"id\": \"color-contrast\",\n    +     \"impact\": \"serious\",\n    +     \"nodes\": Array [\n    +       Object {\n    +         \"all\": Array [],\n    +         \"any\": Array [\n    +           Object {\n    +             \"data\": Object {\n    +               \"bgColor\": \"#10201e\",\n    +               \"contrastRatio\": 3.72,\n    +               \"expectedContrastRatio\": \"4.5:1\",\n    +               \"fgColor\": \"#727871\",\n    +               \"fontSize\": \"6.8pt (9px)\",\n    +               \"fontWeight\": \"normal\",\n    +               \"messageKey\": null,\n    +             },\n    +             \"id\": \"color-contrast\",\n    +             \"impact\": \"serious\",\n    +             \"message\": \"Element has insufficient color contrast of 3.72 (foreground color: #727871, background color: #10201e, font size: 6.8pt (9px), font weight: normal). Expected contrast ratio of 4.5:1\",\n    +             \"relatedNodes\": Array [\n    +               Object {\n    +                 \"html\": \"<aside class=\\\"sidebar open\\\" role=\\\"dialog\\\" aria-modal=\\\"true\\\" aria-label=\\\"Workspace navigation\\\">\",\n    +                 \"target\": Array [\n    +                   \"aside\",\n    +                 ],\n    +               },\n    +             ],\n    +           },\n    +         ],\n    +         \"failureSummary\": \"Fix any of the following:\n    +   Element has insufficient color contrast of 3.72 (foreground color: #727871, background color: #10201e, font size: 6.8pt (9px), font weight: normal). Expected contrast ratio of 4.5:1\",\n    +         \"html\": \"<div class=\\\"sidebar-section\\\">WORKSPACE</div>\",\n    +         \"impact\": \"serious\",\n    +         \"none\": Array [],\n    +         \"target\": Array [\n    +           \".sidebar-section\",\n    +         ],\n    +       },\n    +     ],\n    +     \"tags\": Array [\n    +       \"cat.color\",\n    +       \"wcag2aa\",\n    +       \"wcag143\",\n    +       \"TTv5\",\n    +       \"TT13.c\",\n    +       \"EN-301-549\",\n    +       \"EN-9.1.4.3\",\n    +       \"ACT\",\n    +       \"RGAAv4\",\n    +       \"RGAA-3.2.1\",\n    +     ],\n    +   },\n    + ]\n\n      65 |     (await new AxeBuilder({ page }).withTags([\"wcag2a\", \"wcag2aa\"]).analyze())\n      66 |       .violations,\n    > 67 |   ).toEqual([]);\n         |     ^\n      68 |   await page.keyboard.press(\"Escape\");\n      69 |   await expect(drawer).not.toBeVisible();\n      70 |   await expect(toggle).toBeFocused();\n        at C:\\Users\\Lenovo\\Desktop\\SIH_Project\\shiksham-apaar\\apps\\web\\tests\\auth.spec.ts:67:5\n\n    Error Context: test-results\\auth-shared-layout-persist-891ae-upports-keyboard-navigation\\error-context.md\n\n  1 failed\n    tests\\auth.spec.ts:5:5 \u203a shared layout persists and palette supports keyboard navigation \u2500\u2500\u2500\u2500\u2500\u2500\u2500\n  13 passed (34.5s)\n",
+    "stderr": "(node:31928) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.\n(Use `node --trace-warnings ...` to show where the warning was created)\n(node:29412) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.\n(Use `node --trace-warnings ...` to show where the warning was created)\nnpm error Lifecycle script `e2e` failed with error:\nnpm error code 1\nnpm error path C:\\Users\\Lenovo\\Desktop\\SIH_Project\\shiksham-apaar\\apps\\web\nnpm error workspace @shiksham/web@1.0.0\nnpm error location C:\\Users\\Lenovo\\Desktop\\SIH_Project\\shiksham-apaar\\apps\\web\nnpm error command failed\nnpm error command C:\\WINDOWS\\system32\\cmd.exe /d /s /c playwright test\n"
+  },
+  {
+    "name": "artifacts",
+    "command": [
+      "C:\\Users\\Lenovo\\Desktop\\SIH_Project\\shiksham-apaar\\.venv\\Scripts\\python.exe",
+      "scripts/check_artifacts.py"
+    ],
+    "start": "2026-10-25T20:51:49.793678+00:00",
+    "end": "2026-10-25T20:51:49.972313+00:00",
+    "exit_code": 1,
+    "stdout": "Artifact check: 55 exact-tree paths absent; 0 fixture hash mismatches; font licenses present=True.\n",
+    "stderr": ""
+  },
+  {
+    "name": "benchmark",
+    "command": [
+      "C:\\Users\\Lenovo\\Desktop\\SIH_Project\\shiksham-apaar\\.venv\\Scripts\\python.exe",
+      "scripts/benchmark.py",
+      "--runs",
+      "20"
+    ],
+    "start": "2026-10-25T20:51:49.975219+00:00",
+    "end": "2026-10-25T20:51:55.139192+00:00",
+    "exit_code": 0,
+    "stdout": "{\"application_cold\": {\"min_ms\": 5.676, \"max_ms\": 137.403, \"p50_ms\": 10.24, \"p95_ms\": 106.503}, \"cached\": {\"min_ms\": 3.625, \"max_ms\": 5.048, \"p50_ms\": 4.6315, \"p95_ms\": 4.858}, \"hardware\": \"Windows-11-10.0.26300-SP0; AMD64 Family 25 Model 80 Stepping 0, AuthenticAMD\"}\n",
+    "stderr": "C:\\Users\\Lenovo\\Desktop\\SIH_Project\\shiksham-apaar\\.venv\\Lib\\site-packages\\fastapi\\testclient.py:1: StarletteDeprecationWarning: Using `httpx` with `starlette.testclient` is deprecated; install `httpx2` instead.\n  from starlette.testclient import TestClient as TestClient  # noqa\n{\"request_id\": \"req_fc788297408944ec\", \"status\": 200, \"took_ms\": 103.24}\n{\"request_id\": \"req_0a5383e953884ea6\", \"status\": 200, \"took_ms\": 11.257}\n{\"request_id\": \"req_6e9dc95291994eb6\", \"status\": 200, \"took_ms\": 6.214}\n{\"request_id\": \"req_b7aa48256d2842d1\", \"status\": 200, \"took_ms\": 5.758}\n{\"request_id\": \"req_e6ce955f77fa4c1c\", \"status\": 200, \"took_ms\": 11.071}\n{\"request_id\": \"req_87c9e45746354259\", \"status\": 200, \"took_ms\": 5.962}\n{\"request_id\": \"req_ea1b14c7830e4829\", \"status\": 200, \"took_ms\": 4.811}\n{\"request_id\": \"req_3d16ae155bb54459\", \"status\": 200, \"took_ms\": 10.221}\n{\"request_id\": \"req_a8df9a686fc649a6\", \"status\": 200, \"took_ms\": 5.255}\n{\"request_id\": \"req_11f6e6e0b2d54348\", \"status\": 200, \"took_ms\": 5.212}\n{\"request_id\": \"req_91a6e2fd49b34b48\", \"status\": 200, \"took_ms\": 14.687}\n{\"request_id\": \"req_16c56f1d4290440a\", \"status\": 200, \"took_ms\": 5.061}\n{\"request_id\": \"req_e8e038b1f5ba4beb\", \"status\": 200, \"took_ms\": 5.461}\n{\"request_id\": \"req_a1f42763408845a2\", \"status\": 200, \"took_ms\": 8.134}\n{\"request_id\": \"req_8b0ed0b579424ad8\", \"status\": 200, \"took_ms\": 4.452}\n{\"request_id\": \"req_c0a34879bb49425a\", \"status\": 200, \"took_ms\": 4.247}\n{\"request_id\": \"req_8e5366cc60aa4c88\", \"status\": 200, \"took_ms\": 7.158}\n{\"request_id\": \"req_bbe515e65c094546\", \"status\": 200, \"took_ms\": 4.513}\n{\"request_id\": \"req_b5c992748b9a452c\", \"status\": 200, \"took_ms\": 4.984}\n{\"request_id\": \"req_321b918dbfde4551\", \"status\": 200, \"took_ms\": 6.919}\n{\"request_id\": \"req_c5bdc37c60d94018\", \"status\": 200, \"took_ms\": 5.527}\n{\"request_id\": \"req_c43dc7f10f9e42a2\", \"status\": 200, \"took_ms\": 4.224}\n{\"request_id\": \"req_f5a3fbdb77c84f59\", \"status\": 200, \"took_ms\": 7.339}\n{\"request_id\": \"req_3c2ea62ae2e24f89\", \"status\": 200, \"took_ms\": 4.327}\n{\"request_id\": \"req_9514990d8bda46e6\", \"status\": 200, \"took_ms\": 5.739}\n{\"request_id\": \"req_d2aa07701441446d\", \"status\": 200, \"took_ms\": 7.631}\n{\"request_id\": \"req_60fcdfc77c3443f0\", \"status\": 200, \"took_ms\": 5.784}\n{\"request_id\": \"req_8a5658d9b0c24067\", \"status\": 200, \"took_ms\": 5.368}\n{\"request_id\": \"req_83da6dd5ad41460f\", \"status\": 200, \"took_ms\": 83.871}\n{\"request_id\": \"req_140c3d0e3a684787\", \"status\": 200, \"took_ms\": 5.071}\n{\"request_id\": \"req_dfa26d26102d4df5\", \"status\": 200, \"took_ms\": 5.235}\n{\"request_id\": \"req_96208ff6e9eb485f\", \"status\": 200, \"took_ms\": 67.033}\n{\"request_id\": \"req_9ce497d2f0094677\", \"status\": 200, \"took_ms\": 5.36}\n{\"request_id\": \"req_e6feca8321644d08\", \"status\": 200, \"took_ms\": 5.356}\n{\"request_id\": \"req_f653adce4c504c4d\", \"status\": 200, \"took_ms\": 87.449}\n{\"request_id\": \"req_92c8fc32aaa24386\", \"status\": 200, \"took_ms\": 5.1}\n{\"request_id\": \"req_22d619e416934b31\", \"status\": 200, \"took_ms\": 5.706}\n{\"request_id\": \"req_0bd10a783c9f4d8c\", \"status\": 200, \"took_ms\": 9.637}\n{\"request_id\": \"req_d1b7f7a55b1b4ffb\", \"status\": 200, \"took_ms\": 4.92}\n{\"request_id\": \"req_6f5b29316eab434e\", \"status\": 200, \"took_ms\": 5.128}\n{\"request_id\": \"req_f8b670779642448f\", \"status\": 200, \"took_ms\": 10.966}\n{\"request_id\": \"req_49e593b6db2d4575\", \"status\": 200, \"took_ms\": 5.692}\n{\"request_id\": \"req_5e48fce361464dff\", \"status\": 200, \"took_ms\": 5.167}\n{\"request_id\": \"req_03570d86391442ea\", \"status\": 200, \"took_ms\": 88.005}\n{\"request_id\": \"req_45bf119eb4c74928\", \"status\": 200, \"took_ms\": 5.216}\n{\"request_id\": \"req_d90589a475dd457f\", \"status\": 200, \"took_ms\": 5.694}\n{\"request_id\": \"req_13c21b6f8ea549e7\", \"status\": 200, \"took_ms\": 107.347}\n{\"request_id\": \"req_cde9cacef4e8424c\", \"status\": 200, \"took_ms\": 4.927}\n{\"request_id\": \"req_10e785b4e9eb40ad\", \"status\": 200, \"took_ms\": 5.742}\n{\"request_id\": \"req_ba199d45820543ef\", \"status\": 200, \"took_ms\": 68.891}\n{\"request_id\": \"req_084ed5512298413c\", \"status\": 200, \"took_ms\": 4.533}\n{\"request_id\": \"req_759d260c9d8d4464\", \"status\": 200, \"took_ms\": 5.882}\n{\"request_id\": \"req_7d8a1ff4f26c4183\", \"status\": 200, \"took_ms\": 6.505}\n{\"request_id\": \"req_9f0ec361fcec4ca5\", \"status\": 200, \"took_ms\": 4.752}\n{\"request_id\": \"req_f6ed5670d0574170\", \"status\": 200, \"took_ms\": 4.256}\n{\"request_id\": \"req_d83ac9321f544398\", \"status\": 200, \"took_ms\": 138.2}\n{\"request_id\": \"req_9a09a20555d249fe\", \"status\": 200, \"took_ms\": 4.589}\n{\"request_id\": \"req_ede1b9a9676842ee\", \"status\": 200, \"took_ms\": 5.368}\n{\"request_id\": \"req_e68e0583146b4f13\", \"status\": 200, \"took_ms\": 79.372}\n{\"request_id\": \"req_785b81fa3e1d429c\", \"status\": 200, \"took_ms\": 5.038}\n{\"request_id\": \"req_acb84d96c1f1472c\", \"status\": 200, \"took_ms\": 5.504}\n"
+  }
+]

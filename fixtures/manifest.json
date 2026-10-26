@@ -386,7 +386,7 @@
     8272,
     8272
   ],
-  "seed_seconds": 65.921,
+  "seed_seconds": 46.726,
   "seed_validation": {
     "completed_term_students": 80006,
     "certificate_files": 202,
@@ -397,6 +397,6 @@
     "achievements_owners": 2000,
     "scholarships_owners": 2000
   },
-  "database_bytes": 457458191,
-  "total_seconds": 75.579
+  "database_bytes": 457474575,
+  "total_seconds": 53.106
 }

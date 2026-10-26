@@ -1,26 +1,8 @@
-import { test, expect, Page } from "@playwright/test";
+import { test, expect } from "@playwright/test";
 import AxeBuilder from "@axe-core/playwright";
 import fs from "node:fs";
 import path from "node:path";
-const root = path.resolve(process.cwd(), "../..");
-const env = Object.fromEntries(
-  fs
-    .readFileSync(path.join(root, ".env"), "utf8")
-    .trim()
-    .split(/\r?\n/)
-    .filter((s) => s.includes("="))
-    .map((s) => [s.slice(0, s.indexOf("=")), s.slice(s.indexOf("=") + 1)]),
-);
-const manifest = JSON.parse(
-  fs.readFileSync(path.join(root, "fixtures/manifest.json"), "utf8"),
-);
-async function login(page: Page, email: string) {
-  await page.goto("/login");
-  await page.getByLabel("Email", { exact: true }).fill(email);
-  await page.getByLabel("Password", { exact: true }).fill(env.DEMO_PASSWORD);
-  await page.getByRole("button", { name: "Sign in", exact: true }).click();
-  await expect(page).not.toHaveURL(/\/login$/);
-}
+import { root, manifest, login } from "./helpers";
 test("operator ledger and real search MISS HIT", async ({ page }) => {
   await login(page, "operator.a@example.test");
   await expect(
@@ -77,6 +59,11 @@ test("student passport and career evidence", async ({ page }) => {
       { exact: false },
     ),
   ).toBeVisible();
+  await expect(
+    page.getByRole("heading", { name: "Saved advice", exact: true }),
+  ).toBeVisible();
+  await page.locator(".advice-history button").first().click();
+  await expect(page.getByRole("status")).toContainText("Saved advice from");
   await page.screenshot({
     path: path.join(root, "docs/career-desktop.png"),
     fullPage: true,
@@ -107,6 +94,29 @@ test("admin masking and aggregate oversight", async ({ page }) => {
   await expect(
     page.getByRole("heading", { name: "Institution oversight" }),
   ).toBeVisible();
+  await page
+    .getByRole("combobox", { name: "State", exact: true })
+    .selectOption("Karnataka");
+  await page
+    .getByRole("combobox", { name: "Institution", exact: true })
+    .selectOption(manifest.institution_a_id);
+  await expect(page.locator(".table-scroll tbody tr")).toHaveCount(1);
+  await page
+    .getByRole("combobox", { name: "Program", exact: true })
+    .selectOption({ label: "B.Tech Computer Science" });
+  await expect(page.locator(".table-scroll tbody tr")).toHaveCount(1);
+  await expect(
+    page.getByText(
+      "Historical quality snapshots are not recorded separately by program.",
+      { exact: true },
+    ),
+  ).toBeVisible();
+  await page
+    .getByRole("combobox", { name: "Aggregate institution", exact: true })
+    .selectOption("");
+  await expect(
+    page.getByRole("combobox", { name: "State", exact: true }),
+  ).toHaveValue("");
   await page.goto("/cases");
   await expect(
     page.getByRole("heading", { name: "Verification cases" }),
@@ -121,6 +131,11 @@ test("375px mobile and axe on passport", async ({ page }) => {
   await page.emulateMedia({ reducedMotion: "reduce" });
   await login(page, "student.riya@example.test");
   await expect(
+    page.getByText("SYNTHETIC DATA · Not an official APAAR service", {
+      exact: true,
+    }),
+  ).toBeVisible();
+  await expect(
     page.getByRole("heading", { name: "Riya Sharma", exact: true }),
   ).toBeVisible();
   expect(
@@ -132,7 +147,7 @@ test("375px mobile and axe on passport", async ({ page }) => {
   await expect(
     page.getByRole("link", { name: "Career Copilot" }),
   ).toBeVisible();
-  await page.getByRole("button", { name: "Toggle navigation" }).click();
+  await page.getByRole("button", { name: "Close navigation" }).click();
   const result = await new AxeBuilder({ page })
     .withTags(["wcag2a", "wcag2aa"])
     .analyze();

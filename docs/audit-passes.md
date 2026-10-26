@@ -99,4 +99,31 @@ Shared table, badge, loading/error, heading, formatting, typed view aliases and 
 
 Start **2026-10-25T19:58:53.284725+00:00**; end **2026-10-25T20:01:43.432173+00:00**. [Full archive](audits/20261025T195853284725Z/automation.json). **12/13 checks passed**, process exit1: only exact artifacts remain FAIL (**102 missing paths**, zero fixture hash mismatches, font licenses present). **65 Python tests** and **7 browser flows** passed; production build, client diff, schema/body/grants, scanner, fresh100k and benchmark passed. The collection fix is now verified by the complete sweep. Core acceptance numbers still match.
 
-These are six automation attempts, not six full ordered A?E cycles. The prompt stopping rule remains unsatisfied; V9 stays OPEN. Typed success models now cover12of61operations. Remaining module/repository, typed-contract, UI, OCR and full-conformance work is recorded without claiming completion.
+These are six automation attempts, not six full ordered A-to-E cycles. The prompt stopping rule remains unsatisfied; V9 stays OPEN. Typed success models now cover12of61operations. Remaining module/repository, typed-contract, UI, OCR and full-conformance work is recorded without claiming completion.
+
+## Automation attempt 7: explicit pages and screen modules
+
+Start 2026-10-25T20:28:31.361398+00:00; end 2026-10-25T20:32:02.506145+00:00. [Archive](audits/20261025T202831361398Z/automation.json). 12/13checks passed:65Python tests and14browser checks, build/types/client/schema/fresh100k/benchmark/scanner passed. Artifact gate remained FAIL:55missing paths, zero fixture hash mismatches. This attempt preceded the focused-review fixes below.
+
+## Independent frontend review and nearby regression
+
+Fresh-context reviewer /root/frontend_review sampled45requirements across route/provider ownership, auth/cache isolation, scoped search, keyboard interaction, matrices, chart math and history; section18groups were considered. Review was source-only and did not establish a complete audit cycle.
+
+| ID | Severity | Finding and disposition |
+|---|---|---|
+| UI1 | Medium | Ordinary mobile aside lacked sheet semantics/focus handling. Added modal semantics, inert background, contained Tab/Shift+Tab, Escape and restored trigger focus. Browser regression covers it; open-drawer axe is included in the final sweep. |
+| UI2 | Medium | Oversight could not perform Karnataka to Institution A navigation. Added URL-owned state/institution/program filters,25/50pagination and aggregate topbar switcher. Browser flow verifies the filtered path and return to all institutions. |
+| UI3 | Medium | Required service disclaimer was incomplete/hidden on mobile and absent on login. Added root banner on every page with the required synthetic/not-official wording; mobile regression checks visibility. |
+| UI4 | Medium | Passport print controls available before data. Controls now wait for the core profile/trust response; held-response test proves disabled then enabled. |
+| UI5 | Medium | Refresh lacked completion verification. Capture prior view timestamps, POST refresh, poll refresh-status and require READY/nonstale/newer timestamps before success; cancel on unmount. Browser uses the real native refresh. |
+| UI6 | Medium | Optional evidence failed with the whole profile. PARTIAL: malformed/missing evidence panels now isolate rendering and empty sections show contextual text. Held-response test injects a missing project section while terms remain visible. The combined backend packet still shares a whole-request network failure; V7 remains OPEN. |
+| UI7 | Low | Missing timeline/context/switcher. Added student Timeline links, institution/assignment context and admin aggregate-only switching. |
+| UI8 | Low | Career role/recovery design incomplete. Added supported role chips, unknown-role guidance, saved-advice fallback for rate limits, evidence details and saved-response pagination/restoration. Some recovery paths remain source-reviewed rather than separately runtime-forced. |
+| UI9 | Low | Career timestamp display depended on browser timezone. Uses explicit Asia/Kolkata formatting with IST label. |
+| UI10 | Medium | Recheck found institution history beside program-filtered totals. Hide that wider trend for program filters and always show the program-history limitation. Browser asserts the note. |
+
+Development failures retained honestly: first chart test used an exact label selector that did not match the native select; corrected to accessible combobox-role selectors. A root npm targeted-test invocation consumed its grep flag and found no tests; the workspace-targeted invocation passed. The original mobile test tried to click its now-inert outside toggle; updated to the real drawer Close control. Full14check browser rerun then passed. These test corrections did not relax product permissions, rate limits, focus containment or assertions.
+
+The shared data hook now uses scoped query keys including actor/role/institutions/path/grant, aborts superseded requests, avoids previous-key data and clears forbidden results. A delayed real search request proves the previous student disappears while the new query is pending. Grant cache entries are not retained after unmount. Global search never queries students for student/admin roles.
+
+These remain automation attempts and focused reviews, not completed ordered A-to-E cycles. Full conformance/stopping rule remains OPEN.

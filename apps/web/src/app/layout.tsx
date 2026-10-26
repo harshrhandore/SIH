@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import localFont from "next/font/local";
 import "./globals.css";
+import { GlobalBanner } from "@/components/shared/scope-banner";
 const heading = localFont({
   src: "../../public/fonts/fraunces/latin-600.woff2",
   variable: "--font-heading",
@@ -46,7 +47,10 @@ export default function RootLayout({
       lang="en"
       className={`${heading.variable} ${body.variable} ${mono.variable}`}
     >
-      <body>{children}</body>
+      <body>
+        <GlobalBanner />
+        {children}
+      </body>
     </html>
   );
 }
