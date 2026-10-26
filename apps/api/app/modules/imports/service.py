@@ -1,20 +1,32 @@
+from app.modules.imports.jobs import process as process
+from app.modules.imports import repository
 from app.modules.verification.matching import make_indexes as make_indexes
 from app.modules.verification.rules import evaluate as evaluate
 from app.modules.imports.mapping import ALIASES as ALIASES, MANDATORY as MANDATORY, normalized as normalized
 from datetime import datetime, date
 from io import BytesIO, StringIO
 import csv
-from uuid import uuid4, uuid5
-from unidecode import unidecode
+from uuid import uuid4
 import zipfile
 from openpyxl import load_workbook
 from psycopg.types.json import Jsonb
-from app.core.algorithms import valid_id, normalized_name
-from app.core.audit import append
 from app.core.errors import fail
-from app.core.files import store, read
-from app.db.session import connect, one, many
-from app.modules.students.service import jsonable, epoch
+from app.core.files import store
+from app.db.session import connect, many
+from app.modules.students.service import jsonable
+from app.core.http import listing, pagination, batch_scope, idem
+import hashlib
+from uuid import UUID
+from fastapi import Request, UploadFile, File, Form, BackgroundTasks
+from fastapi.responses import Response
+from app.core.security import allow, institution_scope, reason
+from app.core.audit import append
+from app.core.files import contained, root_path
+from app.settings import settings
+from app.modules.imports import service as imports
+from app.core.contracts import Reason
+from app.modules.imports.schemas import Mapping
+from app.modules.imports.schemas import Confirm
 
 
 def parse(data, filename):
@@ -23,7 +35,7 @@ def parse(data, filename):
     if filename.lower().endswith(".xlsx"):
         try:
             archive = zipfile.ZipFile(BytesIO(data))
-            if sum(i.file_size for i in archive.infolist()) > 100 * 1024 * 1024:
+            if sum((i.file_size for i in archive.infolist())) > 100 * 1024 * 1024:
                 fail("XLSX_EXPANSION_LIMIT")
             book = load_workbook(BytesIO(data), read_only=True, data_only=False, keep_links=False)
             nonempty = []
@@ -33,25 +45,23 @@ def parse(data, filename):
                 if sheet.max_row and sheet.max_row > 1001:
                     fail("TOO_MANY_ROWS")
                 rows = list(sheet.iter_rows())
-                if any(any(c.value is not None for c in row) for row in rows):
+                if any((any((c.value is not None for c in row)) for row in rows)):
                     nonempty.append(rows)
             if len(nonempty) != 1:
                 fail("WORKSHEET_SELECTION_REQUIRED")
             cells = nonempty[0]
-            if any(c.data_type == "f" for row in cells for c in row):
+            if any((c.data_type == "f" for row in cells for c in row)):
                 fail("XLSX_FORMULA_NOT_SUPPORTED")
             headers = [str(c.value or "") for c in cells[0]]
             rows = [
                 {
-                    h: (
-                        c.value.date().isoformat()
-                        if isinstance(c.value, datetime)
-                        else c.value.isoformat()
-                        if isinstance(c.value, date)
-                        else str(c.value)
-                        if c.value is not None
-                        else ""
-                    )
+                    h: c.value.date().isoformat()
+                    if isinstance(c.value, datetime)
+                    else c.value.isoformat()
+                    if isinstance(c.value, date)
+                    else str(c.value)
+                    if c.value is not None
+                    else ""
                     for h, c in zip(headers, row)
                 }
                 for row in cells[1:]
@@ -73,7 +83,7 @@ def parse(data, filename):
         fail("EMPTY_FILE")
     if len(rows) > 1000:
         fail("TOO_MANY_ROWS")
-    return headers, rows
+    return (headers, rows)
 
 
 def upload(conn, user, data, filename, key):
@@ -82,12 +92,11 @@ def upload(conn, user, data, filename, key):
     storage, sha = store(
         data, user["institution_id"], "imports", "xlsx" if filename.lower().endswith(".xlsx") else "csv"
     )
-    conn.execute(
-        "INSERT INTO import_batches(id,institution_id,uploader_id,filename,storage_key,file_sha256,total_rows) VALUES (%s,%s,%s,%s,%s,%s,%s)",
-        (batch, user["institution_id"], user["id"], filename, storage, sha, len(rows)),
+    repository.upload_import_batches(
+        conn, (batch, user["institution_id"], user["id"], filename, storage, sha, len(rows))
     )
     for i, row in enumerate(rows, 1):
-        conn.execute("INSERT INTO import_rows(batch_id,row_no,raw_data) VALUES (%s,%s,%s)", (batch, i, Jsonb(row)))
+        repository.upload_import_rows(conn, (batch, i, Jsonb(row)))
     return dict(
         batch_id=batch,
         status="UPLOADED",
@@ -99,289 +108,19 @@ def upload(conn, user, data, filename, key):
 
 
 def start(conn, batch):
-    refs = many(
-        conn,
-        "SELECT id,submitted_apaar_id,submitted_enrollment_no,full_name,parent_name,dob FROM students WHERE institution_id=%s",
-        (batch["institution_id"],),
-    )
-    claims = {
-        r["apaar_id"]: str(r["id"]) for r in many(conn, "SELECT id,apaar_id FROM students WHERE apaar_id IS NOT NULL")
-    }
+    refs = repository.start_students(conn, (batch["institution_id"],))
+    claims = {r["apaar_id"]: str(r["id"]) for r in repository.start_students_2(conn, ())}
     snapshot = dict(rows=jsonable(refs), claims=claims, rule_version=1, demo_as_of="2026-10-25")
-    conn.execute(
-        "UPDATE import_batches SET status='QUEUED',reference_snapshot=%s WHERE id=%s", (Jsonb(snapshot), batch["id"])
-    )
+    repository.start_import_batches(conn, (Jsonb(snapshot), batch["id"]))
     job = uuid4()
-    conn.execute("INSERT INTO import_jobs(id,batch_id,status) VALUES (%s,%s,'QUEUED')", (job, batch["id"]))
+    repository.start_import_jobs(conn, (job, batch["id"]))
     return job
 
 
-def process(job_id, fail_after=None):
-    try:
-        with connect() as conn:
-            job = one(
-                conn, "SELECT * FROM import_jobs WHERE id=%s AND status='QUEUED' FOR UPDATE SKIP LOCKED", (job_id,)
-            )
-            if not job:
-                return
-            conn.execute("UPDATE import_jobs SET status='RUNNING',heartbeat_at=now() WHERE id=%s", (job_id,))
-            batch = one(conn, "SELECT * FROM import_batches WHERE id=%s", (job["batch_id"],))
-            read(batch["storage_key"])
-            conn.execute(
-                "UPDATE import_batches SET status='RUNNING',started_at=coalesce(started_at,now()) WHERE id=%s",
-                (batch["id"],),
-            )
-        snapshot = batch["reference_snapshot"]
-        indexes = make_indexes(snapshot["rows"], snapshot["claims"])
-        mapping = batch["column_mapping"]["mapping"]
-        with connect() as conn:
-            program_rows = many(
-                conn,
-                "SELECT *,level||':'||branch AS code FROM programs WHERE institution_id=%s",
-                (batch["institution_id"],),
-            )
-            programs = {p["code"]: p for p in program_rows}
-            rows = many(conn, "SELECT * FROM import_rows WHERE batch_id=%s ORDER BY row_no", (batch["id"],))
-        for offset in range(0, len(rows), 250):
-            chunk = rows[offset : offset + 250]
-            with connect() as conn:
-                conn.execute("SELECT pg_advisory_xact_lock(26263,8)")
-                current = one(conn, "SELECT * FROM import_jobs WHERE id=%s FOR UPDATE", (job_id,))
-                for staged in chunk:
-                    data = normalized(
-                        staged["raw_data"], mapping, batch["column_mapping"].get("date_format", "DD/MM/YYYY")
-                    )
-                    sid = uuid5(batch["id"], str(staged["row_no"]))
-                    data["id"] = str(sid)
-                    if staged["row_no"] >= current["next_row"] and valid_id(data.get("submitted_apaar_id")):
-                        claim = one(
-                            conn,
-                            "SELECT id FROM students WHERE apaar_id=%s AND id<>%s",
-                            (data["submitted_apaar_id"], sid),
-                        )
-                        if claim:
-                            indexes[0].setdefault(data["submitted_apaar_id"], {"id": str(claim["id"])})
-                    if staged["row_no"] >= current["next_row"] and data.get("submitted_enrollment_no"):
-                        live = one(
-                            conn,
-                            "SELECT id,submitted_enrollment_no,full_name,parent_name,dob FROM students WHERE institution_id=%s AND enrollment_no=%s AND id<>%s",
-                            (batch["institution_id"], data["submitted_enrollment_no"], sid),
-                        )
-                        if live:
-                            indexes[1].setdefault(data["submitted_enrollment_no"], live)
-                    findings, candidates, quality = evaluate(data, programs.get(data.get("program_code")), indexes)
-                    if staged["row_no"] >= current["next_row"]:
-                        program = programs.get(data.get("program_code"))
-                        canonical_id = (
-                            data.get("submitted_apaar_id")
-                            if valid_id(data.get("submitted_apaar_id"))
-                            and not any(f["code"] == "DUPLICATE_APAAR" for f in findings)
-                            else None
-                        )
-                        canonical_enrollment = (
-                            data.get("submitted_enrollment_no")
-                            if data.get("submitted_enrollment_no") not in indexes[1]
-                            else None
-                        )
-
-                        def integer(field, low, high):
-                            try:
-                                value = int(data[field])
-                                return value if low <= value <= high else None
-                            except (ValueError, KeyError, TypeError):
-                                return None
-
-                        conn.execute(
-                            "INSERT INTO students(id,institution_id,program_id,apaar_id,submitted_apaar_id,enrollment_no,submitted_enrollment_no,full_name,normalized_name,transliterated_name,parent_name,dob,email,admission_year,current_year,source,data_quality_status) VALUES (%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,'CSV',%s)",
-                            (
-                                sid,
-                                batch["institution_id"],
-                                program["id"] if program else None,
-                                canonical_id,
-                                data.get("submitted_apaar_id"),
-                                canonical_enrollment,
-                                data.get("submitted_enrollment_no"),
-                                data.get("full_name"),
-                                normalized_name(data.get("full_name")),
-                                unidecode(normalized_name(data.get("full_name"))),
-                                data.get("parent_name"),
-                                data.get("dob"),
-                                data.get("email"),
-                                integer("admission_year", 1950, 2100),
-                                integer("current_year", 1, 4),
-                                quality,
-                            ),
-                        )
-                        conn.execute(
-                            "UPDATE import_rows SET student_id=%s,normalized_data=%s,status=%s WHERE batch_id=%s AND row_no=%s",
-                            (
-                                sid,
-                                Jsonb(jsonable(data)),
-                                "CLEAN"
-                                if quality == "PASSED_LOCAL_CHECKS"
-                                else "INCOMPLETE"
-                                if quality == "INCOMPLETE"
-                                else "FLAGGED",
-                                batch["id"],
-                                staged["row_no"],
-                            ),
-                        )
-                        for f in findings:
-                            conn.execute(
-                                "INSERT INTO verification_checks(code,description,severity,version) VALUES (%s,%s,%s,1) ON CONFLICT DO NOTHING",
-                                (f["code"], f["explanation"], f["severity"]),
-                            )
-                            conn.execute(
-                                "INSERT INTO verification_findings(student_id,check_code,rule_version,student_version,batch_id,row_no,severity,explanation,evidence) VALUES (%s,%s,1,1,%s,%s,%s,%s,%s)",
-                                (
-                                    sid,
-                                    f["code"],
-                                    batch["id"],
-                                    staged["row_no"],
-                                    f["severity"],
-                                    f["explanation"],
-                                    Jsonb(f["evidence"]),
-                                ),
-                            )
-                            conn.execute(
-                                "INSERT INTO import_errors(batch_id,row_no,field,code,message,is_primary,evidence) VALUES (%s,%s,%s,%s,%s,%s,%s)",
-                                (
-                                    batch["id"],
-                                    staged["row_no"],
-                                    f["field"],
-                                    f["code"],
-                                    f["explanation"],
-                                    f["is_primary"],
-                                    Jsonb(f["evidence"]),
-                                ),
-                            )
-                        if findings:
-                            conn.execute(
-                                "INSERT INTO review_cases(student_id,opened_reason) VALUES (%s,%s)",
-                                (sid, findings[0]["code"]),
-                            )
-                        for target, kind, score in candidates:
-                            a, b = sorted([str(sid), str(target)])
-                            conn.execute(
-                                "INSERT INTO duplicate_candidates(student_a,student_b,match_type,score,matched_fields) VALUES (%s,%s,%s,%s,%s) ON CONFLICT DO NOTHING",
-                                (a, b, kind, round(score, 2), Jsonb(dict(source=str(sid), target=str(target)))),
-                            )
-                        conn.execute(
-                            "INSERT INTO record_versions(student_id,version_no,snapshot,changed_fields,changed_by,reason) VALUES (%s,1,%s,%s,%s,%s)",
-                            (
-                                sid,
-                                Jsonb(jsonable(data)),
-                                Jsonb({}),
-                                batch["uploader_id"],
-                                "Imported synthetic source record.",
-                            ),
-                        )
-                        append(
-                            conn,
-                            batch["institution_id"],
-                            batch["uploader_id"],
-                            "STUDENT_IMPORTED",
-                            "student",
-                            sid,
-                            "Imported synthetic source record.",
-                            dict(batch_id=str(batch["id"]), row_no=staged["row_no"], quality=quality),
-                            sid,
-                        )
-                        if (
-                            program
-                            and data.get("admission_year")
-                            and data.get("current_year")
-                            and not any(f["code"] == "IMPOSSIBLE_ACADEMIC" for f in findings)
-                            and data.get("sgpa")
-                            and data.get("term_no")
-                        ):
-                            eno = one(
-                                conn,
-                                "INSERT INTO enrolments(student_id,program_id,academic_year,term_no,term_type) VALUES (%s,%s,%s,%s,%s) RETURNING id",
-                                (
-                                    sid,
-                                    program["id"],
-                                    int(data["admission_year"]),
-                                    int(data["term_no"]),
-                                    program["term_type"],
-                                ),
-                            )["id"]
-                            conn.execute(
-                                "INSERT INTO academic_performance(student_id,enrolment_id,academic_year,term_no,term_type,credits,sgpa,cgpa) VALUES (%s,%s,%s,%s,%s,%s,%s,%s)",
-                                (
-                                    sid,
-                                    eno,
-                                    int(data["admission_year"]),
-                                    int(data["term_no"]),
-                                    program["term_type"],
-                                    float(data.get("credits") or 22),
-                                    float(data["sgpa"]),
-                                    float(data["sgpa"]),
-                                ),
-                            )
-                    # Earlier batch rows are part of the frozen reference order even on retry.
-                    if data.get("submitted_apaar_id"):
-                        indexes[0].setdefault(data["submitted_apaar_id"], data)
-                    if data.get("submitted_enrollment_no"):
-                        indexes[1].setdefault(data["submitted_enrollment_no"], data)
-                    if data.get("dob"):
-                        indexes[2][str(data["dob"])].append(data)
-                end = chunk[-1]["row_no"]
-                if end < current["next_row"]:
-                    continue
-                counts = one(
-                    conn,
-                    "SELECT count(*) FILTER(WHERE status='CLEAN') AS clean,count(*) FILTER(WHERE status='FLAGGED') AS flagged,count(*) FILTER(WHERE status='INCOMPLETE') AS incomplete FROM import_rows WHERE batch_id=%s",
-                    (batch["id"],),
-                )
-                conn.execute(
-                    "UPDATE import_batches SET processed_rows=%s,clean_rows=%s,flagged_rows=%s,incomplete_rows=%s WHERE id=%s",
-                    (end, counts["clean"], counts["flagged"], counts["incomplete"], batch["id"]),
-                )
-                conn.execute(
-                    "UPDATE import_jobs SET next_row=%s,progress=%s,heartbeat_at=now() WHERE id=%s",
-                    (end + 1, 100 * end / len(rows), job_id),
-                )
-                append(
-                    conn,
-                    batch["institution_id"],
-                    batch["uploader_id"],
-                    "IMPORT_CHUNK",
-                    "import",
-                    batch["id"],
-                    "Committed synthetic import checkpoint.",
-                    dict(processed_rows=end),
-                )
-                epoch(conn, batch["institution_id"])
-            if fail_after and end == fail_after:
-                raise RuntimeError("TEST_INTERRUPTION")
-        with connect() as conn:
-            conn.execute(
-                "UPDATE import_jobs SET status='COMPLETED',progress=100,updated_at=now() WHERE id=%s", (job_id,)
-            )
-            conn.execute("UPDATE import_batches SET status='COMPLETED',finished_at=now() WHERE id=%s", (batch["id"],))
-            conn.execute("SELECT refresh_demo_views()")
-    except Exception:
-        with connect() as conn:
-            conn.execute(
-                "UPDATE import_jobs SET status='FAILED',error_code='PROCESS_INTERRUPTED',error_message='Import interrupted; retry from saved checkpoint.',updated_at=now() WHERE id=%s",
-                (job_id,),
-            )
-            conn.execute(
-                "UPDATE import_batches SET status='FAILED' WHERE id=(SELECT batch_id FROM import_jobs WHERE id=%s)",
-                (job_id,),
-            )
-        raise
-
-
 def report(conn, batch_id):
-    batch = one(conn, "SELECT * FROM import_batches WHERE id=%s", (batch_id,))
-    buckets = many(
-        conn,
-        "SELECT code,count(*)::int AS count FROM import_errors WHERE batch_id=%s AND is_primary GROUP BY code ORDER BY code",
-        (batch_id,),
-    )
-    all_count = one(conn, "SELECT count(*) AS n FROM import_errors WHERE batch_id=%s", (batch_id,))["n"]
+    batch = repository.report_import_batches(conn, (batch_id,))
+    buckets = repository.report_import_errors(conn, (batch_id,))
+    all_count = repository.report_import_errors_2(conn, (batch_id,))["n"]
     return dict(
         batch_id=batch_id,
         clean=batch["clean_rows"],
@@ -390,8 +129,182 @@ def report(conn, batch_id):
         affected_rows=batch["flagged_rows"] + batch["incomplete_rows"],
         primary_findings=buckets,
         all_findings=all_count,
-        secondary_findings=all_count - sum(b["count"] for b in buckets),
+        secondary_findings=all_count - sum((b["count"] for b in buckets)),
         processed_rows=batch["processed_rows"],
         total_rows=batch["total_rows"],
         status=batch["status"],
+    )
+
+
+def upload_import(request: Request, file: UploadFile = File(...), institution_id: UUID = Form(...), user=None):
+    allow(user, "OPERATOR")
+    institution_scope(user, institution_id)
+    data = file.file.read(20 * 1024 * 1024 + 1)
+    with connect() as conn:
+        return idem(
+            conn,
+            user,
+            request,
+            dict(sha=hashlib.sha256(data).hexdigest(), institution=str(institution_id)),
+            lambda key: imports.upload(conn, user, data, file.filename or "", key),
+        )
+
+
+def list_imports(page: int = 1, page_size: int = 25, user=None):
+    allow(user, "OPERATOR", "OFFICER", "ADMIN")
+    offset = pagination(page, page_size)
+    ids = institution_scope(user, admin=True)
+    with connect() as conn:
+        cols = (
+            "id,institution_id,status,total_rows,processed_rows,clean_rows,flagged_rows,incomplete_rows,created_at"
+            + ("" if user["role_code"] == "ADMIN" else ",filename")
+        )
+        rows = many(
+            conn,
+            f"SELECT {cols} FROM import_batches WHERE (%s::uuid[] IS NULL OR institution_id=ANY(%s::uuid[])) ORDER BY created_at DESC LIMIT %s OFFSET %s",
+            (ids, ids, page_size, offset),
+        )
+        total = repository.list_imports_import_batches(conn, (ids, ids))["n"]
+        return listing(rows, total, page, page_size)
+
+
+def import_detail(batch_id: UUID, user=None):
+    with connect() as conn:
+        batch = batch_scope(conn, user, batch_id)
+        rows = repository.import_detail_import_rows(conn, (batch_id,))
+        job = repository.import_detail_import_jobs(conn, (batch_id,))
+        return {
+            **{k: batch[k] for k in ["id", "filename", "status", "total_rows", "processed_rows", "column_mapping"]},
+            "preview": rows,
+            "report": imports.report(conn, batch_id),
+            "job": job,
+        }
+
+
+def set_mapping(batch_id: UUID, body: Mapping, user=None):
+    allow(user, "OPERATOR")
+    with connect() as conn:
+        batch = batch_scope(conn, user, batch_id)
+        if batch["status"] not in {"UPLOADED", "MAPPED"}:
+            fail("IMPORT_ALREADY_STARTED", 409)
+        rows = repository.set_mapping_import_rows(conn, (batch_id,))
+        headers = set(rows[0]["raw_data"])
+        if set(body.mapping.values()) - headers or set(body.mapping) - set(imports.ALIASES):
+            fail("UNKNOWN_COLUMN", 400)
+        if len(set(body.mapping.values())) != len(body.mapping):
+            fail("DUPLICATE_MAPPING", 400)
+        if imports.MANDATORY - set(body.mapping):
+            fail("REQUIRED_MAPPING_MISSING")
+        if body.date_format not in {"DD/MM/YYYY", "ISO"}:
+            fail("DATE_FORMAT_UNSUPPORTED")
+        repository.set_mapping_import_batches(conn, (Jsonb(body.model_dump()), batch_id))
+        return dict(
+            batch_id=batch_id,
+            status="MAPPED",
+            required_fields_mapped=True,
+            preview=[
+                dict(
+                    row_no=r["row_no"],
+                    normalized=imports.normalized(r["raw_data"], body.mapping, body.date_format),
+                    errors=[],
+                )
+                for r in rows
+            ],
+        )
+
+
+def validate_import(batch_id: UUID, body: Confirm, request: Request, tasks: BackgroundTasks, user=None):
+    allow(user, "OPERATOR")
+    if not body.confirm_synthetic_data:
+        fail("SYNTHETIC_CONFIRMATION_REQUIRED")
+    with connect() as conn:
+        batch = batch_scope(conn, user, batch_id)
+
+        def work(key):
+            if batch["status"] != "MAPPED":
+                fail("MAPPING_REQUIRED", 409)
+            job = imports.start(conn, batch)
+            tasks.add_task(imports.process, job)
+            return dict(job_id=job, batch_id=batch_id, status="QUEUED", poll_url=f"/api/v1/import-jobs/{job}")
+
+        result = idem(conn, user, request, body.model_dump(), work)
+    return result
+
+
+def get_job(job_id: UUID, user=None):
+    with connect() as conn:
+        job = repository.get_job_import_jobs(conn, (job_id,))
+        if not job:
+            fail("NOT_FOUND", 404)
+        batch = batch_scope(conn, user, job["batch_id"])
+        return {**job, "processed_rows": batch["processed_rows"], "total_rows": batch["total_rows"]}
+
+
+def retry_job(job_id: UUID, body: Reason, request: Request, tasks: BackgroundTasks, user=None):
+    allow(user, "OPERATOR")
+    reason(body.reason)
+    with connect() as conn:
+        job = repository.retry_job_import_jobs(conn, (job_id,))
+        if not job:
+            fail("NOT_FOUND", 404)
+        batch = batch_scope(conn, user, job["batch_id"])
+
+        def work(key):
+            if job["status"] != "FAILED":
+                fail("JOB_NOT_FAILED", 409)
+            if job["retry_count"] >= 3:
+                fail("RETRY_LIMIT", 409)
+            if not contained(root_path(settings.storage_root), batch["storage_key"]).is_file():
+                fail("UPLOAD_MISSING", 409)
+            repository.retry_job_import_jobs_2(conn, (job_id,))
+            repository.queue_batch(conn, (job["batch_id"],))
+            append(
+                conn,
+                batch["institution_id"],
+                user["id"],
+                "IMPORT_RETRIED",
+                "import",
+                batch["id"],
+                body.reason,
+                dict(next_row=job["next_row"]),
+            )
+            tasks.add_task(imports.process, job_id)
+            return dict(
+                id=job_id,
+                job_id=job_id,
+                status="QUEUED",
+                retry_count=job["retry_count"] + 1,
+                resume_from_row=job["next_row"],
+            )
+
+        return idem(conn, user, request, body.model_dump(), work)
+
+
+def import_report(batch_id: UUID, user=None):
+    with connect() as conn:
+        batch_scope(conn, user, batch_id)
+        return imports.report(conn, batch_id)
+
+
+def errors_csv(batch_id: UUID, user=None):
+    with connect() as conn:
+        batch_scope(conn, user, batch_id)
+        rows = repository.errors_csv_import_errors(conn, (batch_id,))
+    output = StringIO()
+    writer = csv.writer(output)
+    writer.writerow(["row_no", "field", "code", "is_primary", "message", "submitted_value", "expected"])
+
+    def safe(value):
+        value = str(value or "")
+        return "'" + value if value.startswith(("=", "+", "-", "@", "\t", "\r")) else value
+
+    for row in rows:
+        writer.writerow(
+            [safe(row[k]) for k in ["row_no", "field", "code", "is_primary", "message"]]
+            + [safe(row["evidence"].get(k)) for k in ["submitted_value", "expected"]]
+        )
+    return Response(
+        output.getvalue(),
+        media_type="text/csv",
+        headers={"Content-Disposition": 'attachment; filename="import-errors.csv"'},
     )

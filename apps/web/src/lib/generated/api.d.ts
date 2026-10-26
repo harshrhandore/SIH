@@ -209,6 +209,23 @@ export interface paths {
         patch: operations["patch_student_api_v1_students__student_id__patch"];
         trace?: never;
     };
+    "/api/v1/students/{student_id}/evidence/{section}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** Student Evidence */
+        get: operations["student_evidence_api_v1_students__student_id__evidence__section__get"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/api/v1/student/{apaar_id}": {
         parameters: {
             query?: never;
@@ -720,6 +737,40 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/api/v1/analytics/refresh": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /** Refresh Analytics */
+        post: operations["refresh_analytics_api_v1_analytics_refresh_post"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/analytics/refresh-status": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** Refresh Status */
+        get: operations["refresh_status_api_v1_analytics_refresh_status_get"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/api/v1/analytics/admissions": {
         parameters: {
             query?: never;
@@ -780,40 +831,6 @@ export interface paths {
         };
         /** Analytics Data Quality */
         get: operations["analytics_data_quality_api_v1_analytics_data_quality_get"];
-        put?: never;
-        post?: never;
-        delete?: never;
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
-    };
-    "/api/v1/analytics/refresh": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        get?: never;
-        put?: never;
-        /** Refresh Analytics */
-        post: operations["refresh_analytics_api_v1_analytics_refresh_post"];
-        delete?: never;
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
-    };
-    "/api/v1/analytics/refresh-status": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        /** Refresh Status */
-        get: operations["refresh_status_api_v1_analytics_refresh_status_get"];
         put?: never;
         post?: never;
         delete?: never;
@@ -1019,6 +1036,38 @@ export interface components {
             reason: string;
             /** Action */
             action: string;
+        };
+        /** AdmissionsRow */
+        AdmissionsRow: {
+            /**
+             * Institution Id
+             * Format: uuid
+             */
+            institution_id: string;
+            /**
+             * Program Id
+             * Format: uuid
+             */
+            program_id: string;
+            /** Year */
+            year: number;
+            /** Admitted */
+            admitted: number;
+        };
+        /** AnalyticsResponse */
+        AnalyticsResponse: {
+            /** Items */
+            items: (components["schemas"]["AdmissionsRow"] | components["schemas"]["PlacementRow"] | components["schemas"]["PerformanceRow"] | components["schemas"]["QualityRow"])[];
+            /** Trend */
+            trend: components["schemas"]["TrendPoint"][];
+            /** Took Ms */
+            took_ms: number;
+            /** Data As Of */
+            data_as_of: string | null;
+            /** Refreshing */
+            refreshing: boolean;
+            /** Stale */
+            stale: boolean;
         };
         /** BenchmarkRequest */
         BenchmarkRequest: {
@@ -1390,6 +1439,41 @@ export interface components {
             /** Label */
             label: string;
         };
+        /** OversightResponse */
+        OversightResponse: {
+            /** Items */
+            items: components["schemas"]["OversightRow"][];
+            /** Total */
+            total: number;
+            /** Page */
+            page: number;
+            /** Page Size */
+            page_size: number;
+            /** Trend */
+            trend: components["schemas"]["TrendPoint"][];
+        };
+        /** OversightRow */
+        OversightRow: {
+            /**
+             * Institution Id
+             * Format: uuid
+             */
+            institution_id: string;
+            /** Institution Name */
+            institution_name: string;
+            /** State */
+            state: string;
+            /** Total */
+            total: number;
+            /** Submission Percent */
+            submission_percent: number;
+            /** Missing Records */
+            missing_records: number;
+            /** Unresolved Discrepancies */
+            unresolved_discrepancies: number;
+            /** Pending Reviews */
+            pending_reviews: number;
+        };
         /** Patch */
         Patch: {
             /** Reason */
@@ -1400,6 +1484,62 @@ export interface components {
             patch: {
                 [key: string]: unknown;
             };
+        };
+        /** PerformanceRow */
+        PerformanceRow: {
+            /**
+             * Institution Id
+             * Format: uuid
+             */
+            institution_id: string;
+            /**
+             * Program Id
+             * Format: uuid
+             */
+            program_id: string;
+            /** Branch */
+            branch: string;
+            /** Year */
+            year: number;
+            /** Assessed Students */
+            assessed_students: number;
+            /** Avg Cgpa */
+            avg_cgpa: number | null;
+            /** Pass Percent */
+            pass_percent: number | null;
+            /** Bucket 0 4 */
+            bucket_0_4: number;
+            /** Bucket 4 6 */
+            bucket_4_6: number;
+            /** Bucket 6 8 */
+            bucket_6_8: number;
+            /** Bucket 8 10 */
+            bucket_8_10: number;
+        };
+        /** PlacementRow */
+        PlacementRow: {
+            /**
+             * Institution Id
+             * Format: uuid
+             */
+            institution_id: string;
+            /**
+             * Program Id
+             * Format: uuid
+             */
+            program_id: string;
+            /** Year */
+            year: number;
+            /** Eligible Students */
+            eligible_students: number;
+            /** Placed Students */
+            placed_students: number;
+            /** Placement Rate */
+            placement_rate: number | null;
+            /** Median Package Lpa */
+            median_package_lpa: number | null;
+            /** Max Package Lpa */
+            max_package_lpa: number | null;
         };
         /** Program */
         Program: {
@@ -1445,6 +1585,34 @@ export interface components {
             /** Page Size */
             page_size: number;
         };
+        /** QualityRow */
+        QualityRow: {
+            /**
+             * Institution Id
+             * Format: uuid
+             */
+            institution_id: string;
+            /** Program Id */
+            program_id?: string | null;
+            /** Expected Records */
+            expected_records?: number | null;
+            /** Total */
+            total: number;
+            /** Clean */
+            clean: number;
+            /** Flagged */
+            flagged: number;
+            /** Incomplete */
+            incomplete: number;
+            /** External Pending */
+            external_pending: number;
+            /** Submission Percent */
+            submission_percent: number;
+            /** Missing Records */
+            missing_records: number;
+            /** Pending Reviews */
+            pending_reviews: number;
+        };
         /** Reason */
         Reason: {
             /** Reason */
@@ -1454,6 +1622,33 @@ export interface components {
         Refresh: {
             /** Refresh Token */
             refresh_token: string;
+        };
+        /** RefreshQueued */
+        RefreshQueued: {
+            /** Status */
+            status: string;
+            /** Poll Url */
+            poll_url: string;
+        };
+        /** RefreshStatus */
+        RefreshStatus: {
+            /** Status */
+            status: string;
+            /** Views */
+            views: components["schemas"]["RefreshView"][];
+            /** Stale */
+            stale: boolean;
+        };
+        /** RefreshView */
+        RefreshView: {
+            /** Name */
+            name: string;
+            /** Status */
+            status: string;
+            /** Refreshed At */
+            refreshed_at: string | null;
+            /** Source Epoch */
+            source_epoch: number;
         };
         /** Role */
         Role: {
@@ -1611,6 +1806,16 @@ export interface components {
             /** Expires In */
             expires_in: number;
             user: components["schemas"]["UserResponse"];
+        };
+        /** TrendPoint */
+        TrendPoint: {
+            /**
+             * Date
+             * Format: date
+             */
+            date: string;
+            /** Clean Percent */
+            clean_percent: number | null;
         };
         /** TrustComponent */
         TrustComponent: {
@@ -2044,7 +2249,9 @@ export interface operations {
     };
     student_api_v1_students__student_id__get: {
         parameters: {
-            query?: never;
+            query?: {
+                include_evidence?: boolean;
+            };
             header?: never;
             path: {
                 student_id: string;
@@ -2087,6 +2294,38 @@ export interface operations {
                 "application/json": components["schemas"]["Patch"];
             };
         };
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": unknown;
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    student_evidence_api_v1_students__student_id__evidence__section__get: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                student_id: string;
+                section: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
         responses: {
             /** @description Successful Response */
             200: {
@@ -3106,7 +3345,7 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content: {
-                    "application/json": unknown;
+                    "application/json": components["schemas"]["OversightResponse"];
                 };
             };
             /** @description Validation Error */
@@ -3116,6 +3355,46 @@ export interface operations {
                 };
                 content: {
                     "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    refresh_analytics_api_v1_analytics_refresh_post: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            202: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["RefreshQueued"];
+                };
+            };
+        };
+    };
+    refresh_status_api_v1_analytics_refresh_status_get: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["RefreshStatus"];
                 };
             };
         };
@@ -3140,7 +3419,7 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content: {
-                    "application/json": unknown;
+                    "application/json": components["schemas"]["AnalyticsResponse"];
                 };
             };
             /** @description Validation Error */
@@ -3174,7 +3453,7 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content: {
-                    "application/json": unknown;
+                    "application/json": components["schemas"]["AnalyticsResponse"];
                 };
             };
             /** @description Validation Error */
@@ -3208,7 +3487,7 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content: {
-                    "application/json": unknown;
+                    "application/json": components["schemas"]["AnalyticsResponse"];
                 };
             };
             /** @description Validation Error */
@@ -3242,7 +3521,7 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content: {
-                    "application/json": unknown;
+                    "application/json": components["schemas"]["AnalyticsResponse"];
                 };
             };
             /** @description Validation Error */
@@ -3252,46 +3531,6 @@ export interface operations {
                 };
                 content: {
                     "application/json": components["schemas"]["HTTPValidationError"];
-                };
-            };
-        };
-    };
-    refresh_analytics_api_v1_analytics_refresh_post: {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        requestBody?: never;
-        responses: {
-            /** @description Successful Response */
-            202: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": unknown;
-                };
-            };
-        };
-    };
-    refresh_status_api_v1_analytics_refresh_status_get: {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        requestBody?: never;
-        responses: {
-            /** @description Successful Response */
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": unknown;
                 };
             };
         };

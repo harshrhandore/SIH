@@ -9,6 +9,7 @@ from app.modules.analytics.router import router as analytics_router
 from app.modules.verification.router import router as verification_router
 from app.modules.demo.router import router as demo_router
 from contextlib import asynccontextmanager
+import asyncio
 from time import perf_counter
 from uuid import uuid4
 from fastapi import FastAPI, APIRouter, HTTPException
@@ -24,11 +25,15 @@ from app.modules.institutions.router import router as institutions_router
 
 @asynccontextmanager
 async def lifespan(app):
-    with connect() as conn:
-        conn.execute(
-            "UPDATE import_jobs SET status='FAILED',error_code='PROCESS_INTERRUPTED',error_message='Process restarted; retry from checkpoint.' WHERE status='RUNNING' AND heartbeat_at<now()-interval '60 seconds'"
-        )
-    yield
+    from app.modules.imports.jobs import schedule
+
+    stop = asyncio.Event()
+    recovery = asyncio.create_task(schedule(stop))
+    try:
+        yield
+    finally:
+        stop.set()
+        await recovery
 
 
 app = FastAPI(title="Shiksham APAAR synthetic academic ledger", version="1.0.0", lifespan=lifespan)

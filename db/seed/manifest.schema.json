@@ -1,0 +1,138 @@
+{
+  "additionalProperties": true,
+  "properties": {
+    "seed": {
+      "const": 2026263,
+      "title": "Seed",
+      "type": "integer"
+    },
+    "clock": {
+      "format": "date",
+      "title": "Clock",
+      "type": "string"
+    },
+    "showcase_student_id": {
+      "format": "uuid",
+      "title": "Showcase Student Id",
+      "type": "string"
+    },
+    "showcase_apaar_id": {
+      "pattern": "^SYN-[0-9]{13}$",
+      "title": "Showcase Apaar Id",
+      "type": "string"
+    },
+    "institution_a_id": {
+      "format": "uuid",
+      "title": "Institution A Id",
+      "type": "string"
+    },
+    "correction_row": {
+      "minimum": 1,
+      "title": "Correction Row",
+      "type": "integer"
+    },
+    "correct_to": {
+      "pattern": "^SYN-[0-9]{13}$",
+      "title": "Correct To",
+      "type": "string"
+    },
+    "correction_enrollment": {
+      "title": "Correction Enrollment",
+      "type": "string"
+    },
+    "expected_import": {
+      "additionalProperties": {
+        "minimum": 0,
+        "type": "integer"
+      },
+      "title": "Expected Import",
+      "type": "object"
+    },
+    "fixture_import": {
+      "const": "demo-import-1000.csv",
+      "title": "Fixture Import",
+      "type": "string"
+    },
+    "showcase_readiness": {
+      "maximum": 100,
+      "minimum": 0,
+      "title": "Showcase Readiness",
+      "type": "integer"
+    },
+    "showcase_trust": {
+      "maximum": 100,
+      "minimum": 0,
+      "title": "Showcase Trust",
+      "type": "integer"
+    },
+    "hashes": {
+      "additionalProperties": {
+        "pattern": "^[0-9a-f]{64}$",
+        "type": "string"
+      },
+      "title": "Hashes",
+      "type": "object"
+    },
+    "dataset_students": {
+      "enum": [
+        200,
+        5000,
+        50000,
+        100000
+      ],
+      "title": "Dataset Students",
+      "type": "integer"
+    },
+    "institution_counts": {
+      "items": {
+        "minimum": 0,
+        "type": "integer"
+      },
+      "title": "Institution Counts",
+      "type": "array"
+    },
+    "seed_seconds": {
+      "minimum": 0,
+      "title": "Seed Seconds",
+      "type": "number"
+    },
+    "total_seconds": {
+      "minimum": 0,
+      "title": "Total Seconds",
+      "type": "number"
+    },
+    "database_bytes": {
+      "minimum": 0,
+      "title": "Database Bytes",
+      "type": "integer"
+    },
+    "seed_validation": {
+      "additionalProperties": true,
+      "title": "Seed Validation",
+      "type": "object"
+    }
+  },
+  "required": [
+    "seed",
+    "clock",
+    "showcase_student_id",
+    "showcase_apaar_id",
+    "institution_a_id",
+    "correction_row",
+    "correct_to",
+    "correction_enrollment",
+    "expected_import",
+    "fixture_import",
+    "showcase_readiness",
+    "showcase_trust",
+    "hashes",
+    "dataset_students",
+    "institution_counts",
+    "seed_seconds",
+    "total_seconds",
+    "database_bytes",
+    "seed_validation"
+  ],
+  "title": "SeedManifest",
+  "type": "object"
+}

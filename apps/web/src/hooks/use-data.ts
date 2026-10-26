@@ -4,7 +4,11 @@ import { api, ApiError } from "@/lib/api";
 import { queryKeys } from "@/lib/query-keys";
 import { useCurrentUser } from "@/hooks/use-current-user";
 
-export function useData<T>(path: string | null, interval = 0, grant = "") {
+export function useData<T>(
+  path: string | null,
+  interval: number | ((data: T | null) => number | false) = 0,
+  grant = "",
+) {
   const session = useCurrentUser();
   const client = useQueryClient();
   const key = queryKeys.data(session.data, path, grant);
@@ -25,7 +29,10 @@ export function useData<T>(path: string | null, interval = 0, grant = "") {
       }
     },
     gcTime: grant ? 0 : 300000,
-    refetchInterval: interval || (grant ? 30000 : false),
+    refetchInterval:
+      typeof interval === "function"
+        ? (state) => interval(state.state.data ?? null)
+        : interval || (grant ? 30000 : false),
     refetchIntervalInBackground: false,
   });
   const forbidden = [401, 403, 404].includes(query.error?.status || 0);

@@ -1,7 +1,8 @@
 "use client";
+import { FileDropzone } from "./file-dropzone";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
-import { ShieldCheck, FileText } from "lucide-react";
+import { ShieldCheck } from "lucide-react";
 import { api } from "@/lib/api";
 import { Row } from "@/lib/schemas";
 import { Title } from "@/components/shared/page-heading";
@@ -74,15 +75,7 @@ export function CertificateUpload() {
             </option>
           </select>
         </label>
-        <label className="dropzone">
-          <FileText size={32} />
-          <span>{file?.name || "Choose PDF, PNG or JPEG"}</span>
-          <input
-            type="file"
-            accept=".pdf,.png,.jpg,.jpeg"
-            onChange={(e) => setFile(e.target.files?.[0] || null)}
-          />
-        </label>
+        <FileDropzone file={file} setFile={setFile} />
         <p className="note">
           10 MiB maximum · 10 PDF pages · encrypted or active PDFs rejected
         </p>

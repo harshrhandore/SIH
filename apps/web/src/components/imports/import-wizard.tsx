@@ -1,29 +1,13 @@
 "use client";
+import { UploadStep } from "./upload-step";
+import { MappingStep } from "./mapping-step";
+import { PreviewStep } from "./preview-step";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
-import { Upload, ArrowRight } from "lucide-react";
 import { api } from "@/lib/api";
 import { Row } from "@/lib/schemas";
-import { number } from "@/lib/format";
 import { Title } from "@/components/shared/page-heading";
-import { Table } from "@/components/shared/data-table";
 import { useRequiredUser } from "@/hooks/use-current-user";
-
-export const fields = [
-  "submitted_apaar_id",
-  "submitted_enrollment_no",
-  "full_name",
-  "dob",
-  "parent_name",
-  "program_code",
-  "admission_year",
-  "current_year",
-  "term_no",
-  "sgpa",
-  "credits",
-  "email",
-  "gender",
-];
 
 export function ImportWizard() {
   const user = useRequiredUser();
@@ -122,96 +106,29 @@ export function ImportWizard() {
           </div>
         ) : null}
         {!batch ? (
-          <>
-            <h2>Choose a source file</h2>
-            <p>CSV or XLSX · up to 1,000 rows · 20 MiB maximum</p>
-            <details className="sample-files">
-              <summary>Need a sample file?</summary>
-              <a href="/api/backend/demo/fixtures/import_csv" download>
-                Download 1,000 sample records (CSV)
-              </a>
-            </details>
-            <label className="dropzone">
-              <Upload size={32} />
-              <span>{file?.name || "Choose a CSV or XLSX file"}</span>
-              <input
-                type="file"
-                accept=".csv,.xlsx"
-                onChange={(e) => setFile(e.target.files?.[0] || null)}
-              />
-            </label>
-            <label className="checkbox">
-              <input
-                type="checkbox"
-                checked={confirmed}
-                onChange={(e) => setConfirmed(e.target.checked)}
-              />{" "}
-              I confirm this dataset is synthetic.
-            </label>
-            <button
-              className="primary"
-              disabled={!file || !confirmed || busy}
-              onClick={upload}
-            >
-              {busy ? "Saving source…" : "Continue to mapping"}
-              <ArrowRight size={16} />
-            </button>
-          </>
+          <UploadStep
+            file={file}
+            confirmed={confirmed}
+            busy={busy}
+            setFile={setFile}
+            setConfirmed={setConfirmed}
+            upload={upload}
+          />
         ) : !preview ? (
-          <>
-            <h2>Map source columns</h2>
-            <p className="muted">
-              Mandatory fields: enrollment, name, DOB, program, admission year
-              and current year. Dates use DD/MM/YYYY.
-            </p>
-            <div className="mapping-grid">
-              {fields.map((field) => (
-                <label key={field}>
-                  {field.replaceAll("_", " ")}
-                  <select
-                    value={mapping[field] || ""}
-                    onChange={(e) =>
-                      setMapping({ ...mapping, [field]: e.target.value })
-                    }
-                  >
-                    <option value="">Ignore optional column</option>
-                    {(batch.headers as string[]).map((h) => (
-                      <option key={h}>{h}</option>
-                    ))}
-                  </select>
-                </label>
-              ))}
-            </div>
-            <button className="primary" disabled={busy} onClick={map}>
-              {busy ? "Checking mapping…" : "Preview 20 rows"}
-            </button>
-          </>
+          <MappingStep
+            batch={batch}
+            mapping={mapping}
+            busy={busy}
+            setMapping={setMapping}
+            map={map}
+          />
         ) : (
-          <>
-            <h2>Preview the first 20 rows</h2>
-            <p className="note">
-              Preview is not full-file validation. Missing identifiers remain
-              visible in the source.
-            </p>
-            <Table
-              rows={preview.map((p) => ({
-                row_no: p.row_no,
-                ...(p.normalized as Row),
-              }))}
-              columns={[
-                ["row_no", "Row"],
-                ["full_name", "Name"],
-                ["submitted_apaar_id", "Submitted ID"],
-                ["dob", "DOB"],
-                ["program_code", "Program"],
-              ]}
-            />
-            <button className="primary" disabled={busy} onClick={validate}>
-              {busy
-                ? "Starting validation…"
-                : "Validate " + number(batch.total_rows) + " records"}
-            </button>
-          </>
+          <PreviewStep
+            preview={preview}
+            batch={batch}
+            busy={busy}
+            validate={validate}
+          />
         )}
       </section>
     </>

@@ -6,7 +6,9 @@ import { useData } from "@/hooks/use-data";
 import { State } from "@/components/shared/view-state";
 import { Badge } from "@/components/shared/status-badge";
 import { Title } from "@/components/shared/page-heading";
-import { Table } from "@/components/shared/data-table";
+import { ExtractionPanel } from "./extraction-panel";
+import { RiskReasons } from "./risk-reasons";
+import { MatchTable } from "./match-table";
 
 export function CertificateReport({ id }: { id: string }) {
   const query = useData<Row>("/certificate-verifications/" + id);
@@ -47,54 +49,9 @@ export function CertificateReport({ id }: { id: string }) {
                 />
               </div>
             </div>
-            <section className="panel">
-              <div className="panel-heading">
-                <h2>Extracted fields</h2>
-                <a
-                  href={
-                    "/api/backend/certificates/" + d.certificate_id + "/file"
-                  }
-                  download
-                >
-                  Download source
-                </a>
-              </div>
-              <Table
-                rows={Object.entries(d.extracted as Row).map(
-                  ([field, value]) => ({ field, value }),
-                )}
-                columns={[
-                  ["field", "Field"],
-                  ["value", "Observed in document"],
-                ]}
-              />
-              <details className="processing-details padded">
-                <summary>Processing details</summary>
-                <p>
-                  Text engine: <span>{text(d.ocr_engine)}</span>
-                </p>
-                <p>Extraction method: {text(d.extraction_source)}</p>
-              </details>
-            </section>
-            <section className="panel">
-              <div className="panel-heading">
-                <h2>Heuristic risk signals</h2>
-                <span>Heuristic, not validated</span>
-              </div>
-              <Table
-                rows={risk.reasons as Row[]}
-                columns={[
-                  ["label", "Reason"],
-                  ["weight", "Weight"],
-                  ["evidence", "Measured evidence"],
-                ]}
-              />
-              <div className="padded">
-                <h3>Not assessed</h3>
-                <p>{(d.not_assessed as string[]).join(" · ")}</p>
-                <p>{(d.warnings as string[]).join(" ")}</p>
-              </div>
-            </section>
+            <ExtractionPanel d={d} />
+            <MatchTable matches={d.matches as Row} />
+            <RiskReasons d={d} risk={risk} />
             <Link className="button" href="/certificates">
               New trial
             </Link>

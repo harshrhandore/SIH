@@ -1,4 +1,5 @@
 "use client";
+import { LatencyChip } from "@/components/shared/latency-chip";
 import Link from "next/link";
 import { useSearchParams } from "next/navigation";
 import { useState, useEffect } from "react";
@@ -103,6 +104,13 @@ export function SearchScreen() {
         <State {...query} retry={query.reload}>
           {query.data ? (
             <>
+              <details className="padded">
+                <summary>Search timing</summary>
+                <LatencyChip
+                  cache={query.data.cache}
+                  tookMs={query.data.took_ms}
+                />
+              </details>
               <div className="search-summary" role="status">
                 Found <b>{number(query.data.total)}</b>{" "}
                 {query.data.total === 1 ? "record" : "records"}

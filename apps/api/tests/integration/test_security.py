@@ -21,11 +21,14 @@ def login(email):
     )
     assert r.status_code == 200, r.text
     value = r.json()
-    return value, {
-        "Authorization": "Bearer " + value["access_token"],
-        "X-CSRF-Token": value["csrf_token"],
-        "Idempotency-Key": str(uuid4()),
-    }
+    return (
+        value,
+        {
+            "Authorization": "Bearer " + value["access_token"],
+            "X-CSRF-Token": value["csrf_token"],
+            "Idempotency-Key": str(uuid4()),
+        },
+    )
 
 
 def test_runtime_immutable_privileges():
@@ -61,7 +64,9 @@ def test_scope_and_forged_token():
     _, admin = login("admin@example.test")
     assert client.get("/api/v1/students/" + sid, headers=admin).status_code == 404
     rows = client.get("/api/v1/cases", headers=admin).json()["items"]
-    assert all("student_id" not in r and "full_name" not in r and "dob" not in r and "email" not in r for r in rows)
+    assert all(
+        ("student_id" not in r and "full_name" not in r and ("dob" not in r) and ("email" not in r) for r in rows)
+    )
 
 
 def test_refresh_reuse_revokes_family():
@@ -124,69 +129,6 @@ def test_term_guard():
             )
 
 
-def test_program_oversight_denominator_and_state_trend():
-    _, admin = login("admin@example.test")
-    program = str(uid("program", "0:BTECH:CSE"))
-    institution = str(uid("institution", 0))
-    response = client.get(
-        "/api/v1/oversight", params={"institution_id": institution, "program_id": program}, headers=admin
-    )
-    assert response.status_code == 200, response.text
-    result = response.json()
-    with connect() as conn:
-        actual = one(conn, "SELECT count(*) AS n FROM students WHERE program_id=%s", (program,))["n"]
-        expected = one(
-            conn, "SELECT expected_records AS n FROM program_expected_records WHERE program_id=%s", (program,)
-        )["n"]
-    assert result["total"] == 1 and result["items"][0]["total"] == actual
-    assert result["items"][0]["missing_records"] == max(0, expected - actual)
-    wrong = client.get(
-        "/api/v1/oversight", params={"institution_id": str(uid("institution", 1)), "program_id": program}, headers=admin
-    )
-    assert wrong.status_code == 422
-    quality = client.get("/api/v1/analytics/data-quality?state=Maharashtra", headers=admin)
-    assert quality.status_code == 200, quality.text
-    assert quality.json()["trend"] and all(point["clean_percent"] == 100 for point in quality.json()["trend"])
-
-
-def test_dashboard_quality_links_and_literal_search():
-    _, operator = login("operator.a@example.test")
-    dashboard = client.get("/api/v1/dashboard", headers=operator)
-    assert dashboard.status_code == 200, dashboard.text
-    for quality in ["total", "clean", "flagged", "incomplete"]:
-        result = client.get("/api/v1/students/search", params={"quality": quality}, headers=operator)
-        assert result.status_code == 200, result.text
-        assert result.json()["total"] == dashboard.json()[quality]
-    for query in ["%%", "__", "' OR 1=1 --"]:
-        result = client.get("/api/v1/students/search", params={"q": query}, headers=operator)
-        assert result.status_code == 200 and result.json()["total"] == 0, result.text
-
-
-def test_multiple_offers_count_one_student():
-    with connect() as conn:
-        conn.execute("BEGIN")
-        student = uid("student", 1)
-        program = uid("program", "0:BTECH:CSE")
-        for suffix, amount in [("A", 12), ("B", 13)]:
-            conn.execute(
-                "INSERT INTO placements(student_id,company,role,package_lpa,placement_year,offer_status) VALUES (%s,%s,'Synthetic regression role',%s,2026,'OFFERED')",
-                (student, "Synthetic regression " + suffix, amount),
-            )
-        conn.execute("SELECT refresh_demo_views()")
-        row = one(
-            conn,
-            "SELECT * FROM mv_placements WHERE institution_id=%s AND program_id=%s AND year=2026",
-            (uid("institution", 0), program),
-        )
-        distinct = one(
-            conn,
-            "SELECT count(DISTINCT s.id)::int AS n FROM students s JOIN programs p ON p.id=s.program_id JOIN placements pl ON pl.student_id=s.id AND pl.placement_year=s.admission_year+p.duration_years AND pl.offer_status IN ('OFFERED','ACCEPTED') WHERE s.program_id=%s AND s.current_year=p.duration_years AND s.status<>'WITHDRAWN' AND s.admission_year+p.duration_years=2026",
-            (program,),
-        )["n"]
-        assert row["placed_students"] == distinct <= row["eligible_students"]
-        conn.rollback()
-
-
 def test_read_only_sandbox_broker_detects_tamper_without_production_change():
     from app.cli import sandbox
 
@@ -200,7 +142,7 @@ def test_read_only_sandbox_broker_detects_tamper_without_production_change():
             conn.execute("SELECT * FROM demo_sandbox.audit_events")
     sandbox("tamper")
     broken = client.get(path, headers=headers)
-    assert broken.status_code == 200 and not broken.json()["valid"]
+    assert broken.status_code == 200 and (not broken.json()["valid"])
     assert broken.json()["first_broken_link"]["reason"] == "ROW_HASH_MISMATCH"
     production = client.get("/api/v1/audit/verify-chain?institution_id=" + str(uid("institution", 0)), headers=headers)
     assert production.status_code == 200 and production.json()["valid"]

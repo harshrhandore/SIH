@@ -1,18 +1,17 @@
 "use client";
 import Link from "next/link";
 import { ArrowRight } from "lucide-react";
-import { api } from "@/lib/api";
+import { ProgressStep } from "./progress-step";
 import { Row } from "@/lib/schemas";
 import { text } from "@/lib/format";
 import { number } from "@/lib/format";
-import { useData } from "@/hooks/use-data";
+import { useImportJob } from "@/hooks/use-import-job";
 import { State } from "@/components/shared/view-state";
-import { Badge } from "@/components/shared/status-badge";
 import { Title } from "@/components/shared/page-heading";
 import { Table } from "@/components/shared/data-table";
 
 export function ImportDetail({ id }: { id: string }) {
-  const query = useData<Row>("/imports/" + id, 1000);
+  const query = useImportJob(id);
   const d = query.data;
   const report = d?.report as Row | undefined;
   const job = d?.job as Row | undefined;
@@ -25,38 +24,12 @@ export function ImportDetail({ id }: { id: string }) {
       <State {...query} retry={query.reload}>
         {d && report ? (
           <>
-            <section className="panel padded">
-              <Badge value={d.status} />
-              <div className="spread">
-                <h2>
-                  {number(report.processed_rows)} / {number(report.total_rows)}{" "}
-                  records processed
-                </h2>
-                <span className="mono">{text(job?.progress || 0)}%</span>
-              </div>
-              <div className="progress">
-                <div style={{ width: text(job?.progress || 0) + "%" }} />
-              </div>
-              {d.status === "FAILED" ? (
-                <div className="error">
-                  {text(job?.error_message)}
-                  <button
-                    onClick={async () => {
-                      await api("/import-jobs/" + job?.id + "/retry", {
-                        method: "POST",
-                        body: JSON.stringify({
-                          reason:
-                            "Retry the interrupted synthetic import from its checkpoint.",
-                        }),
-                      });
-                      query.reload();
-                    }}
-                  >
-                    Retry saved checkpoint
-                  </button>
-                </div>
-              ) : null}
-            </section>
+            <ProgressStep
+              d={d}
+              report={report}
+              job={job}
+              onRetry={query.reload}
+            />
             <div className="metrics">
               {[
                 ["clean", "Passed local checks"],

@@ -1,5 +1,8 @@
 "use client";
 import Link from "next/link";
+import { CandidatePanel } from "./candidate-panel";
+import { DecisionPanel } from "./decision-panel";
+import { FieldDiff } from "./field-diff";
 import { useState } from "react";
 import { CheckCircle2, ArrowRight } from "lucide-react";
 import { api } from "@/lib/api";
@@ -130,6 +133,16 @@ export function CaseDetail({ id }: { id: string }) {
                   </p>
                   <div className="two-columns">
                     <div>
+                      <h3>Submitted and reference values</h3>
+                      <Table
+                        rows={data.comparison as Row[]}
+                        columns={[
+                          ["field", "Field"],
+                          ["submitted", "Submitted source"],
+                          ["reference", "Reference"],
+                          ["source_label", "Reference source"],
+                        ]}
+                      />
                       <h3>Current findings</h3>
                       {(data.findings as Row[]).length ? (
                         (data.findings as Row[]).map((f) => (
@@ -144,64 +157,28 @@ export function CaseDetail({ id }: { id: string }) {
                           <CheckCircle2 size={17} /> No unresolved findings.
                         </p>
                       )}
-                      <h3>Candidate review</h3>
-                      <Table
+                      <CandidatePanel
                         rows={data.duplicates as Row[]}
-                        columns={[
-                          ["match_type", "Type"],
-                          ["score", "Score"],
-                          ["status", "Status"],
-                        ]}
+                        caseRow={caseRow}
+                        canDecide={
+                          user.role !== "OPERATOR" &&
+                          caseRow.status !== "APPROVED"
+                        }
+                        grant={grant}
+                        onSaved={query.reload}
                       />
                     </div>
-                    <div className="review-form">
-                      <h3>Record the next action</h3>
-                      <label>
-                        Reason (10–1,000 characters)
-                        <textarea
-                          minLength={10}
-                          maxLength={1000}
-                          value={note}
-                          onChange={(e) => setNote(e.target.value)}
-                          placeholder="Describe the source evidence and your decision."
-                        />
-                      </label>
-                      {user.role === "OPERATOR" ? (
-                        <>
-                          <label>
-                            Corrected synthetic ID
-                            <input
-                              value={correction}
-                              onChange={(e) => setCorrection(e.target.value)}
-                              placeholder="Enter the corrected identifier…"
-                            />
-                          </label>
-                          <button
-                            className="primary"
-                            disabled={
-                              note.trim().length < 10 || busy || !correction
-                            }
-                            onClick={correct}
-                          >
-                            {busy ? "Saving…" : "Save correction"}
-                          </button>
-                        </>
-                      ) : (
-                        (data.allowed_actions as string[]).map((action) => (
-                          <button
-                            className={action === "APPROVE" ? "primary" : ""}
-                            disabled={note.trim().length < 10 || busy}
-                            key={action}
-                            onClick={() => decide(action)}
-                          >
-                            {action.replaceAll("_", " ")}
-                          </button>
-                        ))
-                      )}
-                      <p className="note">
-                        Confirmation never merges student identities.
-                      </p>
-                    </div>
+                    <DecisionPanel
+                      role={user.role}
+                      note={note}
+                      setNote={setNote}
+                      correction={correction}
+                      setCorrection={setCorrection}
+                      busy={busy}
+                      correct={correct}
+                      decide={decide}
+                      allowedActions={data.allowed_actions as string[]}
+                    />
                   </div>
                   <Link href={"/students/" + caseRow.student_id + "/timeline"}>
                     Open audit timeline <ArrowRight size={15} />
@@ -214,6 +191,9 @@ export function CaseDetail({ id }: { id: string }) {
                 </p>
               ) : null}
             </section>
+            {data.versions ? (
+              <FieldDiff versions={data.versions as Row[]} />
+            ) : null}
             {data.versions ? (
               <section className="panel">
                 <div className="panel-heading">

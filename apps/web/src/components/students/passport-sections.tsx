@@ -22,7 +22,7 @@ export function PassportScreen({
   print: boolean;
   timeline: boolean;
 }) {
-  const query = useData<Row>("/students/" + id);
+  const query = useData<Row>("/students/" + id + "?include_evidence=false");
   const data = query.data,
     profile = data?.profile as Row | undefined,
     trust = data?.trust as Row | undefined;
@@ -77,17 +77,17 @@ export function PassportScreen({
                 "scholarships",
                 "skills",
               ].map((key) => (
-                <EvidenceSection
+                <RemoteEvidence
                   key={key}
+                  id={id}
+                  section={key}
                   title={key[0].toUpperCase() + key.slice(1)}
-                  rows={data[key]}
                   columns={
                     EVIDENCE_COLUMNS[key] || [
                       ["title", "Title"],
                       ["description", "Description"],
                     ]
                   }
-                  onRetry={query.reload}
                 />
               ))}
             </div>
@@ -96,6 +96,37 @@ export function PassportScreen({
         ) : null}
       </State>
     </>
+  );
+}
+
+function RemoteEvidence({
+  id,
+  section,
+  title,
+  columns,
+}: {
+  id: string;
+  section: string;
+  title: string;
+  columns: [string, string][];
+}) {
+  const query = useData<{ items: Row[] }>(
+    "/students/" + id + "/evidence/" + section,
+  );
+  if (query.loading)
+    return (
+      <section className="panel padded" aria-busy="true">
+        <h2>{title}</h2>
+        <p>Loading evidence…</p>
+      </section>
+    );
+  return (
+    <EvidenceSection
+      title={title}
+      rows={query.error ? undefined : query.data?.items}
+      columns={columns}
+      onRetry={query.reload}
+    />
   );
 }
 

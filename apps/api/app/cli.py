@@ -63,7 +63,10 @@ def bootstrap(students):
         conn.execute("UPDATE app_state SET seed_ready=true,updated_at=now()")
         manifest["database_bytes"] = one(conn, "SELECT pg_database_size(current_database()) AS bytes")["bytes"]
         manifest["total_seconds"] = round(perf_counter() - start, 3)
-    (ROOT / "fixtures/manifest.json").write_text(json.dumps(manifest, indent=2))
+        from db.seed.manifest import SeedManifest
+
+        SeedManifest.model_validate(manifest)
+    (ROOT / "fixtures/manifest.json").write_text(json.dumps(manifest, indent=2), encoding="utf-8")
     from app.core.files import root_path, contained
 
     storage_manifest = contained(root_path(settings.storage_root), "manifest.json")

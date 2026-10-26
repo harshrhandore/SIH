@@ -24,13 +24,30 @@ test("unfinished terms show missing grades without invented zeroes", async ({
   const held = new Promise<void>((resolve) => {
     release = resolve;
   });
-  await page.route("**/api/backend/students/" + student.id, async (route) => {
-    started();
-    const response = await route.fetch();
-    const packet = await response.json();
-    await held;
-    await route.fulfill({ response, json: { ...packet, projects: null } });
-  });
+  await page.route(
+    "**/api/backend/students/" + student.id + "?include_evidence=false",
+    async (route) => {
+      started();
+      const response = await route.fetch();
+      const packet = await response.json();
+      await held;
+      await route.fulfill({ response, json: packet });
+    },
+  );
+  const evidencePath =
+    "**/api/backend/students/" + student.id + "/evidence/projects";
+  await page.route(evidencePath, (route) =>
+    route.fulfill({
+      status: 503,
+      json: {
+        error: {
+          code: "TEMPORARILY_UNAVAILABLE",
+          message: "Synthetic regression outage",
+          request_id: "test-evidence",
+        },
+      },
+    }),
+  );
   await page.goto("/students/" + student.id);
   await requested;
   try {
@@ -52,6 +69,14 @@ test("unfinished terms show missing grades without invented zeroes", async ({
     page.getByRole("link", { name: "Print passport", exact: true }),
   ).toBeVisible();
   await expect(rows.first()).toContainText("Not completed");
+  await page.unroute(evidencePath);
+  await page
+    .getByRole("button", { name: "Retry evidence", exact: true })
+    .click();
+  await expect(
+    page.getByText("This evidence section is unavailable.", { exact: false }),
+  ).toHaveCount(0);
+  await expect(rows).toHaveCount(student.total);
   await expect(
     rows.first().getByRole("cell").nth(2).locator(".cell-value"),
   ).toHaveText("—");

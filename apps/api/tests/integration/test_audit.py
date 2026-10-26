@@ -110,6 +110,9 @@ def test_case_bound_audit_reason_access_stops_after_grant_revocation():
             ).status_code
             == 404
         )
+        assert (
+            client.get(f"/api/v1/cases/{other_case_id}", headers={**headers, "X-Case-Access": token}).status_code == 404
+        )
         with connect() as conn:
             conn.execute("UPDATE review_cases SET status='OPEN',version_no=version_no+1 WHERE id=%s", (case_id,))
         assert client.get(path, headers={**headers, "X-Case-Access": token}).status_code == 404

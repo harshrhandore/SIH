@@ -4,20 +4,13 @@ import { Upload, ArrowUpRight, ArrowRight } from "lucide-react";
 import { Row } from "@/lib/schemas";
 import { text } from "@/lib/format";
 import { number } from "@/lib/format";
-import { useData } from "@/hooks/use-data";
+import { useLiveDashboard } from "@/hooks/use-live-dashboard";
 import { State } from "@/components/shared/view-state";
 import { Title } from "@/components/shared/page-heading";
 import { Table } from "@/components/shared/data-table";
-import { useRequiredUser } from "@/hooks/use-current-user";
 
 export function Dashboard() {
-  const user = useRequiredUser();
-  const url =
-    "/dashboard" +
-    (user.role === "OFFICER"
-      ? "?institution_id=" + user.assigned_institutions[0]
-      : "");
-  const query = useData<Row>(url, 5000);
+  const query = useLiveDashboard();
   const d = query.data;
   return (
     <>

@@ -4,6 +4,8 @@ import hashlib, json, re, sys
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[1]
+sys.path.insert(0, str(ROOT))
+from db.seed.manifest import SeedManifest
 
 
 def required_paths():
@@ -38,6 +40,8 @@ def required_paths():
 def run():
     missing = [p for p in required_paths() if not (ROOT / p).exists()]
     manifest = json.loads((ROOT / "fixtures/manifest.json").read_text())
+    SeedManifest.model_validate(manifest)
+    manifest_schema = json.loads((ROOT / "db/seed/manifest.schema.json").read_text()) == SeedManifest.model_json_schema()
     bad = [
         name
         for name, digest in manifest["hashes"].items()
@@ -48,12 +52,12 @@ def run():
         (ROOT / "apps/web/public/fonts" / family / "LICENSE").exists()
         for family in ["fraunces", "instrument-sans", "ibm-plex-mono"]
     )
-    result = dict(missing=missing, bad_fixture_hashes=bad, font_licenses=fonts)
+    result = dict(missing=missing, bad_fixture_hashes=bad, font_licenses=fonts, manifest_schema=manifest_schema)
     (ROOT / "docs/artifact-check.json").write_text(json.dumps(result, indent=2))
     print(
         f"Artifact check: {len(missing)} exact-tree paths absent; {len(bad)} fixture hash mismatches; font licenses present={fonts}."
     )
-    return int(bool(missing or bad or not fonts))
+    return int(bool(missing or bad or not fonts or not manifest_schema))
 
 
 if __name__ == "__main__":

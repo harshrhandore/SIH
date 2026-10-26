@@ -1,10 +1,10 @@
 """PDF text extraction followed by bounded optional local OCR."""
 
-import shutil
 from io import BytesIO
 from pypdf import PdfReader
 from PIL import Image
 from app.core.errors import fail
+from app.integrations import ocr_tesseract
 
 
 def extract_text(data, mime):
@@ -29,12 +29,10 @@ def extract_text(data, mime):
         image = page.render(scale=150 / 72).to_pil()
     else:
         image = Image.open(BytesIO(data))
-    if shutil.which("tesseract"):
-        import pytesseract
-
-        try:
-            return pytesseract.image_to_string(image, timeout=15)[:16000], "TESSERACT", metadata, warnings
-        except RuntimeError:
-            warnings.append("Tesseract timed out or failed.")
+    if ocr_tesseract.available():
+        text, engine_warnings = ocr_tesseract.extract(image)
+        warnings.extend(engine_warnings)
+        if text.strip():
+            return text, "TESSERACT", metadata, warnings
     warnings.append("No available OCR engine produced readable text.")
     return "", "UNAVAILABLE", metadata, warnings

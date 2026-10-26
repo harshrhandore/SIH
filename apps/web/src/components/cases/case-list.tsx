@@ -1,4 +1,5 @@
 "use client";
+import { CaseFilters } from "./case-filters";
 import { useState } from "react";
 import { Envelope } from "@/lib/schemas";
 import { useData } from "@/hooks/use-data";
@@ -21,32 +22,7 @@ export function Cases() {
         description="Review flagged records and record your decision."
       />
       <section className="panel">
-        <div className="filters">
-          <label>
-            Case status
-            <select value={status} onChange={(e) => setStatus(e.target.value)}>
-              {[
-                "OPEN",
-                "CORRECTION_REQUESTED",
-                "ESCALATED",
-                "APPROVED",
-                "",
-              ].map((v) => (
-                <option key={v} value={v}>
-                  {v ? v.toLowerCase().replaceAll("_", " ") : "All statuses"}
-                </option>
-              ))}
-            </select>
-          </label>
-          <label>
-            Enrollment or name
-            <input
-              value={q}
-              onChange={(e) => setQ(e.target.value)}
-              placeholder="DEMO-A-0032"
-            />
-          </label>
-        </div>
+        <CaseFilters status={status} q={q} setStatus={setStatus} setQ={setQ} />
         <State {...query} retry={query.reload}>
           <Table
             rows={query.data?.items || []}

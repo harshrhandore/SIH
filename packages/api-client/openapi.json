@@ -549,6 +549,16 @@
               "format": "uuid",
               "title": "Student Id"
             }
+          },
+          {
+            "name": "include_evidence",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "boolean",
+              "default": true,
+              "title": "Include Evidence"
+            }
           }
         ],
         "responses": {
@@ -605,6 +615,61 @@
             }
           }
         },
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {}
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/students/{student_id}/evidence/{section}": {
+      "get": {
+        "tags": [
+          "students"
+        ],
+        "summary": "Student Evidence",
+        "operationId": "student_evidence_api_v1_students__student_id__evidence__section__get",
+        "security": [
+          {
+            "HTTPBearer": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "student_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid",
+              "title": "Student Id"
+            }
+          },
+          {
+            "name": "section",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "title": "Section"
+            }
+          }
+        ],
         "responses": {
           "200": {
             "description": "Successful Response",
@@ -2354,7 +2419,9 @@
             "description": "Successful Response",
             "content": {
               "application/json": {
-                "schema": {}
+                "schema": {
+                  "$ref": "#/components/schemas/OversightResponse"
+                }
               }
             }
           },
@@ -2369,6 +2436,58 @@
             }
           }
         }
+      }
+    },
+    "/api/v1/analytics/refresh": {
+      "post": {
+        "tags": [
+          "analytics"
+        ],
+        "summary": "Refresh Analytics",
+        "operationId": "refresh_analytics_api_v1_analytics_refresh_post",
+        "responses": {
+          "202": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/RefreshQueued"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "HTTPBearer": []
+          }
+        ]
+      }
+    },
+    "/api/v1/analytics/refresh-status": {
+      "get": {
+        "tags": [
+          "analytics"
+        ],
+        "summary": "Refresh Status",
+        "operationId": "refresh_status_api_v1_analytics_refresh_status_get",
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/RefreshStatus"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "HTTPBearer": []
+          }
+        ]
       }
     },
     "/api/v1/analytics/admissions": {
@@ -2456,7 +2575,9 @@
             "description": "Successful Response",
             "content": {
               "application/json": {
-                "schema": {}
+                "schema": {
+                  "$ref": "#/components/schemas/AnalyticsResponse"
+                }
               }
             }
           },
@@ -2558,7 +2679,9 @@
             "description": "Successful Response",
             "content": {
               "application/json": {
-                "schema": {}
+                "schema": {
+                  "$ref": "#/components/schemas/AnalyticsResponse"
+                }
               }
             }
           },
@@ -2660,7 +2783,9 @@
             "description": "Successful Response",
             "content": {
               "application/json": {
-                "schema": {}
+                "schema": {
+                  "$ref": "#/components/schemas/AnalyticsResponse"
+                }
               }
             }
           },
@@ -2762,7 +2887,9 @@
             "description": "Successful Response",
             "content": {
               "application/json": {
-                "schema": {}
+                "schema": {
+                  "$ref": "#/components/schemas/AnalyticsResponse"
+                }
               }
             }
           },
@@ -2777,54 +2904,6 @@
             }
           }
         }
-      }
-    },
-    "/api/v1/analytics/refresh": {
-      "post": {
-        "tags": [
-          "analytics"
-        ],
-        "summary": "Refresh Analytics",
-        "operationId": "refresh_analytics_api_v1_analytics_refresh_post",
-        "responses": {
-          "202": {
-            "description": "Successful Response",
-            "content": {
-              "application/json": {
-                "schema": {}
-              }
-            }
-          }
-        },
-        "security": [
-          {
-            "HTTPBearer": []
-          }
-        ]
-      }
-    },
-    "/api/v1/analytics/refresh-status": {
-      "get": {
-        "tags": [
-          "analytics"
-        ],
-        "summary": "Refresh Status",
-        "operationId": "refresh_status_api_v1_analytics_refresh_status_get",
-        "responses": {
-          "200": {
-            "description": "Successful Response",
-            "content": {
-              "application/json": {
-                "schema": {}
-              }
-            }
-          }
-        },
-        "security": [
-          {
-            "HTTPBearer": []
-          }
-        ]
       }
     },
     "/api/v1/students/{student_id}/checks": {
@@ -3305,6 +3384,101 @@
           "action"
         ],
         "title": "Acceptance"
+      },
+      "AdmissionsRow": {
+        "properties": {
+          "institution_id": {
+            "type": "string",
+            "format": "uuid",
+            "title": "Institution Id"
+          },
+          "program_id": {
+            "type": "string",
+            "format": "uuid",
+            "title": "Program Id"
+          },
+          "year": {
+            "type": "integer",
+            "title": "Year"
+          },
+          "admitted": {
+            "type": "integer",
+            "title": "Admitted"
+          }
+        },
+        "type": "object",
+        "required": [
+          "institution_id",
+          "program_id",
+          "year",
+          "admitted"
+        ],
+        "title": "AdmissionsRow"
+      },
+      "AnalyticsResponse": {
+        "properties": {
+          "items": {
+            "items": {
+              "anyOf": [
+                {
+                  "$ref": "#/components/schemas/AdmissionsRow"
+                },
+                {
+                  "$ref": "#/components/schemas/PlacementRow"
+                },
+                {
+                  "$ref": "#/components/schemas/PerformanceRow"
+                },
+                {
+                  "$ref": "#/components/schemas/QualityRow"
+                }
+              ]
+            },
+            "type": "array",
+            "title": "Items"
+          },
+          "trend": {
+            "items": {
+              "$ref": "#/components/schemas/TrendPoint"
+            },
+            "type": "array",
+            "title": "Trend"
+          },
+          "took_ms": {
+            "type": "number",
+            "title": "Took Ms"
+          },
+          "data_as_of": {
+            "anyOf": [
+              {
+                "type": "string",
+                "format": "date-time"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Data As Of"
+          },
+          "refreshing": {
+            "type": "boolean",
+            "title": "Refreshing"
+          },
+          "stale": {
+            "type": "boolean",
+            "title": "Stale"
+          }
+        },
+        "type": "object",
+        "required": [
+          "items",
+          "trend",
+          "took_ms",
+          "data_as_of",
+          "refreshing",
+          "stale"
+        ],
+        "title": "AnalyticsResponse"
       },
       "BenchmarkRequest": {
         "properties": {
@@ -4216,6 +4390,94 @@
         ],
         "title": "MissingSkill"
       },
+      "OversightResponse": {
+        "properties": {
+          "items": {
+            "items": {
+              "$ref": "#/components/schemas/OversightRow"
+            },
+            "type": "array",
+            "title": "Items"
+          },
+          "total": {
+            "type": "integer",
+            "title": "Total"
+          },
+          "page": {
+            "type": "integer",
+            "title": "Page"
+          },
+          "page_size": {
+            "type": "integer",
+            "title": "Page Size"
+          },
+          "trend": {
+            "items": {
+              "$ref": "#/components/schemas/TrendPoint"
+            },
+            "type": "array",
+            "title": "Trend"
+          }
+        },
+        "type": "object",
+        "required": [
+          "items",
+          "total",
+          "page",
+          "page_size",
+          "trend"
+        ],
+        "title": "OversightResponse"
+      },
+      "OversightRow": {
+        "properties": {
+          "institution_id": {
+            "type": "string",
+            "format": "uuid",
+            "title": "Institution Id"
+          },
+          "institution_name": {
+            "type": "string",
+            "title": "Institution Name"
+          },
+          "state": {
+            "type": "string",
+            "title": "State"
+          },
+          "total": {
+            "type": "integer",
+            "title": "Total"
+          },
+          "submission_percent": {
+            "type": "number",
+            "title": "Submission Percent"
+          },
+          "missing_records": {
+            "type": "integer",
+            "title": "Missing Records"
+          },
+          "unresolved_discrepancies": {
+            "type": "integer",
+            "title": "Unresolved Discrepancies"
+          },
+          "pending_reviews": {
+            "type": "integer",
+            "title": "Pending Reviews"
+          }
+        },
+        "type": "object",
+        "required": [
+          "institution_id",
+          "institution_name",
+          "state",
+          "total",
+          "submission_percent",
+          "missing_records",
+          "unresolved_discrepancies",
+          "pending_reviews"
+        ],
+        "title": "OversightRow"
+      },
       "Patch": {
         "properties": {
           "reason": {
@@ -4243,6 +4505,156 @@
           "patch"
         ],
         "title": "Patch"
+      },
+      "PerformanceRow": {
+        "properties": {
+          "institution_id": {
+            "type": "string",
+            "format": "uuid",
+            "title": "Institution Id"
+          },
+          "program_id": {
+            "type": "string",
+            "format": "uuid",
+            "title": "Program Id"
+          },
+          "branch": {
+            "type": "string",
+            "title": "Branch"
+          },
+          "year": {
+            "type": "integer",
+            "title": "Year"
+          },
+          "assessed_students": {
+            "type": "integer",
+            "title": "Assessed Students"
+          },
+          "avg_cgpa": {
+            "anyOf": [
+              {
+                "type": "number"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Avg Cgpa"
+          },
+          "pass_percent": {
+            "anyOf": [
+              {
+                "type": "number"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Pass Percent"
+          },
+          "bucket_0_4": {
+            "type": "integer",
+            "title": "Bucket 0 4"
+          },
+          "bucket_4_6": {
+            "type": "integer",
+            "title": "Bucket 4 6"
+          },
+          "bucket_6_8": {
+            "type": "integer",
+            "title": "Bucket 6 8"
+          },
+          "bucket_8_10": {
+            "type": "integer",
+            "title": "Bucket 8 10"
+          }
+        },
+        "type": "object",
+        "required": [
+          "institution_id",
+          "program_id",
+          "branch",
+          "year",
+          "assessed_students",
+          "avg_cgpa",
+          "pass_percent",
+          "bucket_0_4",
+          "bucket_4_6",
+          "bucket_6_8",
+          "bucket_8_10"
+        ],
+        "title": "PerformanceRow"
+      },
+      "PlacementRow": {
+        "properties": {
+          "institution_id": {
+            "type": "string",
+            "format": "uuid",
+            "title": "Institution Id"
+          },
+          "program_id": {
+            "type": "string",
+            "format": "uuid",
+            "title": "Program Id"
+          },
+          "year": {
+            "type": "integer",
+            "title": "Year"
+          },
+          "eligible_students": {
+            "type": "integer",
+            "title": "Eligible Students"
+          },
+          "placed_students": {
+            "type": "integer",
+            "title": "Placed Students"
+          },
+          "placement_rate": {
+            "anyOf": [
+              {
+                "type": "number"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Placement Rate"
+          },
+          "median_package_lpa": {
+            "anyOf": [
+              {
+                "type": "number"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Median Package Lpa"
+          },
+          "max_package_lpa": {
+            "anyOf": [
+              {
+                "type": "number"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Max Package Lpa"
+          }
+        },
+        "type": "object",
+        "required": [
+          "institution_id",
+          "program_id",
+          "year",
+          "eligible_students",
+          "placed_students",
+          "placement_rate",
+          "median_package_lpa",
+          "max_package_lpa"
+        ],
+        "title": "PlacementRow"
       },
       "Program": {
         "properties": {
@@ -4338,6 +4750,83 @@
         ],
         "title": "ProgramsResponse"
       },
+      "QualityRow": {
+        "properties": {
+          "institution_id": {
+            "type": "string",
+            "format": "uuid",
+            "title": "Institution Id"
+          },
+          "program_id": {
+            "anyOf": [
+              {
+                "type": "string",
+                "format": "uuid"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Program Id"
+          },
+          "expected_records": {
+            "anyOf": [
+              {
+                "type": "integer"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Expected Records"
+          },
+          "total": {
+            "type": "integer",
+            "title": "Total"
+          },
+          "clean": {
+            "type": "integer",
+            "title": "Clean"
+          },
+          "flagged": {
+            "type": "integer",
+            "title": "Flagged"
+          },
+          "incomplete": {
+            "type": "integer",
+            "title": "Incomplete"
+          },
+          "external_pending": {
+            "type": "integer",
+            "title": "External Pending"
+          },
+          "submission_percent": {
+            "type": "number",
+            "title": "Submission Percent"
+          },
+          "missing_records": {
+            "type": "integer",
+            "title": "Missing Records"
+          },
+          "pending_reviews": {
+            "type": "integer",
+            "title": "Pending Reviews"
+          }
+        },
+        "type": "object",
+        "required": [
+          "institution_id",
+          "total",
+          "clean",
+          "flagged",
+          "incomplete",
+          "external_pending",
+          "submission_percent",
+          "missing_records",
+          "pending_reviews"
+        ],
+        "title": "QualityRow"
+      },
       "Reason": {
         "properties": {
           "reason": {
@@ -4369,6 +4858,86 @@
           "refresh_token"
         ],
         "title": "Refresh"
+      },
+      "RefreshQueued": {
+        "properties": {
+          "status": {
+            "type": "string",
+            "title": "Status"
+          },
+          "poll_url": {
+            "type": "string",
+            "title": "Poll Url"
+          }
+        },
+        "type": "object",
+        "required": [
+          "status",
+          "poll_url"
+        ],
+        "title": "RefreshQueued"
+      },
+      "RefreshStatus": {
+        "properties": {
+          "status": {
+            "type": "string",
+            "title": "Status"
+          },
+          "views": {
+            "items": {
+              "$ref": "#/components/schemas/RefreshView"
+            },
+            "type": "array",
+            "title": "Views"
+          },
+          "stale": {
+            "type": "boolean",
+            "title": "Stale"
+          }
+        },
+        "type": "object",
+        "required": [
+          "status",
+          "views",
+          "stale"
+        ],
+        "title": "RefreshStatus"
+      },
+      "RefreshView": {
+        "properties": {
+          "name": {
+            "type": "string",
+            "title": "Name"
+          },
+          "status": {
+            "type": "string",
+            "title": "Status"
+          },
+          "refreshed_at": {
+            "anyOf": [
+              {
+                "type": "string",
+                "format": "date-time"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Refreshed At"
+          },
+          "source_epoch": {
+            "type": "integer",
+            "title": "Source Epoch"
+          }
+        },
+        "type": "object",
+        "required": [
+          "name",
+          "status",
+          "refreshed_at",
+          "source_epoch"
+        ],
+        "title": "RefreshView"
       },
       "Role": {
         "properties": {
@@ -4778,6 +5347,32 @@
           "user"
         ],
         "title": "TokenResponse"
+      },
+      "TrendPoint": {
+        "properties": {
+          "date": {
+            "type": "string",
+            "format": "date",
+            "title": "Date"
+          },
+          "clean_percent": {
+            "anyOf": [
+              {
+                "type": "number"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Clean Percent"
+          }
+        },
+        "type": "object",
+        "required": [
+          "date",
+          "clean_percent"
+        ],
+        "title": "TrendPoint"
       },
       "TrustComponent": {
         "properties": {
