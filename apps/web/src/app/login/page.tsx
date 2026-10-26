@@ -5,18 +5,29 @@ import { api } from "@/lib/api";
 type Account = { key: string; label: string; email: string; role: string };
 export default function Login() {
   const [accounts, setAccounts] = useState<Account[]>([]),
+    [showDemoAccounts, setShowDemoAccounts] = useState(false),
+    [accountError, setAccountError] = useState(""),
     [email, setEmail] = useState(""),
     [password, setPassword] = useState(""),
     [error, setError] = useState(""),
     [pending, setPending] = useState(false);
   useEffect(() => {
-    api<{ accounts: Account[] }>("/auth/demo-accounts")
+    if (!showDemoAccounts || accounts.length) return;
+    const controller = new AbortController();
+    api<{ accounts: Account[] }>("/auth/demo-accounts", {
+      signal: controller.signal,
+    })
       .then((r) => {
         setAccounts(r.accounts);
-        setEmail((current) => current || r.accounts[0]?.email || "");
       })
-      .catch((e) => setError(e.message));
-  }, []);
+      .catch(() => {
+        if (!controller.signal.aborted)
+          setAccountError(
+            "Demo accounts are unavailable. You can still enter your email above.",
+          );
+      });
+    return () => controller.abort();
+  }, [showDemoAccounts, accounts.length]);
   async function submit(e: React.FormEvent) {
     e.preventDefault();
     setPending(true);
@@ -67,21 +78,8 @@ export default function Login() {
       <section className="login-form">
         <div className="eyebrow">WELCOME TO THE LEDGER</div>
         <h2>Sign in to your workspace</h2>
-        <p className="muted">
-          Choose a synthetic demo account, then enter your locally generated
-          password.
-        </p>
+        <p className="muted">Enter your email and password to continue.</p>
         <form onSubmit={submit}>
-          <label>
-            Workspace
-            <select value={email} onChange={(e) => setEmail(e.target.value)}>
-              {accounts.map((a) => (
-                <option key={a.key} value={a.email}>
-                  {a.label}
-                </option>
-              ))}
-            </select>
-          </label>
           <label>
             Email
             <input
@@ -105,9 +103,6 @@ export default function Login() {
           {error ? (
             <div role="alert" className="error">
               {error}
-              <button type="button" onClick={() => location.reload()}>
-                Retry
-              </button>
             </div>
           ) : null}
           <button className="primary" disabled={pending}>
@@ -115,6 +110,41 @@ export default function Login() {
             <ArrowRight size={18} />
           </button>
         </form>
+        <details
+          className="login-demo"
+          onToggle={(event) => {
+            setShowDemoAccounts(event.currentTarget.open);
+            setAccountError("");
+          }}
+        >
+          <summary>Demo accounts</summary>
+          <p className="muted">
+            Choose a sample account to fill in your email, then sign in with
+            your demo password.
+          </p>
+          {accountError ? (
+            <p role="status">{accountError}</p>
+          ) : accounts.length ? (
+            <label>
+              Demo account
+              <select
+                value={accounts.some((a) => a.email === email) ? email : ""}
+                onChange={(event) => setEmail(event.target.value)}
+              >
+                <option value="" disabled>
+                  Choose an account
+                </option>
+                {accounts.map((account) => (
+                  <option key={account.key} value={account.email}>
+                    {account.label}
+                  </option>
+                ))}
+              </select>
+            </label>
+          ) : (
+            <p role="status">Loading demo accounts…</p>
+          )}
+        </details>
         <p className="note">
           Synthetic data only. Local and mock checks do not establish official
           APAAR or issuer verification.

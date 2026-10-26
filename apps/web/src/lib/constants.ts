@@ -6,7 +6,6 @@ import {
   ChartNoAxesCombined,
   Layers,
   FileText,
-  Settings,
   GraduationCap,
 } from "lucide-react";
 
@@ -34,16 +33,4 @@ export const NAVIGATION = [
   ],
   ["/certificates", "Certificates", FileText, ["STUDENT"]],
   ["/career", "Career Copilot", GraduationCap, ["STUDENT"]],
-  [
-    "/architecture",
-    "Architecture",
-    Layers,
-    ["OPERATOR", "OFFICER", "ADMIN", "STUDENT"],
-  ],
-  [
-    "/settings/demo",
-    "Demo controls",
-    Settings,
-    ["OPERATOR", "OFFICER", "ADMIN"],
-  ],
 ] as const;
