@@ -4,7 +4,7 @@
 2. Native PostgreSQL16 contains the100k baseline plus imported demonstration records.
 3. Exact import and correction counts are measured in docs/acceptance-results.json.
 4. PDF confidence95, tampered risk83, trust91 and readiness74 are computed.
-5. Seven browser flows passed, including375px layout and axe.
+5. Latest browser checks: 14 passed, 0 failed, including375px layout and axe.
 6. Fresh100k database reproduction and schema comparison passed.
 7. Risk1: exact module tree and full response typing remain incomplete.
 8. Risk2: broader screen, seed, API and adversarial requirements remain incomplete.

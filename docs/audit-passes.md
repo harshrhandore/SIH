@@ -127,3 +127,13 @@ Development failures retained honestly: first chart test used an exact label sel
 The shared data hook now uses scoped query keys including actor/role/institutions/path/grant, aborts superseded requests, avoids previous-key data and clears forbidden results. A delayed real search request proves the previous student disappears while the new query is pending. Grant cache entries are not retained after unmount. Global search never queries students for student/admin roles.
 
 These remain automation attempts and focused reviews, not completed ordered A-to-E cycles. Full conformance/stopping rule remains OPEN.
+
+## Automation attempt 8 and contrast regression
+
+2026-10-25T20:48:26.863557+00:00 to 2026-10-25T20:51:55.139192+00:00. [Archive](audits/20261025T204826863557Z/automation.json). Browser and artifact gates failed. The new open-drawer axe scan found sidebar-section contrast3.72:1 instead of4.5:1; other13browser checks passed. Root cause was label opacity. Removed that opacity and set an explicit light label color; the same open-drawer scan passed in the targeted3check authentication run. No axe rule was disabled.
+
+## Automation attempt 9
+
+2026-10-26T02:13:36.675880+00:00 to 2026-10-26T02:15:52.142422+00:00. [Archive](audits/20261026T021336675880Z/automation.json). **12/13checks PASS**:65Python tests,14browser checks including open-drawer axe, production build, generated client, SQL/schema/grants, fresh100k demo, benchmark and scanner. Only exact artifacts FAIL:55missing paths, zero fixture hash mismatches. These are not complete ordered audit cycles.
+
+Visual QA then found corrupted punctuation caused by default Windows text decoding during file extraction. Repaired three source files using explicit UTF-8, added detection for invalid/corrupted UI encoding to the scanner, rebuilt and reran all14browser checks successfully. The regenerated3page A4 passport first page was rendered and reviewed; its description is now correct. The analytics screenshot was also visually reviewed. No backend/runtime behavior changed in that final text repair.
