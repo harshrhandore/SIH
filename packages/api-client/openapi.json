@@ -178,7 +178,12 @@
               }
             }
           }
-        }
+        },
+        "security": [
+          {
+            "HTTPBearer": []
+          }
+        ]
       }
     },
     "/api/v1/auth/me": {
@@ -199,7 +204,12 @@
               }
             }
           }
-        }
+        },
+        "security": [
+          {
+            "HTTPBearer": []
+          }
+        ]
       }
     },
     "/api/v1/institutions": {
@@ -209,6 +219,11 @@
         ],
         "summary": "Institutions",
         "operationId": "institutions_api_v1_institutions_get",
+        "security": [
+          {
+            "HTTPBearer": []
+          }
+        ],
         "parameters": [
           {
             "name": "state",
@@ -258,6 +273,11 @@
         ],
         "summary": "Programs",
         "operationId": "programs_api_v1_institutions__institution_id__programs_get",
+        "security": [
+          {
+            "HTTPBearer": []
+          }
+        ],
         "parameters": [
           {
             "name": "institution_id",
@@ -301,6 +321,11 @@
         ],
         "summary": "Get Dashboard",
         "operationId": "get_dashboard_api_v1_dashboard_get",
+        "security": [
+          {
+            "HTTPBearer": []
+          }
+        ],
         "parameters": [
           {
             "name": "institution_id",
@@ -349,6 +374,11 @@
         ],
         "summary": "Search",
         "operationId": "search_api_v1_students_search_get",
+        "security": [
+          {
+            "HTTPBearer": []
+          }
+        ],
         "parameters": [
           {
             "name": "q",
@@ -504,6 +534,11 @@
         ],
         "summary": "Student",
         "operationId": "student_api_v1_students__student_id__get",
+        "security": [
+          {
+            "HTTPBearer": []
+          }
+        ],
         "parameters": [
           {
             "name": "student_id",
@@ -543,6 +578,11 @@
         ],
         "summary": "Patch Student",
         "operationId": "patch_student_api_v1_students__student_id__patch",
+        "security": [
+          {
+            "HTTPBearer": []
+          }
+        ],
         "parameters": [
           {
             "name": "student_id",
@@ -594,6 +634,11 @@
         ],
         "summary": "Student By Id",
         "operationId": "student_by_id_api_v1_student__apaar_id__get",
+        "security": [
+          {
+            "HTTPBearer": []
+          }
+        ],
         "parameters": [
           {
             "name": "apaar_id",
@@ -634,6 +679,11 @@
         ],
         "summary": "Versions",
         "operationId": "versions_api_v1_students__student_id__versions_get",
+        "security": [
+          {
+            "HTTPBearer": []
+          }
+        ],
         "parameters": [
           {
             "name": "student_id",
@@ -695,6 +745,11 @@
         ],
         "summary": "Upload Import",
         "operationId": "upload_import_api_v1_imports_post",
+        "security": [
+          {
+            "HTTPBearer": []
+          }
+        ],
         "requestBody": {
           "required": true,
           "content": {
@@ -732,6 +787,11 @@
         ],
         "summary": "List Imports",
         "operationId": "list_imports_api_v1_imports_get",
+        "security": [
+          {
+            "HTTPBearer": []
+          }
+        ],
         "parameters": [
           {
             "name": "page",
@@ -783,6 +843,11 @@
         ],
         "summary": "Import Detail",
         "operationId": "import_detail_api_v1_imports__batch_id__get",
+        "security": [
+          {
+            "HTTPBearer": []
+          }
+        ],
         "parameters": [
           {
             "name": "batch_id",
@@ -824,6 +889,11 @@
         ],
         "summary": "Set Mapping",
         "operationId": "set_mapping_api_v1_imports__batch_id__mapping_put",
+        "security": [
+          {
+            "HTTPBearer": []
+          }
+        ],
         "parameters": [
           {
             "name": "batch_id",
@@ -875,6 +945,11 @@
         ],
         "summary": "Validate Import",
         "operationId": "validate_import_api_v1_imports__batch_id__validate_post",
+        "security": [
+          {
+            "HTTPBearer": []
+          }
+        ],
         "parameters": [
           {
             "name": "batch_id",
@@ -926,6 +1001,11 @@
         ],
         "summary": "Get Job",
         "operationId": "get_job_api_v1_import_jobs__job_id__get",
+        "security": [
+          {
+            "HTTPBearer": []
+          }
+        ],
         "parameters": [
           {
             "name": "job_id",
@@ -967,6 +1047,11 @@
         ],
         "summary": "Retry Job",
         "operationId": "retry_job_api_v1_import_jobs__job_id__retry_post",
+        "security": [
+          {
+            "HTTPBearer": []
+          }
+        ],
         "parameters": [
           {
             "name": "job_id",
@@ -1018,6 +1103,11 @@
         ],
         "summary": "Import Report",
         "operationId": "import_report_api_v1_imports__batch_id__report_get",
+        "security": [
+          {
+            "HTTPBearer": []
+          }
+        ],
         "parameters": [
           {
             "name": "batch_id",
@@ -1059,6 +1149,11 @@
         ],
         "summary": "Errors Csv",
         "operationId": "errors_csv_api_v1_imports__batch_id__errors_csv_get",
+        "security": [
+          {
+            "HTTPBearer": []
+          }
+        ],
         "parameters": [
           {
             "name": "batch_id",
@@ -1100,6 +1195,11 @@
         ],
         "summary": "List Cases",
         "operationId": "list_cases_api_v1_cases_get",
+        "security": [
+          {
+            "HTTPBearer": []
+          }
+        ],
         "parameters": [
           {
             "name": "status",
@@ -1210,6 +1310,11 @@
         ],
         "summary": "Case Detail",
         "operationId": "case_detail_api_v1_cases__case_id__get",
+        "security": [
+          {
+            "HTTPBearer": []
+          }
+        ],
         "parameters": [
           {
             "name": "case_id",
@@ -1251,6 +1356,11 @@
         ],
         "summary": "Case Access",
         "operationId": "case_access_api_v1_cases__case_id__access_post",
+        "security": [
+          {
+            "HTTPBearer": []
+          }
+        ],
         "parameters": [
           {
             "name": "case_id",
@@ -1302,6 +1412,11 @@
         ],
         "summary": "Decide",
         "operationId": "decide_api_v1_cases__case_id__decisions_post",
+        "security": [
+          {
+            "HTTPBearer": []
+          }
+        ],
         "parameters": [
           {
             "name": "case_id",
@@ -1353,6 +1468,11 @@
         ],
         "summary": "Candidate Decision",
         "operationId": "candidate_decision_api_v1_duplicate_candidates__candidate_id__decision_post",
+        "security": [
+          {
+            "HTTPBearer": []
+          }
+        ],
         "parameters": [
           {
             "name": "candidate_id",
@@ -1404,6 +1524,11 @@
         ],
         "summary": "Timeline",
         "operationId": "timeline_api_v1_students__student_id__timeline_get",
+        "security": [
+          {
+            "HTTPBearer": []
+          }
+        ],
         "parameters": [
           {
             "name": "student_id",
@@ -1441,7 +1566,9 @@
             "description": "Successful Response",
             "content": {
               "application/json": {
-                "schema": {}
+                "schema": {
+                  "$ref": "#/components/schemas/TimelineResponse"
+                }
               }
             }
           },
@@ -1465,6 +1592,11 @@
         ],
         "summary": "Verify Chain",
         "operationId": "verify_chain_api_v1_audit_verify_chain_get",
+        "security": [
+          {
+            "HTTPBearer": []
+          }
+        ],
         "parameters": [
           {
             "name": "institution_id",
@@ -1482,7 +1614,9 @@
             "description": "Successful Response",
             "content": {
               "application/json": {
-                "schema": {}
+                "schema": {
+                  "$ref": "#/components/schemas/ChainVerification"
+                }
               }
             }
           },
@@ -1506,6 +1640,11 @@
         ],
         "summary": "Audit Events",
         "operationId": "audit_events_api_v1_audit_events_get",
+        "security": [
+          {
+            "HTTPBearer": []
+          }
+        ],
         "parameters": [
           {
             "name": "institution_id",
@@ -1567,7 +1706,9 @@
             "description": "Successful Response",
             "content": {
               "application/json": {
-                "schema": {}
+                "schema": {
+                  "$ref": "#/components/schemas/EventsResponse"
+                }
               }
             }
           },
@@ -1591,6 +1732,11 @@
         ],
         "summary": "Student Trust",
         "operationId": "student_trust_api_v1_students__student_id__trust_get",
+        "security": [
+          {
+            "HTTPBearer": []
+          }
+        ],
         "parameters": [
           {
             "name": "student_id",
@@ -1634,6 +1780,11 @@
         ],
         "summary": "Upload Certificate",
         "operationId": "upload_certificate_api_v1_students__student_id__certificates_post",
+        "security": [
+          {
+            "HTTPBearer": []
+          }
+        ],
         "parameters": [
           {
             "name": "student_id",
@@ -1685,6 +1836,11 @@
         ],
         "summary": "Verify Certificate",
         "operationId": "verify_certificate_api_v1_certificates__certificate_id__verify_post",
+        "security": [
+          {
+            "HTTPBearer": []
+          }
+        ],
         "parameters": [
           {
             "name": "certificate_id",
@@ -1726,6 +1882,11 @@
         ],
         "summary": "Report",
         "operationId": "report_api_v1_certificate_verifications__verification_id__get",
+        "security": [
+          {
+            "HTTPBearer": []
+          }
+        ],
         "parameters": [
           {
             "name": "verification_id",
@@ -1767,6 +1928,11 @@
         ],
         "summary": "Fraud",
         "operationId": "fraud_api_v1_certificate_verifications__verification_id__fraud_get",
+        "security": [
+          {
+            "HTTPBearer": []
+          }
+        ],
         "parameters": [
           {
             "name": "verification_id",
@@ -1808,6 +1974,11 @@
         ],
         "summary": "Certificate File",
         "operationId": "certificate_file_api_v1_certificates__certificate_id__file_get",
+        "security": [
+          {
+            "HTTPBearer": []
+          }
+        ],
         "parameters": [
           {
             "name": "certificate_id",
@@ -1849,6 +2020,11 @@
         ],
         "summary": "Acceptance",
         "operationId": "acceptance_api_v1_certificates__certificate_id__acceptance_post",
+        "security": [
+          {
+            "HTTPBearer": []
+          }
+        ],
         "parameters": [
           {
             "name": "certificate_id",
@@ -1929,7 +2105,12 @@
               }
             }
           }
-        }
+        },
+        "security": [
+          {
+            "HTTPBearer": []
+          }
+        ]
       }
     },
     "/api/v1/career/roles": {
@@ -1950,7 +2131,12 @@
               }
             }
           }
-        }
+        },
+        "security": [
+          {
+            "HTTPBearer": []
+          }
+        ]
       }
     },
     "/api/v1/students/{student_id}/career": {
@@ -1960,6 +2146,11 @@
         ],
         "summary": "Ask Career",
         "operationId": "ask_career_api_v1_students__student_id__career_post",
+        "security": [
+          {
+            "HTTPBearer": []
+          }
+        ],
         "parameters": [
           {
             "name": "student_id",
@@ -2013,6 +2204,11 @@
         ],
         "summary": "Career History",
         "operationId": "career_history_api_v1_students__student_id__career_history_get",
+        "security": [
+          {
+            "HTTPBearer": []
+          }
+        ],
         "parameters": [
           {
             "name": "student_id",
@@ -2076,6 +2272,11 @@
         ],
         "summary": "Oversight",
         "operationId": "oversight_api_v1_oversight_get",
+        "security": [
+          {
+            "HTTPBearer": []
+          }
+        ],
         "parameters": [
           {
             "name": "state",
@@ -2177,6 +2378,11 @@
         ],
         "summary": "Analytics Admissions",
         "operationId": "analytics_admissions_api_v1_analytics_admissions_get",
+        "security": [
+          {
+            "HTTPBearer": []
+          }
+        ],
         "parameters": [
           {
             "name": "institution_id",
@@ -2274,6 +2480,11 @@
         ],
         "summary": "Analytics Placements",
         "operationId": "analytics_placements_api_v1_analytics_placements_get",
+        "security": [
+          {
+            "HTTPBearer": []
+          }
+        ],
         "parameters": [
           {
             "name": "institution_id",
@@ -2371,6 +2582,11 @@
         ],
         "summary": "Analytics Performance",
         "operationId": "analytics_performance_api_v1_analytics_performance_get",
+        "security": [
+          {
+            "HTTPBearer": []
+          }
+        ],
         "parameters": [
           {
             "name": "institution_id",
@@ -2468,6 +2684,11 @@
         ],
         "summary": "Analytics Data Quality",
         "operationId": "analytics_data_quality_api_v1_analytics_data_quality_get",
+        "security": [
+          {
+            "HTTPBearer": []
+          }
+        ],
         "parameters": [
           {
             "name": "institution_id",
@@ -2574,7 +2795,12 @@
               }
             }
           }
-        }
+        },
+        "security": [
+          {
+            "HTTPBearer": []
+          }
+        ]
       }
     },
     "/api/v1/analytics/refresh-status": {
@@ -2593,7 +2819,12 @@
               }
             }
           }
-        }
+        },
+        "security": [
+          {
+            "HTTPBearer": []
+          }
+        ]
       }
     },
     "/api/v1/students/{student_id}/checks": {
@@ -2603,6 +2834,11 @@
         ],
         "summary": "Checks",
         "operationId": "checks_api_v1_students__student_id__checks_post",
+        "security": [
+          {
+            "HTTPBearer": []
+          }
+        ],
         "parameters": [
           {
             "name": "student_id",
@@ -2654,6 +2890,11 @@
         ],
         "summary": "External Check",
         "operationId": "external_check_api_v1_students__student_id__external_check_post",
+        "security": [
+          {
+            "HTTPBearer": []
+          }
+        ],
         "parameters": [
           {
             "name": "student_id",
@@ -2714,7 +2955,12 @@
               }
             }
           }
-        }
+        },
+        "security": [
+          {
+            "HTTPBearer": []
+          }
+        ]
       }
     },
     "/api/v1/demo/manifest": {
@@ -2733,7 +2979,12 @@
               }
             }
           }
-        }
+        },
+        "security": [
+          {
+            "HTTPBearer": []
+          }
+        ]
       }
     },
     "/api/v1/demo/fixtures/{fixture_key}": {
@@ -2743,6 +2994,11 @@
         ],
         "summary": "Fixture",
         "operationId": "fixture_api_v1_demo_fixtures__fixture_key__get",
+        "security": [
+          {
+            "HTTPBearer": []
+          }
+        ],
         "parameters": [
           {
             "name": "fixture_key",
@@ -2783,6 +3039,11 @@
         ],
         "summary": "Sandbox Status",
         "operationId": "sandbox_status_api_v1_demo_audit_sandbox_verify_get",
+        "security": [
+          {
+            "HTTPBearer": []
+          }
+        ],
         "parameters": [
           {
             "name": "institution_id",
@@ -2824,6 +3085,11 @@
         ],
         "summary": "Sandbox Status",
         "operationId": "sandbox_status_api_v1_demo_audit_sandbox_get",
+        "security": [
+          {
+            "HTTPBearer": []
+          }
+        ],
         "parameters": [
           {
             "name": "institution_id",
@@ -2894,7 +3160,12 @@
               }
             }
           }
-        }
+        },
+        "security": [
+          {
+            "HTTPBearer": []
+          }
+        ]
       }
     },
     "/api/v1/demo/performance": {
@@ -2913,7 +3184,12 @@
               }
             }
           }
-        }
+        },
+        "security": [
+          {
+            "HTTPBearer": []
+          }
+        ]
       }
     },
     "/api/v1/demo/benchmarks": {
@@ -2952,7 +3228,12 @@
               }
             }
           }
-        }
+        },
+        "security": [
+          {
+            "HTTPBearer": []
+          }
+        ]
       }
     },
     "/api/v1/demo/benchmarks/{run_id}": {
@@ -2962,6 +3243,11 @@
         ],
         "summary": "Benchmark Result",
         "operationId": "benchmark_result_api_v1_demo_benchmarks__run_id__get",
+        "security": [
+          {
+            "HTTPBearer": []
+          }
+        ],
         "parameters": [
           {
             "name": "run_id",
@@ -3087,6 +3373,37 @@
           "institution_id"
         ],
         "title": "Body_upload_import_api_v1_imports_post"
+      },
+      "BrokenLink": {
+        "properties": {
+          "sequence_no": {
+            "type": "integer",
+            "title": "Sequence No"
+          },
+          "event_id": {
+            "anyOf": [
+              {
+                "type": "string",
+                "format": "uuid"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Event Id"
+          },
+          "reason": {
+            "type": "string",
+            "title": "Reason"
+          }
+        },
+        "type": "object",
+        "required": [
+          "sequence_no",
+          "event_id",
+          "reason"
+        ],
+        "title": "BrokenLink"
       },
       "CandidateDecision": {
         "properties": {
@@ -3298,6 +3615,96 @@
         ],
         "title": "CareerResult"
       },
+      "ChainVerification": {
+        "properties": {
+          "valid": {
+            "type": "boolean",
+            "title": "Valid"
+          },
+          "exists": {
+            "type": "boolean",
+            "title": "Exists"
+          },
+          "checked_at": {
+            "type": "string",
+            "title": "Checked At"
+          },
+          "first_broken_link": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/BrokenLink"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "chain_id": {
+            "anyOf": [
+              {
+                "type": "string",
+                "format": "uuid"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Chain Id"
+          },
+          "events_checked": {
+            "anyOf": [
+              {
+                "type": "integer"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Events Checked"
+          },
+          "head_seq": {
+            "anyOf": [
+              {
+                "type": "integer"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Head Seq"
+          },
+          "head_hash": {
+            "anyOf": [
+              {
+                "type": "string",
+                "pattern": "^[0-9a-f]{64}$"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Head Hash"
+          },
+          "is_copy": {
+            "type": "boolean",
+            "title": "Is Copy",
+            "default": false
+          },
+          "production_chain_modified": {
+            "type": "boolean",
+            "title": "Production Chain Modified",
+            "default": false
+          }
+        },
+        "type": "object",
+        "required": [
+          "valid",
+          "exists",
+          "checked_at",
+          "first_broken_link"
+        ],
+        "title": "ChainVerification"
+      },
       "Confirm": {
         "properties": {
           "confirm_synthetic_data": {
@@ -3432,6 +3839,83 @@
           "password_required"
         ],
         "title": "DemoAccountsResponse"
+      },
+      "EventSummary": {
+        "properties": {
+          "event_id": {
+            "type": "string",
+            "format": "uuid",
+            "title": "Event Id"
+          },
+          "action": {
+            "type": "string",
+            "title": "Action"
+          },
+          "occurred_at": {
+            "type": "string",
+            "title": "Occurred At"
+          },
+          "reason": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Reason"
+          },
+          "case_ref": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Case Ref"
+          }
+        },
+        "type": "object",
+        "required": [
+          "event_id",
+          "action",
+          "occurred_at"
+        ],
+        "title": "EventSummary"
+      },
+      "EventsResponse": {
+        "properties": {
+          "items": {
+            "items": {
+              "$ref": "#/components/schemas/EventSummary"
+            },
+            "type": "array",
+            "title": "Items"
+          },
+          "total": {
+            "type": "integer",
+            "title": "Total"
+          },
+          "page": {
+            "type": "integer",
+            "title": "Page"
+          },
+          "page_size": {
+            "type": "integer",
+            "title": "Page Size"
+          }
+        },
+        "type": "object",
+        "required": [
+          "items",
+          "total",
+          "page",
+          "page_size"
+        ],
+        "title": "EventsResponse"
       },
       "Evidence": {
         "properties": {
@@ -4149,6 +4633,114 @@
         ],
         "title": "StudentSummary"
       },
+      "TimelineEvent": {
+        "properties": {
+          "event_id": {
+            "type": "string",
+            "format": "uuid",
+            "title": "Event Id"
+          },
+          "action": {
+            "type": "string",
+            "title": "Action"
+          },
+          "occurred_at": {
+            "type": "string",
+            "title": "Occurred At"
+          },
+          "actor_name": {
+            "type": "string",
+            "title": "Actor Name"
+          },
+          "reason": {
+            "type": "string",
+            "title": "Reason"
+          },
+          "changes": {
+            "additionalProperties": true,
+            "type": "object",
+            "title": "Changes"
+          },
+          "sequence_no": {
+            "type": "integer",
+            "title": "Sequence No"
+          },
+          "row_hash": {
+            "type": "string",
+            "title": "Row Hash"
+          },
+          "hash_verified": {
+            "type": "boolean",
+            "title": "Hash Verified"
+          }
+        },
+        "type": "object",
+        "required": [
+          "event_id",
+          "action",
+          "occurred_at",
+          "actor_name",
+          "reason",
+          "changes",
+          "sequence_no",
+          "row_hash",
+          "hash_verified"
+        ],
+        "title": "TimelineEvent"
+      },
+      "TimelineResponse": {
+        "properties": {
+          "items": {
+            "items": {
+              "$ref": "#/components/schemas/TimelineEvent"
+            },
+            "type": "array",
+            "title": "Items"
+          },
+          "total": {
+            "type": "integer",
+            "title": "Total"
+          },
+          "page": {
+            "type": "integer",
+            "title": "Page"
+          },
+          "page_size": {
+            "type": "integer",
+            "title": "Page Size"
+          },
+          "chain_verified_at": {
+            "type": "string",
+            "title": "Chain Verified At"
+          },
+          "checked_head_seq": {
+            "anyOf": [
+              {
+                "type": "integer"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Checked Head Seq"
+          },
+          "verified": {
+            "type": "boolean",
+            "title": "Verified"
+          }
+        },
+        "type": "object",
+        "required": [
+          "items",
+          "total",
+          "page",
+          "page_size",
+          "chain_verified_at",
+          "checked_head_seq",
+          "verified"
+        ],
+        "title": "TimelineResponse"
+      },
       "TokenResponse": {
         "properties": {
           "access_token": {
@@ -4461,6 +5053,12 @@
           "expected_version"
         ],
         "title": "Version"
+      }
+    },
+    "securitySchemes": {
+      "HTTPBearer": {
+        "type": "http",
+        "scheme": "bearer"
       }
     }
   }

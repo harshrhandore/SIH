@@ -1,3 +1,4 @@
+from pypdf.generic import DictionaryObject, NameObject, TextStringObject
 from io import BytesIO
 from uuid import uuid4
 from pathlib import Path
@@ -56,3 +57,20 @@ def test_html_disguised_as_pdf_rejected():
     with pytest.raises(HTTPException) as caught:
         inspect_document(b"<html><script>alert(1)</script></html>")
     assert caught.value.status_code == 415
+
+
+def test_nested_active_pdf_rejected():
+    writer = PdfWriter()
+    page = writer.add_blank_page(width=595, height=842)
+    page[NameObject("/AA")] = DictionaryObject(
+        {
+            NameObject("/O"): DictionaryObject(
+                {NameObject("/S"): NameObject("/JavaScript"), NameObject("/JS"): TextStringObject("app.alert(1)")}
+            )
+        }
+    )
+    buf = BytesIO()
+    writer.write(buf)
+    with pytest.raises(HTTPException) as caught:
+        inspect_document(buf.getvalue())
+    assert caught.value.status_code == 422

@@ -11,7 +11,8 @@ from datetime import timedelta
 from uuid import uuid4
 import jwt
 from passlib.hash import bcrypt
-from fastapi import Request
+from fastapi import Request, Security
+from fastapi.security import HTTPBearer, HTTPAuthorizationCredentials
 from app.core.errors import fail
 from app.db.session import connect, one, many
 from app.settings import settings
@@ -74,7 +75,9 @@ def public_user(conn, user):
     }
 
 
-def authenticated(request: Request):
+def authenticated(
+    request: Request, _credentials: HTTPAuthorizationCredentials | None = Security(HTTPBearer(auto_error=False))
+):
     auth = request.headers.get("authorization", "")
     if not auth.startswith("Bearer "):
         fail("UNAUTHENTICATED", 401)

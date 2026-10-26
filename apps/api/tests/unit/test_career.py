@@ -43,3 +43,8 @@ def test_missing_skill_plan_has_study_project_and_deployment_phases():
     assert result["readiness_percent"] == 74
     assert [step["estimated_weeks"] for step in result["recommended_steps"]] == [2, 3, 1, 2, 3, 1]
     assert [step["priority"] for step in result["recommended_steps"]] == list(range(1, 7))
+
+
+def test_showcase_readiness_and_catalogue_weight_totals():
+    assert career("DATA_SCIENTIST", {k: [{}] for k in list(CATALOGUE["DATA_SCIENTIST"])[:5]})["readiness_percent"] == 74
+    assert all(sum(weights.values()) == 100 for weights in CATALOGUE.values())

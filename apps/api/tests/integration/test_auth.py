@@ -12,6 +12,13 @@ from app.settings import ROOT
 client = TestClient(app)
 
 
+def test_openapi_distinguishes_protected_bearer_routes_from_public_login():
+    schema = client.get("/openapi.json").json()
+    assert schema["components"]["securitySchemes"]["HTTPBearer"]["scheme"] == "bearer"
+    assert schema["paths"]["/api/v1/audit/events"]["get"]["security"] == [{"HTTPBearer": []}]
+    assert not schema["paths"]["/api/v1/auth/login"]["post"].get("security")
+
+
 @pytest.fixture
 def account():
     identifier = uuid4()

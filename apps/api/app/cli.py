@@ -58,6 +58,8 @@ def bootstrap(students):
         for row in conn.execute("SELECT id FROM institutions").fetchall():
             if not verify(conn, row["id"])["valid"]:
                 raise RuntimeError("Seed audit chain invalid")
+        if not verify(conn, None)["valid"]:
+            raise RuntimeError("Seed system audit chain invalid")
         conn.execute("UPDATE app_state SET seed_ready=true,updated_at=now()")
         manifest["database_bytes"] = one(conn, "SELECT pg_database_size(current_database()) AS bytes")["bytes"]
         manifest["total_seconds"] = round(perf_counter() - start, 3)
@@ -71,46 +73,17 @@ def bootstrap(students):
 
 
 def sandbox(action):
-    if not settings.demo_controls_enabled:
-        raise RuntimeError("Demo controls disabled")
     from db.seed.fixtures import uid
+    from app.modules.audit.sandbox import manage
 
-    inst = uid("institution", 0)
-    with connect(owner_url()) as conn:
-        conn.execute("SET TRANSACTION ISOLATION LEVEL REPEATABLE READ")
-        if action in {"create", "restore"}:
-            conn.execute("CREATE SCHEMA IF NOT EXISTS demo_sandbox")
-            conn.execute("DROP TABLE IF EXISTS demo_sandbox.audit_events,demo_sandbox.audit_chains")
-            conn.execute(
-                "CREATE TABLE demo_sandbox.audit_chains AS SELECT * FROM public.audit_chains WHERE institution_id=%s",
-                (inst,),
-            )
-            conn.execute(
-                "CREATE TABLE demo_sandbox.audit_events AS SELECT * FROM public.audit_events WHERE institution_id=%s",
-                (inst,),
-            )
-        elif action == "tamper":
-            row = one(
-                conn,
-                "SELECT * FROM demo_sandbox.audit_events WHERE action='REVIEW_APPROVED' ORDER BY sequence_no DESC LIMIT 1",
-            )
-            if not row:
-                raise RuntimeError("Create sandbox after a review approval")
-            parsed = json.loads(row["canonical_text"])
-            parsed["reason"] = "TAMPERED SYNTHETIC DEMO"
-            from app.core.audit import canonical
-
-            conn.execute(
-                "UPDATE demo_sandbox.audit_events SET reason=%s,canonical_text=%s WHERE chain_id=%s AND sequence_no=%s",
-                (parsed["reason"], canonical(parsed), row["chain_id"], row["sequence_no"]),
-            )
-        print(json.dumps(verify(conn, inst, True), default=str))
+    print(json.dumps(manage(owner_url(), uid("institution", 0), action), default=str))
 
 
 def main():
     parser = argparse.ArgumentParser()
     parser.add_argument(
-        "command", choices=["bootstrap", "migrate", "preflight", "audit-sandbox", "reset", "cloud-bootstrap"]
+        "command",
+        choices=["bootstrap", "migrate", "preflight", "audit-sandbox", "audit-system", "reset", "cloud-bootstrap"],
     )
     parser.add_argument("action", nargs="?", choices=["create", "restore", "tamper"])
     parser.add_argument("--students", type=int, choices=[200, 5000, 50000, 100000], default=100000)
@@ -133,6 +106,9 @@ def main():
         migrate()
     elif args.command == "audit-sandbox":
         sandbox(args.action)
+    elif args.command == "audit-system":
+        with connect() as conn:
+            print(json.dumps(verify(conn, None), default=str))
     else:
         with connect() as conn:
             print(

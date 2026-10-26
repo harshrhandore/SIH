@@ -45,7 +45,9 @@ def seed(conn, count, password):
     ]
     a_count = {100000: 9000, 50000: 4500, 5000: 1000}.get(count, max(80, count // 4))
     remain = count - a_count
-    sizes = [a_count] + [remain // 11 + (1 if i < remain % 11 else 0) for i in range(11)]
+    sizes = [a_count] + [
+        remain // 11 + (1 if i < remain % 11 else 0) for i in range(11)
+    ]
     institutions = []
     programs = {}
     program_slots = {}
@@ -53,13 +55,17 @@ def seed(conn, count, password):
         inst = uid("institution", i)
         institutions.append(inst)
         management = i >= 10
-        expected = n + ({100000: 2000, 50000: 1500, 5000: 1500}.get(count, 1000) if i == 0 else 1000)
+        expected = n + (
+            {100000: 2000, 50000: 1500, 5000: 1500}.get(count, 1000) if i == 0 else 1000
+        )
         conn.execute(
             "INSERT INTO institutions(id,aicte_code,name,state,institution_type,expected_records) VALUES (%s,%s,%s,%s,%s,%s)",
             (
                 inst,
                 f"SYN-AICTE-{i + 1:03d}",
-                "Synthetic Vidya Institute" if i == 0 else f"Synthetic Institute {i + 1:02d}",
+                "Synthetic Vidya Institute"
+                if i == 0
+                else f"Synthetic Institute {i + 1:02d}",
                 states[i],
                 "MANAGEMENT" if management else "MIXED",
                 expected,
@@ -79,7 +85,9 @@ def seed(conn, count, password):
         )
         expected_allocations = allocate(expected, weights)
         actual_allocations = allocate(n, weights)
-        program_slots[i] = [code for code, _ in weights for _ in range(actual_allocations[code])]
+        program_slots[i] = [
+            code for code, _ in weights for _ in range(actual_allocations[code])
+        ]
         for k, (code, w) in enumerate(weights):
             level, branch = code.split(":")
             pid = uid("program", f"{i}:{code}")
@@ -108,14 +116,22 @@ def seed(conn, count, password):
                 ),
             )
             exp = expected_allocations[code]
-            conn.execute("INSERT INTO program_expected_records VALUES (%s,%s)", (pid, exp))
+            conn.execute(
+                "INSERT INTO program_expected_records VALUES (%s,%s)", (pid, exp)
+            )
             programs[(i, code)] = pid
         conn.execute(
             "INSERT INTO audit_chains(id,institution_id,name) VALUES (%s,%s,%s)",
             (uid("chain", i), inst, f"Synthetic institution {i + 1}"),
         )
-        conn.execute("INSERT INTO institution_epochs(institution_id) VALUES (%s)", (inst,))
+        conn.execute(
+            "INSERT INTO institution_epochs(institution_id) VALUES (%s)", (inst,)
+        )
     encoded = password_hash(password)
+    conn.execute(
+        "INSERT INTO audit_chains(id,institution_id,name) VALUES (%s,NULL,'Synthetic system')",
+        (uid("chain", "system"),),
+    )
     accounts = [
         ("operator_a", "operator.a@example.test", "OPERATOR", institutions[0], None),
         ("operator_b", "operator.b@example.test", "OPERATOR", institutions[1], None),
@@ -125,10 +141,21 @@ def seed(conn, count, password):
     for key, email, role, inst, student in accounts:
         conn.execute(
             "INSERT INTO users(id,email,password_hash,full_name,role_code,institution_id,student_id) VALUES (%s,%s,%s,%s,%s,%s,%s)",
-            (uid("user", key), email, encoded, "Demo " + key.replace("_", " ").title(), role, inst, student),
+            (
+                uid("user", key),
+                email,
+                encoded,
+                "Demo " + key.replace("_", " ").title(),
+                role,
+                inst,
+                student,
+            ),
         )
     for inst in institutions:
-        conn.execute("INSERT INTO user_institutions VALUES (%s,%s)", (uid("user", "officer"), inst))
+        conn.execute(
+            "INSERT INTO user_institutions VALUES (%s,%s)",
+            (uid("user", "officer"), inst),
+        )
 
     def students():
         counter = 0
@@ -142,7 +169,9 @@ def seed(conn, count, password):
                     name = fake.name()
                     if "riya sharma" in normalized_name(name):
                         name = f"Synthetic Reserved Learner {counter}"
-                    dob = date(rng.randint(1999, 2007), rng.randint(1, 12), rng.randint(1, 28))
+                    dob = date(
+                        rng.randint(1999, 2007), rng.randint(1, 12), rng.randint(1, 28)
+                    )
                     parent = None
                 code = program_slots[i][local]
                 duration = 2 if code.startswith("PGDM") else 4
@@ -163,7 +192,9 @@ def seed(conn, count, password):
                     parent,
                     dob,
                     "UNDISCLOSED",
-                    "riya.sharma@example.test" if counter == 1 else f"synthetic.{counter}@example.test",
+                    "riya.sharma@example.test"
+                    if counter == 1
+                    else f"synthetic.{counter}@example.test",
                     admission,
                     year,
                     status,
@@ -234,7 +265,10 @@ def seed(conn, count, password):
             "INSERT INTO skills(code,label,category) VALUES (%s,%s,%s) RETURNING id",
             (code, code.replace("_", " ").title(), "Data"),
         ).fetchone()["id"]
-        conn.execute("INSERT INTO student_skills VALUES (%s,%s,3,'PROJECT',%s)", (showcase, sk, project))
+        conn.execute(
+            "INSERT INTO student_skills VALUES (%s,%s,3,'PROJECT',%s)",
+            (showcase, sk, project),
+        )
     case = uid("case", "showcase")
     conn.execute(
         "INSERT INTO review_cases(id,student_id,opened_reason,status) VALUES (%s,%s,'Seeded synthetic source review','APPROVED')",
@@ -246,7 +280,11 @@ def seed(conn, count, password):
     )
     manifest["enrichment"] = enrich(conn, count)
     manifest["program_counts"] = [
-        dict(institution_id=str(row["institution_id"]), program_id=str(row["program_id"]), students=row["n"])
+        dict(
+            institution_id=str(row["institution_id"]),
+            program_id=str(row["program_id"]),
+            students=row["n"],
+        )
         for row in conn.execute(
             "SELECT institution_id,program_id,count(*) AS n FROM students GROUP BY institution_id,program_id ORDER BY institution_id,program_id"
         ).fetchall()

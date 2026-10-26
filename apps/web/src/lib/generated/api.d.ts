@@ -1063,6 +1063,15 @@ export interface components {
              */
             institution_id: string;
         };
+        /** BrokenLink */
+        BrokenLink: {
+            /** Sequence No */
+            sequence_no: number;
+            /** Event Id */
+            event_id: string | null;
+            /** Reason */
+            reason: string;
+        };
         /** CandidateDecision */
         CandidateDecision: {
             /** Reason */
@@ -1143,6 +1152,34 @@ export interface components {
              */
             catalogue_version: 1;
         };
+        /** ChainVerification */
+        ChainVerification: {
+            /** Valid */
+            valid: boolean;
+            /** Exists */
+            exists: boolean;
+            /** Checked At */
+            checked_at: string;
+            first_broken_link: components["schemas"]["BrokenLink"] | null;
+            /** Chain Id */
+            chain_id?: string | null;
+            /** Events Checked */
+            events_checked?: number | null;
+            /** Head Seq */
+            head_seq?: number | null;
+            /** Head Hash */
+            head_hash?: string | null;
+            /**
+             * Is Copy
+             * @default false
+             */
+            is_copy: boolean;
+            /**
+             * Production Chain Modified
+             * @default false
+             */
+            production_chain_modified: boolean;
+        };
         /** Confirm */
         Confirm: {
             /** Confirm Synthetic Data */
@@ -1194,6 +1231,33 @@ export interface components {
              * @constant
              */
             password_required: true;
+        };
+        /** EventSummary */
+        EventSummary: {
+            /**
+             * Event Id
+             * Format: uuid
+             */
+            event_id: string;
+            /** Action */
+            action: string;
+            /** Occurred At */
+            occurred_at: string;
+            /** Reason */
+            reason?: string | null;
+            /** Case Ref */
+            case_ref?: string | null;
+        };
+        /** EventsResponse */
+        EventsResponse: {
+            /** Items */
+            items: components["schemas"]["EventSummary"][];
+            /** Total */
+            total: number;
+            /** Page */
+            page: number;
+            /** Page Size */
+            page_size: number;
         };
         /** Evidence */
         Evidence: {
@@ -1487,6 +1551,49 @@ export interface components {
             external_status: "EXTERNAL_VERIFICATION_PENDING" | "MOCK_MATCH" | "MOCK_NO_MATCH";
             /** Version No */
             version_no: number;
+        };
+        /** TimelineEvent */
+        TimelineEvent: {
+            /**
+             * Event Id
+             * Format: uuid
+             */
+            event_id: string;
+            /** Action */
+            action: string;
+            /** Occurred At */
+            occurred_at: string;
+            /** Actor Name */
+            actor_name: string;
+            /** Reason */
+            reason: string;
+            /** Changes */
+            changes: {
+                [key: string]: unknown;
+            };
+            /** Sequence No */
+            sequence_no: number;
+            /** Row Hash */
+            row_hash: string;
+            /** Hash Verified */
+            hash_verified: boolean;
+        };
+        /** TimelineResponse */
+        TimelineResponse: {
+            /** Items */
+            items: components["schemas"]["TimelineEvent"][];
+            /** Total */
+            total: number;
+            /** Page */
+            page: number;
+            /** Page Size */
+            page_size: number;
+            /** Chain Verified At */
+            chain_verified_at: string;
+            /** Checked Head Seq */
+            checked_head_seq: number | null;
+            /** Verified */
+            verified: boolean;
         };
         /** TokenResponse */
         TokenResponse: {
@@ -2552,7 +2659,7 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content: {
-                    "application/json": unknown;
+                    "application/json": components["schemas"]["TimelineResponse"];
                 };
             };
             /** @description Validation Error */
@@ -2583,7 +2690,7 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content: {
-                    "application/json": unknown;
+                    "application/json": components["schemas"]["ChainVerification"];
                 };
             };
             /** @description Validation Error */
@@ -2617,7 +2724,7 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content: {
-                    "application/json": unknown;
+                    "application/json": components["schemas"]["EventsResponse"];
                 };
             };
             /** @description Validation Error */

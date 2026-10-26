@@ -26,7 +26,7 @@ def institution_scope(user, institution_id=None, admin=False):
     return [institution_id] if institution_id else ids
 
 
-def student_scope(conn, user, student_id, request=None):
+def student_scope(conn, user, student_id, request=None, *, expected_case_id=None):
     student = one(
         conn,
         "SELECT s.*,p.name AS program,p.branch,p.total_terms,p.duration_years,p.term_type,i.name AS institution_name FROM students s LEFT JOIN programs p ON p.id=s.program_id JOIN institutions i ON i.id=s.institution_id WHERE s.id=%s",
@@ -48,6 +48,8 @@ def student_scope(conn, user, student_id, request=None):
             case = one(conn, "SELECT * FROM review_cases WHERE id=%s AND status='ESCALATED'", (grant["case_id"],))
             permitted = bool(
                 case
+                and case["student_id"] == student["id"]
+                and (expected_case_id is None or str(case["id"]) == str(expected_case_id))
                 and grant["sub"] == str(user["id"])
                 and grant["student_id"] == str(student["id"])
                 and grant["version"] == case["version_no"]
