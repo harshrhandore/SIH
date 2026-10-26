@@ -1,5 +1,7 @@
 # Verification report
 
+This is a historical full-sweep checkpoint. Read [current project status](project-status.md) and [the later UI audit](ui-audit/README.md) for the updated source, browser evidence, retired UI requirements and hosted CI finding. The measurements below retain their original scope and timestamps.
+
 This is a partial implementation and measured local verification report, not completion of the full prompt. Native Windows/PostgreSQL16 is the execution path. The exact audit stopping rule and full specification remain incomplete (V9). Docker is UNVERIFIED-ENV (V1); cloud preview is UNVERIFIED-HUMAN (V3); live Gemini/PNG OCR are UNVERIFIED-ENV (V10); hosted CI is UNVERIFIED-HUMAN (V11).
 
 Source checkpoint: `f13cf0ad6b67063cbb49f6ffadcaec20d78d07d1`. Report generated 2026-10-26T02:27:31.396052+00:00. Raw sweep timestamps below identify the tested working state.

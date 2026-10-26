@@ -1,0 +1,3 @@
+# Generated API artifacts must be identical on Windows and Linux.
+/packages/api-client/openapi.json text eol=lf
+/apps/web/src/lib/generated/api.d.ts text eol=lf

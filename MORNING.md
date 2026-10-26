@@ -1,15 +1,13 @@
-[OWNER_DECISIONS.md](OWNER_DECISIONS.md) — open MUST 5, SHOULD 36, COULD 8.
+# Current handoff
 
-1. Core synthetic local API demo has run end to end.
-2. Native PostgreSQL16 contains the100k baseline plus imported demonstration records.
-3. Exact import and correction counts are measured in docs/acceptance-results.json.
-4. PDF confidence95, tampered risk83, trust91 and readiness74 are computed.
-5. Latest browser checks: 14 passed, 0 failed, including375px layout and axe.
-6. Fresh100k database reproduction and schema comparison passed.
-7. Risk1: exact module tree and full response typing remain incomplete.
-8. Risk2: broader screen, seed, API and adversarial requirements remain incomplete.
-9. Risk3: Docker, cloud provisioning, live Gemini and real image OCR remain unverified.
-10. First action: read the incomplete MUST rows, then use README native launch commands.
+Read [current project status](docs/project-status.md) for the prioritized backlog and [the UI audit](docs/ui-audit/README.md) for the latest interface decisions and browser evidence.
+
+- Native local demo and isolated 100k reproduction have recorded passing acceptance results.
+- The published hosted run passed 72 Python tests and its API checks; generated-schema line endings then failed the web/schema stage. A deterministic LF export fix is included in the current follow-up; the next hosted run remains to be checked.
+- The UI sweep passed 26 browser checks, with additional passing route-removal and final refinement checks.
+- The exact-tree gate still reports 45 absent original paths, including five intentionally retired UI paths. This count is not a missing-feature count.
+- API contract typing, remaining module boundaries, combined passport network-failure isolation, broader workflow/adversarial coverage and complete original conformance remain open.
+- Real image OCR/live provider checks, Docker and cloud delivery still need verification.
 
 ## Remaining mandatory work
 
@@ -19,7 +17,7 @@ This is not a full conformance sign-off. See V2, V4, V5, V7 and V9. Do not descr
 
 - [ ] Use separate Operator, Officer, Admin and Student browser contexts.
 - [ ] Inspect A4 passport print preview for clipping.
-- [ ] Check375px layout and scrollable matrices.
+- [ ] Check375px layout and readable record fields without horizontal scrolling.
 - [ ] Complete keyboard-only navigation.
 - [ ] Enable reduced motion and inspect focus/contrast.
 - [ ] Rehearse the judging script on the owner laptop.
